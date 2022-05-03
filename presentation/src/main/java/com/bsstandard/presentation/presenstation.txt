@@ -1,0 +1,13 @@
+/**
+* @author jhm
+* @since 2022/03/23
+* @commnet
+*   화면 조작 또는 사용자의 입력을 처리 하기 위한 관심사를 모아 놓은 레이어
+*   UI(Activity , Fragment ) , Presenter 및 ViewModel 을 포함
+*   화면과 입력에 대한 처리 등 UI 와 직접적으로 관련된 부분을 담당
+*   Domain,Data 레이어를 포함하고 있음
+*
+*   *** View - Activity , Fragment ***
+*   *** Presenter - Controller , Presenter , ViewModel ***
+*
+**/

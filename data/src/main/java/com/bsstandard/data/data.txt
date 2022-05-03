@@ -1,0 +1,15 @@
+/**
+* @author jhm
+* @since 2022/03/23
+* @commnet
+*   Repository 구현체인 Cache , Room DB , DAO , Model , Server (Retrofit2) 등을 포함
+*   로컬 또는 서버 API 와 통신하여 데이터를 CRUD 하는 역할
+*   Mapper 클래스도 포함
+*   DB 로 부터 받아온 데이터 모델과 UI에 맞는 데이터모델 간의 변환을 해주는 역할
+*   Domain 레이어를 포함하고 있음.
+*
+*   *** Repository - Domain 과 DataStore , Remote Layer 를 연결하기 위함 ***
+*   *** Entity - 최소 단위의 비즈니스 객체 ***
+*
+*
+**/

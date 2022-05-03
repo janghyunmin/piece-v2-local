@@ -1,0 +1,13 @@
+/**
+* @author jhm
+* @since 2022/03/23
+* @commnet
+*   비즈니스 로직 포함
+*   비즈니스 로직에서 필요한 Model과 각 개별 기능 또는 비즈니스 논리 단위인 UseCase 포함
+*   Presentation , Data 레이어와 어떤 의존성도 맺지 않고 독립적으로 구성
+*
+*   *** UseCase ***
+*   *** Repository ***
+*   *** Entity ***
+*
+**/

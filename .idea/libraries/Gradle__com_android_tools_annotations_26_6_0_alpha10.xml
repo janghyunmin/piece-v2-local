@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Gradle: com.android.tools:annotations:26.6.0-alpha10">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools/annotations/26.6.0-alpha10/1113906943281695b5409d2fd833ded3b097a7b6/annotations-26.6.0-alpha10.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools/annotations/26.6.0-alpha10/42c3d9f16a0ef508e27feb8ba58597b46cf9b9f6/annotations-26.6.0-alpha10-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools/annotations/26.6.0-alpha10/2a1720d3e6b724c3d5fa701870e2084a7ecb3027/annotations-26.6.0-alpha10-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

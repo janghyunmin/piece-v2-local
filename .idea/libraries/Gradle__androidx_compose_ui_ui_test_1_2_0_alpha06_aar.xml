@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Gradle: androidx.compose.ui:ui-test:1.2.0-alpha06@aar">
+    <CLASSES>
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/3f51701fe3db9e5ed98919d847f40f50/transformed/jetified-ui-test-1.2.0-alpha06/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/3f51701fe3db9e5ed98919d847f40f50/transformed/jetified-ui-test-1.2.0-alpha06/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/3f51701fe3db9e5ed98919d847f40f50/transformed/jetified-ui-test-1.2.0-alpha06/jars/classes.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/androidx.compose.ui/ui-test/1.2.0-alpha06/58ac1955992f48e598e11ea38718aa63d95d8ac0/ui-test-1.2.0-alpha06-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

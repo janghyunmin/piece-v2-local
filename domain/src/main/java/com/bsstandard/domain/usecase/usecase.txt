@@ -1,0 +1,9 @@
+/**
+* @author jhm
+* @since 2022/03/23
+* @commnet 행동들의 최소 단위
+* ex )
+*       사용자의 활동 로직을 가져오는 UseCase
+*       Token을 가져오는 UseCase
+*       개별기능 및 비즈니스 로직 단위
+**/

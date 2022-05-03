@@ -1,0 +1,17 @@
+<component name="libraryTable">
+  <library name="Gradle: io.realm:realm-android-kotlin-extensions:10.8.0@aar">
+    <CLASSES>
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/4b0d4051b136cf2605f91c75f6abf41d/transformed/jetified-realm-android-kotlin-extensions-10.8.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/8e676da82b48a74494f3718ffb86e3e2/transformed/jetified-realm-android-kotlin-extensions-10.8.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/c5d465e24c95221af5f93ab1a66a7282/transformed/jetified-realm-android-kotlin-extensions-10.8.0/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/c5d465e24c95221af5f93ab1a66a7282/transformed/jetified-realm-android-kotlin-extensions-10.8.0/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/c5d465e24c95221af5f93ab1a66a7282/transformed/jetified-realm-android-kotlin-extensions-10.8.0/AndroidManifest.xml" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.realm/realm-android-kotlin-extensions/10.8.0/300d82f75521d7cd89e6813fc1f88246b71c7942/realm-android-kotlin-extensions-10.8.0-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.realm/realm-android-kotlin-extensions/10.8.0/b65d4c5c463e024032d36968a372201d15d9bfa9/realm-android-kotlin-extensions-10.8.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

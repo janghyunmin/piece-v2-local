@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+
+
+
+    <!-- PIECE 컬러 가이드 -->
+    <!-- PRIMARY 50 -->
+    <color name="c_f3fcfd">#F3FCFD</color>
+    <color name="c_e6f9fa">#E6F9FA</color>
+    <color name="c_cbf4fa">#CBF4FA</color>
+    <color name="c_a1ecf6">#A1ECF6</color>
+    <color name="c_4cdbef">#4CDBEF</color>
+    <color name="c_10cfc9">#10CFC9</color>
+    <color name="c_21b5b5">#21B5B5</color>
+    <color name="c_3b797d">#3b797d</color>
+    <color name="c_002e3d">#002e3d</color>
+    <color name="c_0c2537">#0C2537</color>
+    <color name="c_edf4ff">#EDF4FF</color>
+    <color name="c_d7e7ff">#D7E7FF</color>
+    <color name="c_b7d3fd">#B7D3FD</color>
+    <color name="c_93aafc">#93AAFC</color>
+    <color name="c_657eff">#657EFF</color>
+    <color name="c_6040f3">#6040f3</color>
+    <color name="c_3e21c1">#3E21C1</color>
+    <color name="c_252d70">#252D70</color>
+    <color name="c_283a4a">#283A4A</color>
+    <color name="c_182a32">#182A32</color>
+    
+    
+    
+    <!-- ALERT COLORS -->
+    <color name="c_4575f5">#4575F5</color>
+    <color name="c_dbe8e5">#DBE8E5</color>
+    <color name="c_ff6060">#FF6060</color>
+    <color name="c_ffe2e2">#FFE2E2</color>
+
+
+
+    <!-- GRAYSCALE -->
+    <color name="c_fdfdfd">#FDFDFD</color>
+    <color name="c_eaecf0">#EAECF0</color>
+    <color name="c_dadce3">#DADCE3</color>
+    <color name="c_b8bcc8">#B8BCC8</color>
+    <color name="c_8c919f">#8C919F</color>
+    <color name="c_757983">#757983</color>
+    <color name="c_4a4d55">#4A4D55</color>
+    <color name="c_292a2e">#292A2E</color>
+    <color name="c_131313">#131313</color>
+
+    <!-- BACKGROUND COLORS_LIGHT MODE -->
+    <!-- MODAL COLORS_LIGHT MODE -->
+    <!-- COMMON COLOR -->
+    <color name="c_ffffff">#FFFFFF</color>
+    <color name="c_f9f9f9">#F9F9F9</color>
+    <color name="c_f2f3f4">#F2F3F4</color>
+
+    <!-- DIM COLOR -->
+    <color name="c35_1a1a1a">#591A1A1A</color>
+    <color name="c10_1a1a1a">#1A1A1A1A</color>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</resources>

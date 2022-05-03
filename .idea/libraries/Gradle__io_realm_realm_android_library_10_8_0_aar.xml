@@ -1,0 +1,17 @@
+<component name="libraryTable">
+  <library name="Gradle: io.realm:realm-android-library:10.8.0@aar">
+    <CLASSES>
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/92c91a32ecec7365884fc403b72cafe5/transformed/jetified-realm-android-library-10.8.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/ea334caf427c82ee12ad769415983cb0/transformed/jetified-realm-android-library-10.8.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/43222f8efd9f65a6e2d47abc0c5526dd/transformed/jetified-realm-android-library-10.8.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/43222f8efd9f65a6e2d47abc0c5526dd/transformed/jetified-realm-android-library-10.8.0/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/43222f8efd9f65a6e2d47abc0c5526dd/transformed/jetified-realm-android-library-10.8.0/jars/classes.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.realm/realm-android-library/10.8.0/8e3c51347966e0d44663b8f44e432df11acd4d6d/realm-android-library-10.8.0-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.realm/realm-android-library/10.8.0/b64d0949ca16a4fc88f3d24710820258959eb69c/realm-android-library-10.8.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

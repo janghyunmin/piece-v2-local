@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Gradle: io.realm:realm-transformer:10.8.0">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.realm/realm-transformer/10.8.0/f932e486edc29da859b813246bfd72c35d225b7b/realm-transformer-10.8.0.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.realm/realm-transformer/10.8.0/401a6f998f92dc586a39fa55f7612b3972c35fba/realm-transformer-10.8.0-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.realm/realm-transformer/10.8.0/9d40e3aa6c7a017f1248ffbe2168f8d16feefc4/realm-transformer-10.8.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
