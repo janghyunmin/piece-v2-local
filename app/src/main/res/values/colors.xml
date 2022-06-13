@@ -8,6 +8,8 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
+    <color name="trans">#00000000</color>
+
 
 
 
@@ -65,8 +67,6 @@
     <!-- DIM COLOR -->
     <color name="c35_1a1a1a">#591A1A1A</color>
     <color name="c10_1a1a1a">#1A1A1A1A</color>
-
-
 
 
 

@@ -3,9 +3,19 @@
     <CLASSES>
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/3891b8c60aa2fc74a72a9e5737b6e182/transformed/jetified-rxbinding-3.1.0/res" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/92af406f17dcbb72988c89fe6688f724/transformed/jetified-rxbinding-3.1.0/res" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/16c3c45a64bdab0b001211e2546f0eab/transformed/jetified-rxbinding-3.1.0/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/16c3c45a64bdab0b001211e2546f0eab/transformed/jetified-rxbinding-3.1.0/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/16c3c45a64bdab0b001211e2546f0eab/transformed/jetified-rxbinding-3.1.0/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/809386fae131fda0edb936ac7ed5f750/transformed/jetified-rxbinding-3.1.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/4dc5e75f408b44840c513f341c39b260/transformed/jetified-rxbinding-3.1.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/6b5f08ff760a9e3297199609b469d625/transformed/jetified-rxbinding-3.1.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/9953639d49c4b45442876a54ca512bb9/transformed/jetified-rxbinding-3.1.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/dbc0960ab9048d0597a2e635deddf12d/transformed/jetified-rxbinding-3.1.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/4e53f298c7bde440497753cbfd480f27/transformed/jetified-rxbinding-3.1.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/9417ffdafc601f763338fecebbdb0fb0/transformed/jetified-rxbinding-3.1.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/ab04f3033c01f69b5b8d4bba78755855/transformed/jetified-rxbinding-3.1.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/723fb33a12bd1696ea09e4b8ab1d2f19/transformed/jetified-rxbinding-3.1.0/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/320efe17fe1bd704ec4d471878e8c5d2/transformed/jetified-rxbinding-3.1.0/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/320efe17fe1bd704ec4d471878e8c5d2/transformed/jetified-rxbinding-3.1.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/320efe17fe1bd704ec4d471878e8c5d2/transformed/jetified-rxbinding-3.1.0/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jakewharton.rxbinding3/rxbinding/3.1.0/6328e9b187f147f33b56ce9a75c31c4bd8ccd7bf/rxbinding-3.1.0-javadoc.jar!/" />

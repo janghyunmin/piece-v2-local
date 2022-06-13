@@ -1,6 +1,7 @@
 package com.bsstandard.piece.widget.utils;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.Build;
 import androidx.core.content.ContextCompat;
 import com.bsstandard.piece.R;
@@ -21,7 +22,8 @@ import com.bsstandard.piece.R;
 public class StatusBarCustom {
 
     public enum StatusBarColorType {
-        BLACK_STATUS_BAR( R.color.black );
+
+        WHITE_STATUS_BAR(R.color.trans);
         private int backgroundColorId;
         StatusBarColorType(int backgroundColorId){
             this.backgroundColorId = backgroundColorId;

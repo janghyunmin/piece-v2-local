@@ -1,15 +1,12 @@
 package com.bsstandard.piece.base
 
 import android.view.View
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.bsstandard.piece.widget.utils.ErrorType
 import com.bsstandard.piece.widget.utils.RemoteErrorEmitter
 import com.bsstandard.piece.widget.utils.ScreenState
 import com.bsstandard.piece.widget.utils.SingleLiveEvent
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
 
 /**
  *packageName    : com.bsstandard.piece.base

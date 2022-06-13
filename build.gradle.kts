@@ -17,7 +17,7 @@ buildscript {
         classpath ("io.realm:realm-gradle-plugin:${Versions.REALM_PLUGIN}")
         classpath ("com.neenbedankt.gradle.plugins:android-apt:${Versions.ANDROID_APT}")
         classpath ("io.fabric.tools:gradle:${Versions.FABRIC}")
-
+        classpath ("com.google.dagger:hilt-android-gradle-plugin:${Versions.DAGGER_HILT}")
 
 
     }

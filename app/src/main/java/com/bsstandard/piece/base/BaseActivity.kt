@@ -22,18 +22,19 @@ import io.reactivex.disposables.CompositeDisposable
 
 
 //BaseActivity.kt
-abstract class BaseActivity<T : ViewDataBinding>(@LayoutRes private val layoutResId: Int) :
-    AppCompatActivity() {
-    protected lateinit var binding: T
+abstract class BaseActivity<T : ViewDataBinding>(
+    @LayoutRes private val layoutResId: Int
+    ) : AppCompatActivity() {
+    lateinit var binding: T
+    private val compositeDisposable = CompositeDisposable()
     private var waitTime = 0L
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, layoutResId)
-        init()
-    }
+        binding.lifecycleOwner = this
 
-    abstract fun init()
+    }
 
     override fun onBackPressed() {
         if (System.currentTimeMillis() - waitTime >= 1500) {
@@ -47,4 +48,9 @@ abstract class BaseActivity<T : ViewDataBinding>(@LayoutRes private val layoutRe
 
     protected fun longShowToast(msg: String) =
         Toast.makeText(this, msg, Toast.LENGTH_LONG).show()
+
+    override fun onDestroy() {
+        super.onDestroy()
+        compositeDisposable.clear()
+    }
 }

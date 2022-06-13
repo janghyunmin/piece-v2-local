@@ -1,7 +1,3 @@
-import org.jetbrains.kotlin.gradle.plugin.statistics.ReportStatisticsToElasticSearch.enable
-import org.jetbrains.kotlin.kapt3.base.Kapt.kapt
-import org.jetbrains.kotlin.storage.CacheResetOnProcessCanceled.enabled
-
 /**
  * @author jhm
  * @since 2022/03/21
@@ -42,12 +38,16 @@ android {
             isShrinkResources = false
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
+//            applicationIdSuffix = ".dev"
+            buildConfigField("boolean","DEBUG_VALUE","true")
         }
         getByName("release") {
             isDebuggable = false
             isShrinkResources = true
             isMinifyEnabled = true
             proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
+//            applicationIdSuffix = ".prod"
+            buildConfigField("boolean","DEBUG_VALUE","false")
         }
     }
     packagingOptions {
@@ -70,42 +70,26 @@ android {
         }
     }
 
-/*    flavorDimensions += listOf ("alpha","beta","prod")
-    flavorDimensions += "version"
-    productFlavors {
-        create("alpha") {
-            initWith(getByName("alpha"))
-            dimension = "version"
-            applicationIdSuffix = ".alpha"
-            buildConfigField("boolean", "ALPHA", "true")
-        }
-        create("beta") {
-            initWith(getByName("beta"))
-            dimension = "version"
-            applicationIdSuffix = ".beta"
-            buildConfigField("boolean", "BETA", "false")
-        }
-        create("prod") {
-            initWith(getByName("prod"))
-            dimension = "version"
-            applicationIdSuffix = ".prod"
-            buildConfigField("boolean", "PROD", "false")
-        }
-    }*/
 
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
-    kotlinOptions {
-        jvmTarget = "1.8"
+
+    tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile::class).configureEach {
+        kotlinOptions {
+            jvmTarget = "1.8"
+            freeCompilerArgs = freeCompilerArgs + "-Xjvm-default=all"
+        }
     }
+
+
     buildFeatures.viewBinding = true   // jhm_2022/03/21_ gradle plgin v3.6 이상
     buildFeatures.dataBinding = true   // jhm_2022/03/21_ gradle plgin v4.0 이상
 
-    /*buildFeatures.compose = true
-    composeOptions.kotlinCompilerExtensionVersion = Versions.COMPOSE_UI*/
+
+
 
 }
 
@@ -115,8 +99,9 @@ dependencies {
 
 
     /** { presentation => data / domain 빌드 gradle 종속성 추가 } - jhm 2022/04/22 **/
-    implementation(project(":data"))
-    implementation(project(":domain"))
+    /** 해당 clean build src 는 추후 적용 - jhm 2022/06/10 **/
+//    implementation(project(":data"))
+//    implementation(project(":domain"))
 
 
     /** { Test } - jhm 2022/04/22 **/
@@ -127,15 +112,17 @@ dependencies {
 
     /** { KTX } - jhm 2022/04/22 **/
     implementation(KTX.CORE)
-    implementation(KTX.LIFECYCLE_RUNTIME)
     implementation(KTX.COROUTINES_CORE)
     implementation(KTX.COROUTINES)
-
+    implementation(KTX.WORK)
+    implementation(KTX.ACTIVITY)
+    implementation(KTX.FRAGMENT)
+    implementation(KTX.LIFECYCLE_VIEWMODEL)
+    implementation(KTX.LIFECYCLE_LIVEDATA)
 
     /** { RxJava2 } - jhm 2022/04/22 **/
     implementation(RxJava2.ANDROID)
     implementation(RxJava2.JAVA)
-    implementation(RxJava2.ROOM)
     implementation(RxJava2.RETROFIT)
     implementation(RxJava2.BINDING)
     implementation (RxJava2.RXRELAY2)
@@ -189,14 +176,9 @@ dependencies {
     implementation(Navigation.NAVIGATION_COMPOSE)
 
     /** { Local Database Room , Realm } - jhm 2022/04/22 **/
-    implementation(Room.COMMON)
+    implementation(Room.ROOM)
     implementation(Room.RUNTIME)
-    annotationProcessor(Room.COMPILER)
-    implementation(Room.RXJAVA2)
-    implementation(Room.RXJAVA3)
-    implementation(Room.GUAVA)
-    testImplementation(Room.TESTING)
-    implementation(Room.PAGING)
+    kapt(Room.COMPILER)
     implementation(Realm.PLUGIN)
 
     /** { Firebase } - jhm 2022/04/22 **/
@@ -206,12 +188,10 @@ dependencies {
 
 
     /** { Dagger } - jhm 2022/04/29 **/
-    implementation(Dagger.DAGGER)
     implementation(Dagger.HILT)
     implementation(Dagger.HILT_VIEW_MODEL)
-    implementation(Dagger.SUPPORT)
-    implementation(Dagger.PROCESSOR)
-    implementation(Dagger.COMPILER)
+    //kapt(Dagger.COMPILER)
+    kapt(Dagger.DAGGER_COMPILER)
 
 
     /** { Koin } - jhm 2022/04/26 **/
@@ -222,7 +202,7 @@ dependencies {
     implementation(Koin.WORKMANAGER)
     implementation(Koin.NAVIGATION)
     implementation(Koin.COMPOSE)
-    implementation(Koin.VIEWMODEL)
+    //implementation(Koin.KOIN_VIEWMODEL)
 
 
     /** { Okhttp3 } - jhm 2022/04/22 **/

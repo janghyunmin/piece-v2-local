@@ -65,7 +65,6 @@ dependencies {
     implementation(OkHttp.OKHTTP_3_INTERCEPTOR)
     implementation(Room.COMMON)
     implementation(KTX.ROOM)
-    implementation("androidx.test.ext:junit:1.1.3")
 
 
     /** { Test } - jhm 2022/04/22 **/
@@ -83,5 +82,6 @@ dependencies {
     implementation(Koin.WORKMANAGER)
     implementation(Koin.NAVIGATION)
     implementation(Koin.COMPOSE)
+    //implementation(Koin.KOIN_VIEWMODEL)
 
 }

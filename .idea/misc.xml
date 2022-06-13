@@ -3,7 +3,29 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="app/src/main/res/drawable/arrow_down_right_resize.xml" value="0.239" />
+        <entry key="app/src/main/res/drawable/c_dialog_back.xml" value="0.1495" />
+        <entry key="app/src/main/res/drawable/j_btn_round.xml" value="0.23358917236328128" />
+        <entry key="app/src/main/res/drawable/j_btn_round_text.xml" value="0.265" />
+        <entry key="app/src/main/res/drawable/j_btn_text_back.xml" value="0.1795" />
+        <entry key="app/src/main/res/drawable/j_dialog_back_round.xml" value="0.1835" />
+        <entry key="app/src/main/res/drawable/j_selector.xml" value="0.1865" />
+        <entry key="app/src/main/res/drawable/j_selector_back.xml" value="0.1795" />
+        <entry key="app/src/main/res/drawable/j_selector_text_color.xml" value="0.1795" />
+        <entry key="app/src/main/res/drawable/j_selector_underline.xml" value="0.1865" />
+        <entry key="app/src/main/res/font/font.xml" value="0.23796296296296296" />
+        <entry key="app/src/main/res/font/piece_font.xml" value="0.2947916666666667" />
+        <entry key="app/src/main/res/layout/activity_intro.xml" value="0.4288135593220339" />
+        <entry key="app/src/main/res/layout/activity_join.xml" value="0.33645833333333336" />
+        <entry key="app/src/main/res/layout/activity_login.xml" value="0.2102081298828125" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.19934143870314083" />
+        <entry key="app/src/main/res/layout/activity_splash.xml" value="0.2884963768115942" />
+        <entry key="app/src/main/res/layout/c_dialog.xml" value="0.3302107216655344" />
+        <entry key="app/src/main/res/layout/l_slide_popup.xml" value="0.2708333333333333" />
+        <entry key="app/src/main/res/layout/permission_dialog.xml" value="0.23505434782608695" />
+        <entry key="app/src/main/res/layout/popup_slideup.xml" value="0.280670166015625" />
+        <entry key="app/src/main/res/layout/popup_slideup2.xml" value="0.2708333333333333" />
+        <entry key="app/src/main/res/layout/slide_up_dialog_base.xml" value="0.33645833333333336" />
       </map>
     </option>
   </component>

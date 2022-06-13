@@ -5,7 +5,8 @@
  *
  * Clean Architecture Module
  **/
-include(":data",":domain",":app")
+include(":app")
+//include(":data",":domain",":app")
 //include(":data",":domain",":presentation",":app")
 rootProject.name = "PIECE"
 

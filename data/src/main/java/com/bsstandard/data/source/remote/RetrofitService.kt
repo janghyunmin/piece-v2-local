@@ -1,6 +1,5 @@
 package com.bsstandard.data.source.remote
 
-import com.bsstandard.domain.repository.AuthRepository
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.FormUrlEncoded

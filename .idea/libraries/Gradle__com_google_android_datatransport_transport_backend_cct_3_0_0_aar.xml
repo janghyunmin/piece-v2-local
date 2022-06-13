@@ -3,9 +3,19 @@
     <CLASSES>
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/b81e1360eecc098828bee5dcc7eedee4/transformed/jetified-transport-backend-cct-3.0.0/res" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/e477050c389ef62db6fc328d096cceb7/transformed/jetified-transport-backend-cct-3.0.0/res" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/0ba9fab7bfe7be73ab67fcd584371918/transformed/jetified-transport-backend-cct-3.0.0/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/0ba9fab7bfe7be73ab67fcd584371918/transformed/jetified-transport-backend-cct-3.0.0/AndroidManifest.xml" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/0ba9fab7bfe7be73ab67fcd584371918/transformed/jetified-transport-backend-cct-3.0.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/756f19e7b51a730ad5b03ec3228a4d7b/transformed/jetified-transport-backend-cct-3.0.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/84525d268efe9e57bfa7aa55e3f39af3/transformed/jetified-transport-backend-cct-3.0.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/4052817d927d852840fcbfba25f408a5/transformed/jetified-transport-backend-cct-3.0.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/d3f161c300867fdb281c874a012982c3/transformed/jetified-transport-backend-cct-3.0.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/0e7bdd358155c4cfa49ef5030f17a071/transformed/jetified-transport-backend-cct-3.0.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/ab8684074aa55d81641430625ada4a1b/transformed/jetified-transport-backend-cct-3.0.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/a8c190c67d45751f12fa71b35122e0a9/transformed/jetified-transport-backend-cct-3.0.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/d0b9a5378e4345dde2a60032a6f6c38b/transformed/jetified-transport-backend-cct-3.0.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/5ff80e11b563d7e53d0d5e6a16133fd9/transformed/jetified-transport-backend-cct-3.0.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/22b4abf7615762ce5b6e2365e16dbe69/transformed/jetified-transport-backend-cct-3.0.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/22b4abf7615762ce5b6e2365e16dbe69/transformed/jetified-transport-backend-cct-3.0.0/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/22b4abf7615762ce5b6e2365e16dbe69/transformed/jetified-transport-backend-cct-3.0.0/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.android.datatransport/transport-backend-cct/3.0.0/7f506fe3498cda976d1b350c218464a0f1974982/transport-backend-cct-3.0.0-javadoc.jar!/" />

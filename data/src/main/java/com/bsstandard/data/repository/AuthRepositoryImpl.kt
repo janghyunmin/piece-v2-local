@@ -3,7 +3,6 @@ package com.bsstandard.data.repository
 import com.bsstandard.data.source.local.AppDatabase
 import com.bsstandard.data.source.remote.RetrofitService
 import com.bsstandard.domain.model.local.Auth
-import com.bsstandard.domain.repository.AuthRepository
 import io.reactivex.Single
 
 /**

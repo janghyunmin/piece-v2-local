@@ -1,11 +1,8 @@
 package com.bsstandard.piece.di.koin
-
 import android.app.Application
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.ViewModel
-import com.bsstandard.piece.module.*
 import org.koin.android.BuildConfig
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidFileProperties
@@ -18,7 +15,7 @@ import org.koin.core.logger.Level
  * fileName       : MyApplication
  * author         : piecejhm
  * date           : 2022/04/27
- * description    : DI - Koin Component
+ * description    : DI - Koin Component ( 추후 로직 개선시 사용 )
  * ===========================================================
  * DATE              AUTHOR             NOTE
  * -----------------------------------------------------------

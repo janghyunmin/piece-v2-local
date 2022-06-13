@@ -2,6 +2,7 @@ package com.bsstandard.piece.widget.utils
 
 import android.graphics.drawable.Drawable
 import android.widget.ImageView
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 
@@ -24,7 +25,8 @@ import com.bumptech.glide.Glide
         "imgError"
     ], requireAll = false
 )
-fun ImageView.bindImage(src: String?, placeholder: Drawable?, error: Drawable?) {
+
+fun ImageView.bindImagePlaceHolder(src: String?, placeholder: Drawable?, error: Drawable?) {
     src ?: return
 
     Glide.with(this)
@@ -33,3 +35,4 @@ fun ImageView.bindImage(src: String?, placeholder: Drawable?, error: Drawable?) 
         .placeholder(placeholder)
         .into(this)
 }
+

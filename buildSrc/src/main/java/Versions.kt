@@ -4,7 +4,7 @@
         const val minSdk = 23
         const val targetSdk = 31
         const val versionCode = 1
-        const val versionName = "1.0.0"
+        const val versionName = "2.0.0"
         const val APP_NAME = "com.bsstandard.piece"
         const val ANDROID_JUNIT_RUNNER = "androidx.support.test.runner.AndroidJUnitRunner"
     }
@@ -91,15 +91,15 @@
 
         // Daagger _jhm_2022/04/22
         const val DAGGER = "2.35.1"
-        const val DAGGER_HILT = "2.28-alpha"
+        const val DAGGER_HILT = "2.41"
         const val DAGGER_HILT_VIEW_MODEL = "1.0.0-alpha03"
         const val DAGGER_SUPPORT = "2.15"
         const val DAGGER_PROCESSOR = "2.15"
-        const val DAGGER_COMPILER = "2.15"
+        const val DAGGER_COMPILER = "1.0.0"
 
         // Koin _jhm_2022/04/26
         const val KOIN_VERSION = "3.1.6"
-
+        const val KOIN_VIEWMODEL = "2.0.1"
 
 
 
@@ -202,6 +202,9 @@
         const val KTX_FIREBASE_MESSAGING = "23.0.0"
         const val KTX_FIREBASE_DATABASE = "20.0.3"
         const val KTX_ROOM = "2.4.2"
+        const val WORK = "2.7.1"
+        const val ACTIVITY = "1.4.0"
+        const val FRAGMENT = "1.4.1"
 
 
         // Test _jhm_2022/04/22
@@ -209,7 +212,10 @@
         const val TEST_RUNNER = " 1.4.0"
         const val EXT_JUNIT = "1.1.3"
         const val ESPRESSO_CORE = "3.4.0"
+
+
     }
+
 
 
 
@@ -233,7 +239,6 @@
     object RxJava2 {
         const val ANDROID = "io.reactivex.rxjava2:rxandroid:${Versions.RX2_ANDROID}"
         const val JAVA = "io.reactivex.rxjava2:rxjava:${Versions.RX2_JAVA}"
-        const val ROOM = "androidx.room:room-rxjava2:${Versions.RX2_ROOM}"
         const val RETROFIT = "com.jakewharton.retrofit:retrofit2-rxjava2-adapter:${Versions.RX2_RETROFIT}"
         const val BINDING = "com.jakewharton.rxbinding2:rxbinding:${Versions.RX2_BINDING}"
         const val RXRELAY2 = "com.jakewharton.rxrelay2:rxrelay:${Versions.RXRELAY2}"
@@ -252,8 +257,13 @@
         const val LIFECYCLE_RUNTIME = "androidx.lifecycle:lifecycle-runtime-ktx:${Versions.KTX_LIFECYCLE_RUNTIME}"
         const val COROUTINES_CORE = "org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.KTX_COROUTINES}"
         const val COROUTINES = "org.jetbrains.kotlinx:kotlinx-coroutines-android:${Versions.KTX_COROUTINES}"
+        const val WORK = "androidx.work:work-runtime-ktx:${Versions.WORK}"
+        const val ACTIVITY = "androidx.activity:activity-ktx:${Versions.ACTIVITY}"
+        const val FRAGMENT = "androidx.fragment:fragment-ktx:${Versions.FRAGMENT}"
+        const val LIFECYCLE_VIEWMODEL = "androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.KTX_LIFECYCLE_VIEWMODEL}"
+        const val LIFECYCLE_LIVEDATA = "androidx.lifecycle:lifecycle-livedata-ktx:${Versions.KTX_LIFECYCLE_LIVEDATA}"
 
-        const val ROOM = "androidx.room:room-ktx:${Versions.KTX_ROOM}"
+
     }
 
     object AndroidX {
@@ -303,14 +313,17 @@
 
     object Room {
 
+        const val ROOM = "androidx.room:room-ktx:${Versions.KTX_ROOM}"
+        const val RUNTIME = "androidx.room:room-runtime:${Versions.ROOM_VERSION}"
+        const val COMPILER = "androidx.room:room-compiler:${Versions.ROOM_VERSION}"
+
         const val COMMON = "androidx.room:room-common:${Versions.ROOM_VERSION}"
         const val RXJAVA2 = "androidx.room:room-rxjava2:${Versions.ROOM_VERSION}"
         const val RXJAVA3 = "androidx.room:room-rxjava3:${Versions.ROOM_VERSION}"
         const val GUAVA = "androidx.room:room-guava:${Versions.ROOM_VERSION}"
-        const val RUNTIME = "androidx.room:room-runtime:${Versions.ROOM_VERSION}"
-        const val COMPILER = "androidx.room:room-compiler:${Versions.ROOM_VERSION}"
         const val TESTING = "androidx.room:room-testing:${Versions.ROOM_TESTING}"
         const val PAGING = "androidx.room:room-paging:${Versions.ROOM_PAGING}"
+
 
 
     }
@@ -329,12 +342,15 @@
     }
 
     object Dagger {
-        const val DAGGER = "com.google.dagger:dagger-android:${Versions.DAGGER}"
         const val HILT = "com.google.dagger:hilt-android:${Versions.DAGGER_HILT}"
+        const val COMPILER = "com.google.dagger:hilt-compiler:${Versions.DAGGER_COMPILER}"
         const val HILT_VIEW_MODEL = "androidx.hilt:hilt-lifecycle-viewmodel:${Versions.DAGGER_HILT_VIEW_MODEL}"
-        const val SUPPORT = "com.google.dagger:dagger-android-support:${Versions.DAGGER_SUPPORT}"
-        const val PROCESSOR = "com.google.dagger:dagger-android-processor:${Versions.DAGGER_PROCESSOR}"
-        const val COMPILER = "com.google.dagger:dagger-compiler:${Versions.DAGGER_COMPILER}"
+        const val DAGGER_COMPILER = "androidx.hilt:hilt-compiler:${Versions.DAGGER_COMPILER}"
+//        const val DAGGER = "com.google.dagger:dagger-android:${Versions.DAGGER}"
+//        const val SUPPORT = "com.google.dagger:dagger-android-support:${Versions.DAGGER_SUPPORT}"
+//        const val PROCESSOR = "com.google.dagger:dagger-android-processor:${Versions.DAGGER_PROCESSOR}"
+
+
     }
 
     object Koin {
@@ -345,8 +361,10 @@
         const val WORKMANAGER = "io.insert-koin:koin-androidx-workmanager:${Versions.KOIN_VERSION}"
         const val NAVIGATION = "io.insert-koin:koin-androidx-navigation:${Versions.KOIN_VERSION}"
         const val COMPOSE = "io.insert-koin:koin-androidx-compose:${Versions.KOIN_VERSION}"
-        const val VIEWMODEL = "io.insert-koin:koin-androidx-viewmodel:${Versions.KOIN_VERSION}"
+        const val KOIN_VIEWMODEL = "io.insert-koin:koin-androidx-viewmodel:${Versions.KOIN_VIEWMODEL}"
+
     }
+
 
     object OkHttp {
         const val OKHTTP_3 = "com.squareup.okhttp3:okhttp:${Versions.OKHTTP_3}"
