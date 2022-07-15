@@ -13,9 +13,16 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.databinding.DataBindingUtil;
 
 import com.bsstandard.piece.R;
-import com.bsstandard.piece.view.intro.IntroActivity;
+import com.bsstandard.piece.databinding.ActivityIntroBinding;
+import com.bsstandard.piece.databinding.ActivityPasscodeBinding;
+import com.bsstandard.piece.databinding.CDialogBinding;
+import com.bsstandard.piece.databinding.CDialogPasswordBinding;
+import com.bsstandard.piece.view.join.JoinActivity;
+
+import org.checkerframework.checker.units.qual.C;
 
 import java.util.Objects;
 
@@ -31,50 +38,65 @@ import java.util.Objects;
  * 2022/06/13        piecejhm       최초 생성
  */
 
-public class CommonDialog extends Dialog implements View.OnClickListener{
-
+public class CommonDialog extends Dialog{
     Context mContext;
-    TextView okBtn;
-    Activity introActivity;
+    Activity activity;
+    String division;
 
+    CDialogBinding dialogBinding; // 업데이트 Dialog
+    CDialogPasswordBinding passcodeBinding; // 비밀번호 재설정 Dialog
 
-    public CommonDialog(@NonNull Context mContext, Activity activity){
+    public CommonDialog(@NonNull Context mContext, Activity activity, String division){
         super(mContext);
         this.mContext = mContext;
-        this.introActivity = activity;
+        this.activity = activity;
+        this.division = division;
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.c_dialog);
 
+        LogUtil.logE("division : " + division);
         // 다이얼로그의 배경을 투명으로 만든다.
         Objects.requireNonNull(getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH, WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH);
 
-
-        // findViewById
-        okBtn = findViewById(R.id.okBtn);
-        okBtn.setOnClickListener(this::onClick);
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.okBtn:
-                LogUtil.logE("업데이트 하러 이동");
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse("market://details?id=run.piece.dev"));
-                mContext.startActivity(intent);
-                dismiss();
-                introActivity.finish();
+        switch (division){
+            case "version":
+                dialogBinding = DataBindingUtil.setContentView(activity,R.layout.c_dialog);
+                dialogBinding.okBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        LogUtil.logE("업데이트 하러 이동");
+                        Intent intent = new Intent(Intent.ACTION_VIEW);
+                        intent.setData(Uri.parse(mContext.getResources().getString(R.string.playstore_url)));
+                        mContext.startActivity(intent);
+                        dismiss();
+                        activity.finish();
+                    }
+                });
                 break;
 
+            case "password":
+                passcodeBinding = DataBindingUtil.setContentView(activity,R.layout.c_dialog_password);
+                passcodeBinding.cancleBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        LogUtil.logE("닫기 onclick..");
+                        dismiss();
+                    }
+                });
+                passcodeBinding.rePassword.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        LogUtil.logE("비밀번호 재설정");
+                        Intent go_join = new Intent(mContext, JoinActivity.class);
+                        mContext.startActivity(go_join);
+                    }
+                });
+                break;
         }
     }
-
-
-
 }

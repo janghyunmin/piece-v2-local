@@ -2,7 +2,6 @@ package com.bsstandard.piece.widget.utils
 
 import android.graphics.drawable.Drawable
 import android.widget.ImageView
-import androidx.appcompat.widget.AppCompatImageView
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 

@@ -1,42 +1,33 @@
 package com.bsstandard.piece
 
 import android.app.Application
-import androidx.room.Room
-import androidx.room.RoomDatabase
-import com.bsstandard.piece.data.datasource.room.AppDatabase
+import com.bsstandard.piece.di.hilt.ApiModule
+import com.bumptech.glide.module.AppGlideModule
+import dagger.hilt.android.HiltAndroidApp
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.context.startKoin
 
 /**
  *packageName    : com.bsstandard.piece
  * fileName       : App
  * author         : piecejhm
  * date           : 2022/06/10
- * description    :
+ * description    : Dagger Hilt DI
  * ===========================================================
  * DATE              AUTHOR             NOTE
  * -----------------------------------------------------------
  * 2022/06/10        piecejhm       최초 생성
  */
 
+@HiltAndroidApp
 class App : Application() {
     companion object {
-        lateinit var appInstance: App
-            private set
-
-//        lateinit var appDataBaseInstance: AppDatabase
-//            private set
-
+        private lateinit var application: Application
+        fun getInstance(): Application = application
     }
 
     override fun onCreate() {
         super.onCreate()
-        appInstance = this
-
-//        appDataBaseInstance = Room.databaseBuilder(
-//            appInstance.applicationContext,
-//            AppDatabase::class.java,"PIECE.DB"
-//        )
-//            .fallbackToDestructiveMigration() // DB version 달라졌을 경우 데이터베이스 초기화 - jhm 2022/06/10
-//            .allowMainThreadQueries() // 메인 스레드에서 접근 허용 - jhm 2022/06/10
-//            .build()
+        application = this
     }
 }

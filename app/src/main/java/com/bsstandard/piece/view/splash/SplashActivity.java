@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Window;
@@ -17,10 +18,15 @@ import androidx.lifecycle.ViewModelProvider;
 import com.airbnb.lottie.LottieAnimationView;
 import com.bsstandard.piece.R;
 import com.bsstandard.piece.data.datasource.factory.ViewModelFactory;
-import com.bsstandard.piece.data.model.VersionViewModel;
+import com.bsstandard.piece.data.datasource.shared.PrefsHelper;
+import com.bsstandard.piece.data.viewmodel.VersionViewModel;
 import com.bsstandard.piece.databinding.ActivitySplashBinding;
 import com.bsstandard.piece.view.intro.IntroActivity;
-import com.bsstandard.piece.widget.utils.CommonDialog;
+import com.bsstandard.piece.view.passcode.PassCodeActivity;
+import com.bsstandard.piece.widget.utils.CustomDialog;
+import com.bsstandard.piece.widget.utils.CustomDialogListener;
+import com.bsstandard.piece.widget.utils.CustomDialogPassCodeListener;
+import com.bsstandard.piece.widget.utils.Division;
 import com.bsstandard.piece.widget.utils.LogUtil;
 
 /**
@@ -42,7 +48,12 @@ public class SplashActivity extends AppCompatActivity {
     public String AppVersion = "";
     public String StoreVersion = "";
 
-    CommonDialog commonDialog;
+    public CustomDialog customDialog;
+    // public CommonDialog commonDialog;
+
+    // id값이 있다면 바로 PassCodeActivity - jhm 2022/07/03
+    private String memberId;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -51,7 +62,9 @@ public class SplashActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_splash);
         lottieAnimationView = findViewById(R.id.splash_animation_view);
         context = this;
-        commonDialog = new CommonDialog(context,this);
+        //commonDialog = new CommonDialog(context,this, Division.DIALOG_C_VERSION);
+
+        PrefsHelper.init(context);
 
         // 현재 로컬 앱의 버전을 가져옴 - jhm 2022/06/13
         try {
@@ -113,15 +126,44 @@ public class SplashActivity extends AppCompatActivity {
     public void versionChk(){
         if(StoreVersion.compareTo(AppVersion) > 0) {
             LogUtil.logE("업데이트 필요..");
-            commonDialog.show();
+
+            CustomDialogListener customDialogListener = new CustomDialogListener() {
+                @Override
+                public void onOkButtonClicked() {
+                    LogUtil.logE("업데이트 하러 이동");
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setData(Uri.parse(context.getResources().getString(R.string.playstore_url)));
+                    context.startActivity(intent);
+                    customDialog.dismiss();
+                    finish();
+                }
+            };
+            CustomDialogPassCodeListener customDialogPassCodeListener = new CustomDialogPassCodeListener() {
+                @Override
+                public void onCancleButtonClicked() { }
+
+                @Override
+                public void onRetryPassCodeButtonClicked() { }
+            };
+            customDialog = new CustomDialog(this,Division.DIALOG_C_VERSION,customDialogListener,customDialogPassCodeListener);
+            customDialog.show();
+
         }else {
             LogUtil.logE("업데이트 불필요..");
             Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Intent intent = new Intent(context, IntroActivity.class);
-                    startActivity(intent);
+                    memberId = PrefsHelper.read("memberId","");
+                    LogUtil.logE("memberId : " + memberId);
+                    if(memberId.equals("")){
+                        Intent intent = new Intent(context, IntroActivity.class);
+                        startActivity(intent);
+                    }
+                    else {
+                        Intent intent = new Intent(context, PassCodeActivity.class);
+                        startActivity(intent);
+                    }
                     overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
                     finish();
                 }

@@ -38,18 +38,29 @@ android {
             isShrinkResources = false
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
-//            applicationIdSuffix = ".dev"
-            buildConfigField("boolean","DEBUG_VALUE","true")
+            buildConfigField("boolean", "DEBUG_VALUE", "true")
+
         }
         getByName("release") {
             isDebuggable = false
             isShrinkResources = true
             isMinifyEnabled = true
             proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
-//            applicationIdSuffix = ".prod"
-            buildConfigField("boolean","DEBUG_VALUE","false")
+            buildConfigField("boolean", "DEBUG_VALUE", "false")
         }
     }
+    flavorDimensions += "version"
+    productFlavors {
+        create("dev") {
+            dimension = "version"
+            versionNameSuffix = ".dev"
+        }
+        create("prod") {
+            dimension = "version"
+            versionNameSuffix = ".prod"
+        }
+    }
+
     packagingOptions {
         resources {
             excludes += setOf(
@@ -89,13 +100,10 @@ android {
     buildFeatures.dataBinding = true   // jhm_2022/03/21_ gradle plgin v4.0 이상
 
 
-
-
 }
 
 dependencies {
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
-
 
 
     /** { presentation => data / domain 빌드 gradle 종속성 추가 } - jhm 2022/04/22 **/
@@ -103,12 +111,15 @@ dependencies {
 //    implementation(project(":data"))
 //    implementation(project(":domain"))
 
+    api ("io.jsonwebtoken:jjwt-api:0.10.5")
+    runtimeOnly ("io.jsonwebtoken:jjwt-impl:0.10.5")
 
     /** { Test } - jhm 2022/04/22 **/
     testImplementation(Test.JUNIT)
     androidTestImplementation(Test.TEST_RUNNER)
     androidTestImplementation(Test.EXT_JUNIT)
     androidTestImplementation(Test.ESPRESSO_CORE)
+
 
     /** { KTX } - jhm 2022/04/22 **/
     implementation(KTX.CORE)
@@ -125,7 +136,7 @@ dependencies {
     implementation(RxJava2.JAVA)
     implementation(RxJava2.RETROFIT)
     implementation(RxJava2.BINDING)
-    implementation (RxJava2.RXRELAY2)
+    implementation(RxJava2.RXRELAY2)
 
 
     /** {RxJava3} - jhm 2022/04/22 **/
@@ -229,7 +240,6 @@ dependencies {
 
     /** { Lib } - jhm 2022/05/02 **/
     implementation(Libs.FAST_JSON)
-
 
 
 }

@@ -1,5 +1,6 @@
 package com.bsstandard.piece.base
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -23,27 +24,26 @@ import androidx.fragment.app.Fragment
  */
 
 
-abstract class BaseFragment<B : ViewDataBinding>(
-    @LayoutRes val layoutId: Int
-) : Fragment() {
-    lateinit var binding: B
+abstract class BaseFragment<T: ViewDataBinding>(@LayoutRes val layoutRes: Int)
+    : Fragment() {
+    lateinit var binding: T
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = DataBindingUtil.inflate(inflater, layoutId, container, false)
-        init()
+        binding = DataBindingUtil.inflate(inflater, layoutRes, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.lifecycleOwner = this
+        binding.lifecycleOwner = this@BaseFragment
+        initView()
     }
 
-    abstract fun init()
+    abstract fun initView()
 
     protected fun shortShowToast(msg: String) =
         Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()

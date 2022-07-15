@@ -1,6 +1,8 @@
+
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
+    id ("kotlin-kapt")
 }
 
 android {
@@ -63,8 +65,19 @@ dependencies {
     implementation(Retrofit.RETROFIT_2_ADAPTER)
     implementation(Retrofit.RETROFIT_2_GSON)
     implementation(OkHttp.OKHTTP_3_INTERCEPTOR)
+
+
+    /** { Dagger } - jhm 2022/04/29 **/
+    implementation(Dagger.HILT)
+    implementation(Dagger.HILT_VIEW_MODEL)
+    //kapt(Dagger.COMPILER)
+    kapt(Dagger.DAGGER_COMPILER)
+
+    implementation(Room.ROOM)
+    implementation(Room.RUNTIME)
     implementation(Room.COMMON)
-    implementation(KTX.ROOM)
+    kapt(Room.COMPILER)
+    implementation(Realm.PLUGIN)
 
 
     /** { Test } - jhm 2022/04/22 **/

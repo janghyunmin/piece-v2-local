@@ -8,7 +8,7 @@
         android:id="@+id/background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#B3000000"
+        android:background="@color/c_4a4d55"
         />
 
     <androidx.cardview.widget.CardView

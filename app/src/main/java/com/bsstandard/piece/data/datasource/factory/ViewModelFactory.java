@@ -5,7 +5,7 @@ import android.app.Application;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.bsstandard.piece.data.model.VersionViewModel;
+import com.bsstandard.piece.data.viewmodel.VersionViewModel;
 
 import io.reactivex.rxjava3.annotations.NonNull;
 

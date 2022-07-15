@@ -20,7 +20,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 
 @HiltViewModel
 class MainViewModel(application: Application) : AndroidViewModel(application) {
-    val main_text: ObservableField<String> = ObservableField("Main")
+    val main_text: ObservableField<String> = ObservableField("포트폴리오")
     val mApplication = application
 
 

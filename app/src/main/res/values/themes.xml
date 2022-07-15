@@ -4,9 +4,15 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="colorPrimaryDark">@android:color/transparent</item>
-        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:windowTranslucentStatus">true</item>
+
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowSoftInputMode">adjustResize</item>
+
+        <!-- Status bar color. -->
+        <item name="android:windowTranslucentStatus">false</item> <!-- StatusBar 를 반투명하게 설정한다. -->
+        <item name="android:statusBarColor">@color/white</item> <!-- StatusBar 색상 -->
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item> <!-- StatusBar를 백그라운드 위에 그린다. -->
+        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
 
         <item name="android:textViewStyle">@style/customTextViewFontStyle</item>
         <item name="android:buttonStyle">@style/customButtonFontStyle</item>
@@ -14,6 +20,8 @@
         <item name="android:radioButtonStyle">@style/customRadioButtonFontStyle</item>
         <item name="android:checkboxStyle">@style/customCheckboxFontStyle</item>
 
+<!--        <item name="bottomSheetDialogTheme">@style/BottomSheetDialog</item>-->
 
+        <item name="bottomSheetDialogTheme">@style/CustomBottomSheetDialogTheme</item>
     </style>
 </resources>

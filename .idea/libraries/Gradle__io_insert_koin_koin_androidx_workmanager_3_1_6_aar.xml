@@ -1,21 +1,9 @@
 <component name="libraryTable">
   <library name="Gradle: io.insert-koin:koin-androidx-workmanager:3.1.6@aar">
     <CLASSES>
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/604841d5f275aee009ad628f25374041/transformed/jetified-koin-androidx-workmanager-3.1.6/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/0c56faa6bc7dea9c70b08fd73130fccb/transformed/jetified-koin-androidx-workmanager-3.1.6/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/55c5e2118de9e3e107ff32ec3f5e5db7/transformed/jetified-koin-androidx-workmanager-3.1.6/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/e93361ff7659fc93c872ad58da640f5b/transformed/jetified-koin-androidx-workmanager-3.1.6/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/c978a855ad0d93e655d4b41eceee8495/transformed/jetified-koin-androidx-workmanager-3.1.6/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/2a54a44ec51e2e3ce305cbf7a1850172/transformed/jetified-koin-androidx-workmanager-3.1.6/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/06ef266762f06c31652be89b475a074d/transformed/jetified-koin-androidx-workmanager-3.1.6/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/6279db883b7d4a572d3d09312d4c0843/transformed/jetified-koin-androidx-workmanager-3.1.6/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/47ac118916ca0054f71b398874a29b67/transformed/jetified-koin-androidx-workmanager-3.1.6/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/40bc79948c6b9797efedc9a665bedc53/transformed/jetified-koin-androidx-workmanager-3.1.6/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/cc5c03c4fbb8079ddbedf44d8686dcc3/transformed/jetified-koin-androidx-workmanager-3.1.6/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/b074ec662020bc391d376821128e044e/transformed/jetified-koin-androidx-workmanager-3.1.6/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/b3d41696d8661cfb4c843d764b465fce/transformed/jetified-koin-androidx-workmanager-3.1.6/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/b3d41696d8661cfb4c843d764b465fce/transformed/jetified-koin-androidx-workmanager-3.1.6/AndroidManifest.xml" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/b3d41696d8661cfb4c843d764b465fce/transformed/jetified-koin-androidx-workmanager-3.1.6/jars/classes.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/ed90b9619afbbe03f8fbfb2065ff6301/transformed/jetified-koin-androidx-workmanager-3.1.6/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/ed90b9619afbbe03f8fbfb2065ff6301/transformed/jetified-koin-androidx-workmanager-3.1.6/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/ed90b9619afbbe03f8fbfb2065ff6301/transformed/jetified-koin-androidx-workmanager-3.1.6/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.insert-koin/koin-androidx-workmanager/3.1.6/f7d9feb40ef142e0862946063dc8cb5ea9673dd0/koin-androidx-workmanager-3.1.6-javadoc.jar!/" />

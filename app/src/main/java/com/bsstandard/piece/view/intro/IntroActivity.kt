@@ -10,11 +10,11 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import com.bsstandard.piece.R
-import com.bsstandard.piece.databinding.ActivityIntroBinding
-import com.bsstandard.piece.view.join.JoinActivityJ
+import com.bsstandard.piece.view.join.JoinActivity
 import com.bsstandard.piece.view.main.MainActivity
 import com.bsstandard.piece.widget.utils.Division
 import com.bsstandard.piece.widget.utils.LogUtil
+import com.bsstandard.piece.databinding.ActivityIntroBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -41,6 +41,7 @@ class IntroActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         introBinding = DataBindingUtil.setContentView(this,R.layout.activity_intro)
+        introBinding.lifecycleOwner = this@IntroActivity
         introBinding.activity = this@IntroActivity
 
         // statusBar 공통 - jhm 2022/06/13
@@ -98,7 +99,7 @@ class IntroActivity : AppCompatActivity() {
 
     // 피스 시작하기
     fun piece_start(){
-        val intent = Intent(this, JoinActivityJ::class.java)
+        val intent = Intent(this, JoinActivity::class.java)
         startActivity(intent)
         overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
         finish()

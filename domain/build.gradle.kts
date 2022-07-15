@@ -1,6 +1,11 @@
+import org.jetbrains.kotlin.kapt3.base.Kapt.kapt
+
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
+    id ("kotlin-android")
+    id ("kotlin-kapt")
+    kotlin("kapt")
 }
 
 android {
@@ -57,7 +62,6 @@ dependencies {
     /** { RxJava2 } - jhm 2022/04/22 **/
     implementation(RxJava2.ANDROID)
     implementation(RxJava2.JAVA)
-    implementation(RxJava2.ROOM)
     implementation(RxJava2.RETROFIT)
     implementation(RxJava2.BINDING)
 
@@ -67,6 +71,22 @@ dependencies {
     implementation(RxJava3.ANDROID)
     implementation(RxJava3.BINDING)
     implementation(RxJava3.RETROFIT_ADAPTER)
+
+    /** { Dagger } - jhm 2022/04/29 **/
+    implementation(Dagger.HILT)
+    implementation(Dagger.HILT_VIEW_MODEL)
+    //kapt(Dagger.COMPILER)
+
+
+    /** { Koin } - jhm 2022/04/26 **/
+    implementation(Koin.ANDROIDX)
+    implementation(Koin.TEST)
+    implementation(Koin.ANDROID)
+    implementation(Koin.COMPAT)
+    implementation(Koin.WORKMANAGER)
+    implementation(Koin.NAVIGATION)
+    implementation(Koin.COMPOSE)
+    //implementation(Koin.KOIN_VIEWMODEL)
 
     /** { Google Gson } - jhm 2022/05/03 **/
     implementation(Google.GSON)

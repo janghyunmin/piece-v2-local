@@ -1,14 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="AppBottomSheetDialogTheme" parent="Theme.Design.BottomSheetDialog">
-        <item name="bottomSheetStyle">@style/AppModalStyle</item>
+    <style name="BottomSheetDialog" parent="@style/ThemeOverlay.MaterialComponents.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/BottomSheet</item>
+        <item name="android:colorBackground">@color/white</item>
     </style>
 
-    <style name="AppModalStyle" parent="Widget.Design.BottomSheet.Modal">
-        <item name="android:background">@drawable/j_dialog_back_round</item>
+    <style name="CustomBottomSheetDialogTheme" parent="Theme.MaterialComponents.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/BottomSheet</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:statusBarColor" tools:targetApi="lollipop">@android:color/transparent
+        </item>
+        <item name="android:windowSoftInputMode">adjustResize</item>
     </style>
 
+    <style name="BottomSheet" parent="Widget.MaterialComponents.BottomSheet.Modal">
+        <item name="backgroundTint">@android:color/transparent</item>
+    </style>
+
+    <style name="DialogAnimation">
+        <item name="android:windowEnterAnimation">@anim/popup_scale_up</item>
+        <item name="android:windowExitAnimation">@anim/popup_scale_down</item>
+    </style>
 
     <style name="Piece_EditText" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorControlNormal">@color/c_eaecf0</item> <!-- 활성화 되지 않은 밑줄 색상 -->
@@ -17,7 +30,6 @@
         <item name="android:textColorHighlight">@color/c_4a4d55</item> <!-- 선택됐을때 텍스트 색상 -->
         <item name="android:textColorHint">@color/c_b8bcc8</item> <!-- 힌트 텍스트 색상 -->
     </style>
-
 
 
 </resources>

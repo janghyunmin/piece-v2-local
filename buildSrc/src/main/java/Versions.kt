@@ -114,8 +114,8 @@
 
 
         // Firebase _jhm_2022/04/22
-        const val FIREBASE_MESSAGING = "23.0.0"
-        const val FIREBASE_DATABASE = "20.0.3"
+        const val FIREBASE_MESSAGING = "23.0.5"
+        const val FIREBASE_DATABASE = "20.0.5"
         const val FIREBASE_CORE = "20.1.0"
         const val FIREBASE_ANALYTICS = "20.1.2"
 

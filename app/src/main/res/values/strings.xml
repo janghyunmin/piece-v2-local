@@ -1,16 +1,32 @@
 <resources>
-    <string name="app_name">PIECE</string>
+    <string name="app_name">PIECE_DEV</string>
+
 
     <string name="error_internet_not_available">Internet is not available</string>
     <string name="error_server_not_available">Server is not available</string>
     <string name="error_server">Server error</string>
     <string name="error_unexpected">Unexpected error</string>
 
+    <!-- firebase -->
+    <string name="default_notification_channel_id">96071973609</string>
+    <string name="default_notification_channel_name" translatable="true">Test</string>
+
+
+
+    <!-- playstore url -->
+    <string name="playstore_url">market://details?id=run.piece.dev</string>
+
     <!-- dialog -->
     <string name="confirm">확인</string>
     <string name="cancle">취소</string>
     <string name="d_title">PIECE 앱을 최신버전으로 업데이트해 주세요.</string>
     <string name="d_content">[확인]버튼을 누르시면 설치 화면으로 이동 합니다.</string>
+
+    <!-- dialog password -->
+    <string name="d_p_title">비밀번호가 틀렸어요</string>
+    <string name="d_p_content">비밀번호를 잊으셨나요?</string>
+    <string name="re_password">재설정</string>
+    <string name="dismiss">닫기</string>
 
     <!-- intro -->
     <string name="i_beta_text"><u>서비스 둘러보기</u></string>
@@ -38,5 +54,36 @@
     <string name="confirm_btn_title">확인</string>
     <string name="confirm_btn_next_title">다음</string>
 
+    <!-- consentModel(약관) -->
+    <string name="c_top_title">약관 동의</string>
+    <string name="c_all_agree">약관에 모두 동의합니다</string>
+    <string name="c_agree1">서비스 이용약관</string>
+    <string name="c_agree2">개인정보 처리방침</string>
+    <string name="c_agree3">본인확인서비스 이용 약관</string>
+    <string name="c_agree4">개인정보 수집/이용/취급 위탁 동의 약관</string>
+    <string name="c_agree5">고유식별정보처리 약관</string>
+    <string name="c_agree6">통신사 이용 약관</string>
+    <string name="c_agree7">개인정보 제3자 제공 동의 약관</string>
+    <string name="c_agree8">마케팅 활용 및 광고 수신 동의</string>
+    <string name="c_common">[필수]</string>
+    <string name="c_select">[선택]</string>
 
+    <!-- 인증번호 입력 dialog -->
+    <string name="sms_title">인증번호 입력</string>
+    <string name="sms_hint">전송된 인증번호 입력</string>
+    <string name="sms_retry">재전송</string>
+    <string name="sms_confirm">확인</string>
+    
+    <!-- 간편 비밀번호 -->
+    <string name="passcode_title">간편 비밀번호</string>
+    <string name="passcode_title_c">숫자 6자리를 입력해 주세요</string>
+    <string name="passcode_title_re">한번 더 입력해주세요.</string>
+    <string name="passcode_title_verify">비밀번호가 일치하지 않아요.</string>
+    <string name="passcode_clear">초기화</string>
+
+    <!-- 메인 팝업 -->
+    <string name="p_today_close">오늘은 보지 않기</string>
+
+
+    <string name="test">https://cdn.piece.run/static/portfolio/61bca38c-c74d-4f86-b7a6-e0031fdca1fe.png</string>
 </resources>

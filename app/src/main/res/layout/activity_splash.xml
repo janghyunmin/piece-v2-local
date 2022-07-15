@@ -6,7 +6,7 @@
     <data>
         <variable
             name="VersionViewModel"
-            type="com.bsstandard.piece.data.model.VersionViewModel"
+            type="com.bsstandard.piece.data.viewmodel.VersionViewModel"
             />
     </data>
 

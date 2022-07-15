@@ -1,15 +1,9 @@
 <component name="libraryTable">
   <library name="Gradle: com.google.dagger:hilt-android:2.41@aar">
     <CLASSES>
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/0f0f222450c0548c17a493cf0db30a9f/transformed/jetified-hilt-android-2.41/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/a37bcb8357b0fabcec981342e3fe043b/transformed/jetified-hilt-android-2.41/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/330a13ddd05822cbca3cc333f2b4089f/transformed/jetified-hilt-android-2.41/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/f294e41c7d3d76984d76790b6b715f81/transformed/jetified-hilt-android-2.41/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/7e8c62246e981428edd7cf3cf141cba0/transformed/jetified-hilt-android-2.41/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/635615b467f4f5ff7394dea24f0e98f3/transformed/jetified-hilt-android-2.41/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/ff94214d7b6a118b1a830b1ba18a463c/transformed/jetified-hilt-android-2.41/AndroidManifest.xml" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/ff94214d7b6a118b1a830b1ba18a463c/transformed/jetified-hilt-android-2.41/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/ff94214d7b6a118b1a830b1ba18a463c/transformed/jetified-hilt-android-2.41/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/b2fd328eabdd0573da5f8ee5f88c12fd/transformed/jetified-hilt-android-2.41/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/b2fd328eabdd0573da5f8ee5f88c12fd/transformed/jetified-hilt-android-2.41/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/b2fd328eabdd0573da5f8ee5f88c12fd/transformed/jetified-hilt-android-2.41/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.dagger/hilt-android/2.41/6359d56d727c6c0f86f57aae3ea7f8644b075652/hilt-android-2.41-javadoc.jar!/" />

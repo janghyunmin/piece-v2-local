@@ -9,7 +9,6 @@ buildscript {
         mavenCentral()
 
     }
-
     dependencies {
         classpath ("com.android.tools.build:gradle:7.1.3")
         classpath ("org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.KOTLIN_PLGUIN}") // 코틀린 플러그인 적용
