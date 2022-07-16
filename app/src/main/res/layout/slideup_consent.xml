@@ -1,0 +1,439 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <data>
+        <variable
+            name="data"
+            type="com.bsstandard.piece.view.join.dialog.BottomSheetDialog" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/j_dialog_back_round"
+        android:paddingBottom="20dp"
+        app:behavior_hideable="true"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+        <!--    style="@style/AppModalStyle"-->
+
+        <TextView
+            android:id="@+id/c_top_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:gravity="center"
+            android:text="@string/c_top_title"
+            android:textColor="@color/c_4a4d55"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            app:fontFamily="@font/pretendard_extrabold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/close_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/x_icon"
+            app:layout_constraintBottom_toBottomOf="@+id/c_top_title"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/c_top_title" />
+
+        <CheckBox
+            android:id="@+id/all_chk"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="54dp"
+            android:background="@drawable/all_chk_selector"
+            android:button="@null"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/c_top_title" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/c_all_agree"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:lineHeight="25px"
+            android:text="@string/c_all_agree"
+            android:textColor="@color/c_b8bcc8"
+            android:textSize="16sp"
+            app:fontFamily="@font/pretendard_bold"
+            app:layout_constraintBottom_toBottomOf="@+id/all_chk"
+            app:layout_constraintLeft_toRightOf="@+id/all_chk"
+            app:layout_constraintTop_toTopOf="@+id/all_chk" />
+
+        <View
+            android:id="@+id/line_1"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="16dp"
+            android:background="@color/c_eaecf0"
+            app:layout_constraintTop_toBottomOf="@+id/all_chk" />
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/consentRV"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/line_1" />
+
+
+        <!-- 서비스 이용 약관 -->
+        <!--    <androidx.appcompat.widget.AppCompatImageView-->
+        <!--        android:id="@+id/c_agree1_check"-->
+        <!--        android:layout_width="24dp"-->
+        <!--        android:layout_height="24dp"-->
+        <!--        android:layout_marginStart="16dp"-->
+        <!--        android:layout_marginTop="20dp"-->
+        <!--        android:layout_marginEnd="16dp"-->
+        <!--        android:background="@drawable/check_line_icon"-->
+        <!--        app:layout_constraintLeft_toLeftOf="parent"-->
+        <!--        app:layout_constraintTop_toBottomOf="@+id/line_1" />-->
+
+        <!--    <androidx.appcompat.widget.AppCompatTextView-->
+        <!--        android:id="@+id/c_agree1"-->
+        <!--        android:layout_width="wrap_content"-->
+        <!--        android:layout_height="wrap_content"-->
+        <!--        android:layout_marginStart="10dp"-->
+        <!--        android:gravity="center"-->
+        <!--        android:lineHeight="25px"-->
+        <!--        android:text=""-->
+        <!--        android:textColor="@color/c_4a4d55"-->
+        <!--        android:textSize="16dp"-->
+        <!--        app:fontFamily="@font/pretendard_regular"-->
+        <!--        app:layout_constraintBottom_toBottomOf="@+id/c_agree1_check"-->
+        <!--        app:layout_constraintLeft_toRightOf="@+id/c_agree1_check"-->
+        <!--        app:layout_constraintTop_toTopOf="@+id/c_agree1_check" />-->
+
+        <!--    <androidx.appcompat.widget.AppCompatImageView-->
+        <!--        android:id="@+id/c_agree1_detail"-->
+        <!--        android:layout_width="24dp"-->
+        <!--        android:layout_height="24dp"-->
+        <!--        android:layout_marginEnd="16dp"-->
+        <!--        android:background="@drawable/arrow_right"-->
+        <!--        app:layout_constraintBottom_toBottomOf="@+id/c_agree1_check"-->
+        <!--        app:layout_constraintRight_toRightOf="parent"-->
+        <!--        app:layout_constraintTop_toTopOf="@+id/c_agree1_check" />-->
+
+
+        <!-- 개인정보 처리 방침 -->
+        <!--    <androidx.appcompat.widget.AppCompatImageView-->
+        <!--        android:id="@+id/c_agree2_check"-->
+        <!--        android:layout_width="24dp"-->
+        <!--        android:layout_height="24dp"-->
+        <!--        android:layout_marginStart="16dp"-->
+        <!--        android:layout_marginTop="20dp"-->
+        <!--        android:layout_marginEnd="16dp"-->
+        <!--        android:background="@drawable/check_line_icon"-->
+        <!--        app:layout_constraintLeft_toLeftOf="parent"-->
+        <!--        app:layout_constraintTop_toBottomOf="@+id/c_agree1_check" />-->
+
+        <!--    <androidx.appcompat.widget.AppCompatTextView-->
+        <!--        android:id="@+id/c_agree2"-->
+        <!--        android:layout_width="wrap_content"-->
+        <!--        android:layout_height="wrap_content"-->
+        <!--        android:layout_marginStart="10dp"-->
+        <!--        android:gravity="center"-->
+        <!--        android:lineHeight="25px"-->
+        <!--        android:text=""-->
+        <!--        android:textColor="@color/c_4a4d55"-->
+        <!--        android:textSize="16dp"-->
+        <!--        app:fontFamily="@font/pretendard_regular"-->
+        <!--        app:layout_constraintBottom_toBottomOf="@+id/c_agree2_check"-->
+        <!--        app:layout_constraintLeft_toRightOf="@+id/c_agree2_check"-->
+        <!--        app:layout_constraintTop_toTopOf="@+id/c_agree2_check" />-->
+
+        <!--    <androidx.appcompat.widget.AppCompatImageView-->
+        <!--        android:id="@+id/c_agree2_detail"-->
+        <!--        android:layout_width="24dp"-->
+        <!--        android:layout_height="24dp"-->
+        <!--        android:layout_marginEnd="16dp"-->
+        <!--        android:background="@drawable/arrow_right"-->
+        <!--        app:layout_constraintBottom_toBottomOf="@+id/c_agree2_check"-->
+        <!--        app:layout_constraintRight_toRightOf="parent"-->
+        <!--        app:layout_constraintTop_toTopOf="@+id/c_agree2_check" />-->
+
+
+        <!-- 본인확인서비스 이용 약관 -->
+        <!--    <androidx.appcompat.widget.AppCompatImageView-->
+        <!--        android:id="@+id/c_agree3_check"-->
+        <!--        android:layout_width="24dp"-->
+        <!--        android:layout_height="24dp"-->
+        <!--        android:layout_marginStart="16dp"-->
+        <!--        android:layout_marginTop="20dp"-->
+        <!--        android:layout_marginEnd="16dp"-->
+        <!--        android:background="@drawable/check_line_icon"-->
+        <!--        app:layout_constraintLeft_toLeftOf="parent"-->
+        <!--        app:layout_constraintTop_toBottomOf="@+id/c_agree2_check" />-->
+
+        <!--    <androidx.appcompat.widget.AppCompatTextView-->
+        <!--        android:id="@+id/c_agree3"-->
+        <!--        android:layout_width="wrap_content"-->
+        <!--        android:layout_height="wrap_content"-->
+        <!--        android:layout_marginStart="10dp"-->
+        <!--        android:gravity="center"-->
+        <!--        android:lineHeight="25px"-->
+        <!--        android:text=""-->
+        <!--        android:textColor="@color/c_4a4d55"-->
+        <!--        android:textSize="16dp"-->
+        <!--        app:fontFamily="@font/pretendard_regular"-->
+        <!--        app:layout_constraintBottom_toBottomOf="@+id/c_agree3_check"-->
+        <!--        app:layout_constraintLeft_toRightOf="@+id/c_agree3_check"-->
+        <!--        app:layout_constraintTop_toTopOf="@+id/c_agree3_check" />-->
+
+        <!--    <androidx.appcompat.widget.AppCompatImageView-->
+        <!--        android:id="@+id/c_agree3_detail"-->
+        <!--        android:layout_width="24dp"-->
+        <!--        android:layout_height="24dp"-->
+        <!--        android:layout_marginEnd="16dp"-->
+        <!--        android:background="@drawable/arrow_right"-->
+        <!--        app:layout_constraintBottom_toBottomOf="@+id/c_agree3_check"-->
+        <!--        app:layout_constraintRight_toRightOf="parent"-->
+        <!--        app:layout_constraintTop_toTopOf="@+id/c_agree3_check" />-->
+
+
+        <!-- 개인정보 수집/이용/취급 위탁 동의 약관 -->
+        <!--    <androidx.appcompat.widget.AppCompatImageView-->
+        <!--        android:id="@+id/c_agree4_check"-->
+        <!--        android:layout_width="24dp"-->
+        <!--        android:layout_height="24dp"-->
+        <!--        android:layout_marginStart="16dp"-->
+        <!--        android:layout_marginTop="20dp"-->
+        <!--        android:layout_marginEnd="16dp"-->
+        <!--        android:background="@drawable/check_line_icon"-->
+        <!--        app:layout_constraintLeft_toLeftOf="parent"-->
+        <!--        app:layout_constraintTop_toBottomOf="@+id/c_agree3_check" />-->
+
+        <!--    <androidx.appcompat.widget.AppCompatTextView-->
+        <!--        android:id="@+id/c_agree4"-->
+        <!--        android:layout_width="wrap_content"-->
+        <!--        android:layout_height="wrap_content"-->
+        <!--        android:layout_marginStart="10dp"-->
+        <!--        android:gravity="center"-->
+        <!--        android:lineHeight="25px"-->
+        <!--        android:text=""-->
+        <!--        android:textColor="@color/c_4a4d55"-->
+        <!--        android:textSize="16dp"-->
+        <!--        app:fontFamily="@font/pretendard_regular"-->
+        <!--        app:layout_constraintBottom_toBottomOf="@+id/c_agree4_check"-->
+        <!--        app:layout_constraintLeft_toRightOf="@+id/c_agree4_check"-->
+        <!--        app:layout_constraintTop_toTopOf="@+id/c_agree4_check" />-->
+
+        <!--    <androidx.appcompat.widget.AppCompatImageView-->
+        <!--        android:id="@+id/c_agree4_detail"-->
+        <!--        android:layout_width="24dp"-->
+        <!--        android:layout_height="24dp"-->
+        <!--        android:layout_marginEnd="16dp"-->
+        <!--        android:background="@drawable/arrow_right"-->
+        <!--        app:layout_constraintBottom_toBottomOf="@+id/c_agree4_check"-->
+        <!--        app:layout_constraintRight_toRightOf="parent"-->
+        <!--        app:layout_constraintTop_toTopOf="@+id/c_agree4_check" />-->
+
+
+        <!-- 고유식별정보처리 약관 -->
+        <!--    <androidx.appcompat.widget.AppCompatImageView-->
+        <!--        android:id="@+id/c_agree5_check"-->
+        <!--        android:layout_width="24dp"-->
+        <!--        android:layout_height="24dp"-->
+        <!--        android:layout_marginStart="16dp"-->
+        <!--        android:layout_marginTop="20dp"-->
+        <!--        android:layout_marginEnd="16dp"-->
+        <!--        android:background="@drawable/check_line_icon"-->
+        <!--        app:layout_constraintLeft_toLeftOf="parent"-->
+        <!--        app:layout_constraintTop_toBottomOf="@+id/c_agree4_check" />-->
+
+        <!--    <androidx.appcompat.widget.AppCompatTextView-->
+        <!--        android:id="@+id/c_agree5"-->
+        <!--        android:layout_width="wrap_content"-->
+        <!--        android:layout_height="wrap_content"-->
+        <!--        android:layout_marginStart="10dp"-->
+        <!--        android:gravity="center"-->
+        <!--        android:lineHeight="25px"-->
+        <!--        android:text=""-->
+        <!--        android:textColor="@color/c_4a4d55"-->
+        <!--        android:textSize="16dp"-->
+        <!--        app:fontFamily="@font/pretendard_regular"-->
+        <!--        app:layout_constraintBottom_toBottomOf="@+id/c_agree5_check"-->
+        <!--        app:layout_constraintLeft_toRightOf="@+id/c_agree5_check"-->
+        <!--        app:layout_constraintTop_toTopOf="@+id/c_agree5_check" />-->
+
+        <!--    <androidx.appcompat.widget.AppCompatImageView-->
+        <!--        android:id="@+id/c_agree5_detail"-->
+        <!--        android:layout_width="24dp"-->
+        <!--        android:layout_height="24dp"-->
+        <!--        android:layout_marginEnd="16dp"-->
+        <!--        android:background="@drawable/arrow_right"-->
+        <!--        app:layout_constraintBottom_toBottomOf="@+id/c_agree5_check"-->
+        <!--        app:layout_constraintRight_toRightOf="parent"-->
+        <!--        app:layout_constraintTop_toTopOf="@+id/c_agree5_check" />-->
+
+
+        <!-- 통신사 이용 약관 -->
+        <!--    <androidx.appcompat.widget.AppCompatImageView-->
+        <!--        android:id="@+id/c_agree6_check"-->
+        <!--        android:layout_width="24dp"-->
+        <!--        android:layout_height="24dp"-->
+        <!--        android:layout_marginStart="16dp"-->
+        <!--        android:layout_marginTop="20dp"-->
+        <!--        android:layout_marginEnd="16dp"-->
+        <!--        android:background="@drawable/check_line_icon"-->
+        <!--        app:layout_constraintLeft_toLeftOf="parent"-->
+        <!--        app:layout_constraintTop_toBottomOf="@+id/c_agree5_check" />-->
+
+        <!--    <androidx.appcompat.widget.AppCompatTextView-->
+        <!--        android:id="@+id/c_agree6"-->
+        <!--        android:layout_width="wrap_content"-->
+        <!--        android:layout_height="wrap_content"-->
+        <!--        android:layout_marginStart="10dp"-->
+        <!--        android:gravity="center"-->
+        <!--        android:lineHeight="25px"-->
+        <!--        android:text=""-->
+        <!--        android:textColor="@color/c_4a4d55"-->
+        <!--        android:textSize="16dp"-->
+        <!--        app:fontFamily="@font/pretendard_regular"-->
+        <!--        app:layout_constraintBottom_toBottomOf="@+id/c_agree6_check"-->
+        <!--        app:layout_constraintLeft_toRightOf="@+id/c_agree6_check"-->
+        <!--        app:layout_constraintTop_toTopOf="@+id/c_agree6_check" />-->
+
+        <!--    <androidx.appcompat.widget.AppCompatImageView-->
+        <!--        android:id="@+id/c_agree6_detail"-->
+        <!--        android:layout_width="24dp"-->
+        <!--        android:layout_height="24dp"-->
+        <!--        android:layout_marginEnd="16dp"-->
+        <!--        android:background="@drawable/arrow_right"-->
+        <!--        app:layout_constraintBottom_toBottomOf="@+id/c_agree6_check"-->
+        <!--        app:layout_constraintRight_toRightOf="parent"-->
+        <!--        app:layout_constraintTop_toTopOf="@+id/c_agree6_check" />-->
+
+
+        <!-- 개인정보 제3자 제공 동의 약관 -->
+        <!--    <androidx.appcompat.widget.AppCompatImageView-->
+        <!--        android:id="@+id/c_agree7_check"-->
+        <!--        android:layout_width="24dp"-->
+        <!--        android:layout_height="24dp"-->
+        <!--        android:layout_marginStart="16dp"-->
+        <!--        android:layout_marginTop="20dp"-->
+        <!--        android:layout_marginEnd="16dp"-->
+        <!--        android:background="@drawable/check_line_icon"-->
+        <!--        app:layout_constraintLeft_toLeftOf="parent"-->
+        <!--        app:layout_constraintTop_toBottomOf="@+id/c_agree6_check" />-->
+
+        <!--    <androidx.appcompat.widget.AppCompatTextView-->
+        <!--        android:id="@+id/c_agree7"-->
+        <!--        android:layout_width="wrap_content"-->
+        <!--        android:layout_height="wrap_content"-->
+        <!--        android:layout_marginStart="10dp"-->
+        <!--        android:gravity="center"-->
+        <!--        android:lineHeight="25px"-->
+        <!--        android:text=""-->
+        <!--        android:textColor="@color/c_4a4d55"-->
+        <!--        android:textSize="16dp"-->
+        <!--        app:fontFamily="@font/pretendard_regular"-->
+        <!--        app:layout_constraintBottom_toBottomOf="@+id/c_agree7_check"-->
+        <!--        app:layout_constraintLeft_toRightOf="@+id/c_agree7_check"-->
+        <!--        app:layout_constraintTop_toTopOf="@+id/c_agree7_check" />-->
+
+        <!--    <androidx.appcompat.widget.AppCompatImageView-->
+        <!--        android:id="@+id/c_agree7_detail"-->
+        <!--        android:layout_width="24dp"-->
+        <!--        android:layout_height="24dp"-->
+        <!--        android:layout_marginEnd="16dp"-->
+        <!--        android:background="@drawable/arrow_right"-->
+        <!--        app:layout_constraintBottom_toBottomOf="@+id/c_agree7_check"-->
+        <!--        app:layout_constraintRight_toRightOf="parent"-->
+        <!--        app:layout_constraintTop_toTopOf="@+id/c_agree7_check" />-->
+
+
+        <View
+            android:id="@+id/line_2"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="16dp"
+            android:background="@color/c_eaecf0"
+            app:layout_constraintTop_toBottomOf="@+id/consentRV" />
+
+        <!-- 마케팅 활용 및 광고 수신 동의 -->
+        <CheckBox
+            android:id="@+id/marketing_agree"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/chk_selector"
+            android:button="@null"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/line_2" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/c_agree8_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:lineHeight="25px"
+            android:text=""
+            android:textColor="@color/c_4a4d55"
+            android:textSize="16dp"
+            app:fontFamily="@font/pretendard_regular"
+            app:layout_constraintBottom_toBottomOf="@+id/marketing_agree"
+            app:layout_constraintLeft_toRightOf="@+id/marketing_agree"
+            app:layout_constraintTop_toTopOf="@+id/marketing_agree" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:lineHeight="20px"
+            android:text="@string/c_select"
+            android:textColor="@color/c_8c919f"
+            android:textSize="14dp"
+            app:fontFamily="@font/pretendard_regular"
+            app:layout_constraintBottom_toBottomOf="@+id/marketing_agree"
+            app:layout_constraintLeft_toRightOf="@+id/c_agree8_tv"
+            app:layout_constraintTop_toTopOf="@+id/marketing_agree" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/c_agree8_detail"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/arrow_right"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/line_2" />
+
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/confirm_btn"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="50dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/j_selector"
+            android:gravity="center"
+            android:lineHeight="25dp"
+            android:text="확인"
+            android:textColor="@drawable/j_selector_text_color"
+            android:textSize="14dp"
+            app:fontFamily="@font/pretendard_bold"
+            app:layout_constraintTop_toBottomOf="@+id/marketing_agree"
+            app:layout_constraintBottom_toBottomOf="parent"
+            />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

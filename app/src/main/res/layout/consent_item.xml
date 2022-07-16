@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="40dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/white"
+    >
+
+    <CheckBox
+        android:id="@+id/item_agree"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginStart="16dp"
+        android:button="@null"
+        android:background="@drawable/chk_selector"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/item_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:lineHeight="25px"
+        android:text=""
+        android:textSize="16dp"
+        android:textColor="@color/c_4a4d55"
+        app:fontFamily="@font/pretendard_regular"
+        android:layout_marginStart="10dp"
+        app:layout_constraintLeft_toRightOf="@+id/item_agree"
+        app:layout_constraintTop_toTopOf="@+id/item_agree"
+        />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:lineHeight="20px"
+        android:text="@string/c_common"
+        android:textColor="@color/c_8c919f"
+        android:textSize="14dp"
+        app:fontFamily="@font/pretendard_regular"
+        app:layout_constraintBottom_toBottomOf="@+id/item_agree"
+        app:layout_constraintLeft_toRightOf="@+id/item_text"
+        app:layout_constraintTop_toTopOf="@+id/item_agree" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/item_detail"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/arrow_right"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

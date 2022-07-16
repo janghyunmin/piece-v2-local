@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="sms"
+            type="com.bsstandard.piece.data.viewmodel.SmsViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/j_dialog_back_round"
+        android:paddingBottom="20dp"
+        app:behavior_hideable="true"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+        <!--    style="@style/AppModalStyle"-->
+
+        <TextView
+            android:id="@+id/sms_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:gravity="center"
+            android:text="@string/sms_title"
+            android:textColor="@color/c_4a4d55"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            app:fontFamily="@font/pretendard_extrabold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/close_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/x_icon"
+            app:layout_constraintBottom_toBottomOf="@+id/sms_title"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/sms_title" />
+
+
+      <TextView
+          android:id="@+id/sms_time"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="10dp"
+          android:gravity="center"
+          android:text="02:59"
+          android:textColor="@color/c_FF7878"
+          android:textSize="14dp"
+          app:fontFamily="@font/pretendard_regular"
+          app:layout_constraintLeft_toLeftOf="parent"
+          app:layout_constraintRight_toRightOf="parent"
+          app:layout_constraintTop_toBottomOf="@+id/sms_title"/>
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/sms_number"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="12dp"
+            android:focusable="true"
+            android:gravity="left|center"
+            android:hint="@string/sms_hint"
+            android:inputType="number"
+            android:lineHeight="20dp"
+            android:maxLength="8"
+            android:maxLines="1"
+            android:textColor="@color/c_4a4d55"
+            android:backgroundTint="@color/c_EAECF0"
+            android:layout_marginTop="30dp"
+            android:textSize="16dp"
+            android:text="@={sms.verifyNum}"
+            android:theme="@style/Piece_EditText"
+            app:fontFamily="@font/pretendard_regular"
+            app:layout_constraintTop_toBottomOf="@+id/sms_time" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/sms_retry"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:lineHeight="25px"
+            android:layout_marginEnd="16dp"
+            android:text="@string/sms_retry"
+            android:textColor="@color/c_b8bcc8"
+            android:textSize="16sp"
+            android:gravity="center"
+            app:fontFamily="@font/pretendard_bold"
+            app:layout_constraintTop_toTopOf="@+id/sms_number"
+            app:layout_constraintBottom_toBottomOf="@+id/sms_number"
+            app:layout_constraintRight_toRightOf="parent"
+             />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/sms_error"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="1dp"
+            android:lineHeight="20dp"
+            android:text="유효하지 않은 휴대폰 번호에요."
+            android:textColor="@color/c_FF7878"
+            android:textSize="12dp"
+            android:layout_marginStart="16dp"
+            android:visibility="gone"
+            app:fontFamily="@font/pretendard_regular"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/sms_number" />
+
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/confirm_btn"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/j_selector"
+            android:gravity="center"
+            android:lineHeight="25dp"
+            android:text="확인"
+            android:textColor="@drawable/j_selector_text_color"
+            android:textSize="14dp"
+            app:fontFamily="@font/pretendard_bold"
+            app:layout_constraintTop_toBottomOf="@+id/sms_number"
+            app:layout_constraintBottom_toBottomOf="parent"
+            />
+
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

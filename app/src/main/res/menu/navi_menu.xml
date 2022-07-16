@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/navigation_home"
+        app:showAsAction="ifRoom"
+        android:enabled="true"
+        android:icon="@drawable/tab1_icon"
+        android:title="" />
+    <item
+        android:id="@+id/navigation_magazine"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/tab2_icon"
+        android:title="" />
+    <item
+        android:id="@+id/navigation_wallet"
+        app:showAsAction="ifRoom"
+        android:enabled="true"
+        android:icon="@drawable/tab3_icon"
+        android:title="" />
+    <item
+        android:id="@+id/navigation_more"
+        app:showAsAction="ifRoom"
+        android:enabled="true"
+        android:icon="@drawable/tab4_icon"
+        android:title="" />
+</menu>

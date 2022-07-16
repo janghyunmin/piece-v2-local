@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable
+            name="passcode"
+            type="com.bsstandard.piece.view.passcode.PassCodeViewModel"/>
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/top_layout"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/back_img"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/arrow_left"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/middle_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/top_layout">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/passcode_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="35dp"
+                android:text="@string/passcode_title"
+                android:textColor="@color/c_4a4d55"
+                android:textSize="25dp"
+                app:fontFamily="@font/pretendard_extrabold"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintRight_toRightOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/passcode_title_c"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:lineHeight="16dp"
+                android:text="@string/passcode_title_c"
+                android:textColor="@color/c_8c919f"
+                android:textSize="12dp"
+                app:fontFamily="@font/pretendard_regular"
+                app:layout_constraintLeft_toLeftOf="@+id/passcode_title"
+                app:layout_constraintRight_toRightOf="@+id/passcode_title"
+                app:layout_constraintTop_toBottomOf="@+id/passcode_title" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/passcode_title_c">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/passcode_1"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:background="@drawable/circle_selector"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/passcode_2"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_marginLeft="10dp"
+                    android:background="@drawable/circle_selector"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toRightOf="@+id/passcode_1"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/passcode_3"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_marginLeft="10dp"
+                    android:background="@drawable/circle_selector"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toRightOf="@+id/passcode_2"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/passcode_4"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_marginLeft="10dp"
+                    android:background="@drawable/circle_selector"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toRightOf="@+id/passcode_3"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/passcode_5"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_marginLeft="10dp"
+                    android:background="@drawable/circle_selector"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toRightOf="@+id/passcode_4"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/passcode_6"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_marginLeft="10dp"
+                    android:background="@drawable/circle_selector"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toRightOf="@+id/passcode_5"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/passcode_title_verify"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:lineHeight="16dp"
+                    android:text="@string/passcode_title_verify"
+                    android:textColor="@color/c_FF7878"
+                    android:textSize="12dp"
+                    android:visibility="invisible"
+                    app:fontFamily="@font/pretendard_regular"
+                    app:layout_constraintLeft_toLeftOf="@+id/passcode_1"
+                    app:layout_constraintRight_toRightOf="@+id/passcode_6"
+                    app:layout_constraintTop_toBottomOf="@+id/passcode_1" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/passcode_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="40dp"
+            >
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_weight="12"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+               >
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="70dp"
+                    android:layout_weight="3">
+                    <TextView
+                        android:id="@+id/code_1"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:text="@={passcode.getCode1}"
+                        android:gravity="center"
+                        android:lineHeight="34dp"
+                        android:textColor="@color/c_4a4d55"
+                        android:textSize="26dp"
+                        app:fontFamily="@font/pretendard_extrabold"
+                        />
+                    <TextView
+                        android:id="@+id/code_2"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:text="@={passcode.getCode2}"
+                        android:gravity="center"
+                        android:lineHeight="34dp"
+                        android:textColor="@color/c_4a4d55"
+                        android:textSize="26dp"
+                        app:fontFamily="@font/pretendard_extrabold"
+                        />
+                    <TextView
+                        android:id="@+id/code_3"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:text="@={passcode.getCode3}"
+                        android:gravity="center"
+                        android:lineHeight="34dp"
+                        android:textColor="@color/c_4a4d55"
+                        android:textSize="26dp"
+                        app:fontFamily="@font/pretendard_extrabold"
+                        />
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="70dp"
+                    android:layout_weight="3">
+                    <TextView
+                        android:id="@+id/code_4"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:text="@={passcode.getCode4}"
+                        android:gravity="center"
+                        android:lineHeight="34dp"
+                        android:textColor="@color/c_4a4d55"
+                        android:textSize="26dp"
+                        app:fontFamily="@font/pretendard_extrabold"
+                        />
+                    <TextView
+                        android:id="@+id/code_5"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:text="@={passcode.getCode5}"
+                        android:gravity="center"
+                        android:lineHeight="34dp"
+                        android:textColor="@color/c_4a4d55"
+                        android:textSize="26dp"
+                        app:fontFamily="@font/pretendard_extrabold"
+                        />
+                    <TextView
+                        android:id="@+id/code_6"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:text="@={passcode.getCode6}"
+                        android:gravity="center"
+                        android:lineHeight="34dp"
+                        android:textColor="@color/c_4a4d55"
+                        android:textSize="26dp"
+                        app:fontFamily="@font/pretendard_extrabold"
+                        />
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="70dp"
+                    android:layout_weight="3">
+                    <TextView
+                        android:id="@+id/code_7"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:text="@={passcode.getCode7}"
+                        android:gravity="center"
+                        android:lineHeight="34dp"
+                        android:textColor="@color/c_4a4d55"
+                        android:textSize="26dp"
+                        app:fontFamily="@font/pretendard_extrabold"
+                        />
+                    <TextView
+                        android:id="@+id/code_8"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:text="@={passcode.getCode8}"
+                        android:gravity="center"
+                        android:lineHeight="34dp"
+                        android:textColor="@color/c_4a4d55"
+                        android:textSize="26dp"
+                        app:fontFamily="@font/pretendard_extrabold"
+                        />
+                    <TextView
+                        android:id="@+id/code_9"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:text="@={passcode.getCode9}"
+                        android:gravity="center"
+                        android:lineHeight="34dp"
+                        android:textColor="@color/c_4a4d55"
+                        android:textSize="26dp"
+                        app:fontFamily="@font/pretendard_extrabold"
+                        />
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="70dp"
+                    android:layout_weight="1">
+                    <TextView
+                        android:id="@+id/clear_text"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:text="@string/passcode_clear"
+                        android:gravity="center"
+                        android:lineHeight="20dp"
+                        android:textColor="@color/c_4a4d55"
+                        android:textSize="14dp"
+                        app:fontFamily="@font/pretendard_regular"
+                        />
+                    <TextView
+                        android:id="@+id/code_0"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:text="@={passcode.getCode0}"
+                        android:gravity="center"
+                        android:lineHeight="34dp"
+                        android:textColor="@color/c_4a4d55"
+                        android:textSize="26dp"
+                        app:fontFamily="@font/pretendard_extrabold"
+                        />
+                    <TextView
+                        android:id="@+id/clear"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:background="@drawable/clear_icon"
+                        />
+                </LinearLayout>
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

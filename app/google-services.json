@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "96071973609",
+    "project_id": "piece-v2",
+    "storage_bucket": "piece-v2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:96071973609:android:a8249ace282880ed1ece78",
+        "android_client_info": {
+          "package_name": "com.bsstandard.piece"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "96071973609-8mk8t0so41j5ju8r28p3jus9v6fer64o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA_rjR9kYI2-Swhksed5DJ8jNAedWJQQD4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "96071973609-8mk8t0so41j5ju8r28p3jus9v6fer64o.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
