@@ -35,7 +35,7 @@
                     android:id="@+id/top_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
+                    android:layout_marginStart="22dp"
                     android:layout_marginTop="23dp"
                     android:text="포트폴리오"
                     android:textColor="@color/c_4a4d55"
