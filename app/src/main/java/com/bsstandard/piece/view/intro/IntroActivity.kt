@@ -15,6 +15,7 @@ import com.bsstandard.piece.view.main.MainActivity
 import com.bsstandard.piece.widget.utils.Division
 import com.bsstandard.piece.widget.utils.LogUtil
 import com.bsstandard.piece.databinding.ActivityIntroBinding
+import com.bumptech.glide.Glide
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -49,8 +50,13 @@ class IntroActivity : AppCompatActivity() {
         // 권한체크 - jhm 2022/06/13
         checkPermission()
 
+
+
+        Glide.with(this).load(R.drawable.hello_lopping).into(introBinding.hello)
+
+
     }
-    fun setStatusBar(){
+    private fun setStatusBar(){
         val w: Window = window
         w.setFlags(
             WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,

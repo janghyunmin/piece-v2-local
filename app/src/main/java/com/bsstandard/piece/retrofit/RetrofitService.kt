@@ -1,14 +1,12 @@
 package com.bsstandard.piece.retrofit
 
+import com.bsstandard.piece.data.datamodel.dmodel.MemberPinModel
 import com.bsstandard.piece.data.datamodel.dmodel.SmsAuthModel
 import com.bsstandard.piece.data.datamodel.dmodel.join.JoinModel
-import com.bsstandard.piece.data.datamodel.dmodel.MemberPinModel
 import com.bsstandard.piece.data.dto.*
 import com.bsstandard.piece.data.dto.portfolio.PortfolioDTO
-import com.bsstandard.piece.model.RepositoriesList
 import io.reactivex.Observable
 import retrofit2.Call
-import retrofit2.Response
 import retrofit2.http.*
 
 /**

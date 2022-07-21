@@ -17,7 +17,7 @@ buildscript {
         classpath ("com.neenbedankt.gradle.plugins:android-apt:${Versions.ANDROID_APT}")
         classpath ("io.fabric.tools:gradle:${Versions.FABRIC}")
         classpath ("com.google.dagger:hilt-android-gradle-plugin:${Versions.DAGGER_HILT}")
-
+        classpath("androidx.navigation:navigation-safe-args-gradle-plugin:${Versions.NAVIGATION_SAFE}")
 
     }
 }

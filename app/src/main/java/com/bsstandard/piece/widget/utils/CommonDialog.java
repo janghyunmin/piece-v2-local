@@ -10,19 +10,14 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 
 import com.bsstandard.piece.R;
-import com.bsstandard.piece.databinding.ActivityIntroBinding;
-import com.bsstandard.piece.databinding.ActivityPasscodeBinding;
 import com.bsstandard.piece.databinding.CDialogBinding;
 import com.bsstandard.piece.databinding.CDialogPasswordBinding;
 import com.bsstandard.piece.view.join.JoinActivity;
-
-import org.checkerframework.checker.units.qual.C;
 
 import java.util.Objects;
 

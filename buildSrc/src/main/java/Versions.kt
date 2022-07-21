@@ -63,6 +63,8 @@
         const val NAVIGATION_DYNAMIC_FEATURES = "2.4.1"
         const val NAVIGATION_TESTING = "2.4.1"
         const val NAVIGATION_COMPOSE = "2.4.1"
+        const val NAVIGATION_SAFE = "2.5.0"
+
 
         // Viewpager1,2 _jhm_2022/04/22
         const val VIEWPAGER = "1.1.0-alpha01"
@@ -308,6 +310,7 @@
         const val NAVIGATION_DYNAMIC_FEATURES = "androidx.navigation:navigation-dynamic-features-fragment:${Versions.NAVIGATION_DYNAMIC_FEATURES}"
         const val NAVIGATION_TESTING = "androidx.navigation:navigation-testing:${Versions.NAVIGATION_TESTING}"
         const val NAVIGATION_COMPOSE = "androidx.navigation:navigation-compose:${Versions.NAVIGATION_COMPOSE}"
+        const val NAVIGATION_SAFE = "androidx.navigation:navigation-safe-args-gradle-plugin:${Versions.NAVIGATION_SAFE}"
     }
 
 

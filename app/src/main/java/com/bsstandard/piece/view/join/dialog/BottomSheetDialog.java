@@ -28,7 +28,7 @@ import com.bsstandard.piece.data.viewmodel.ConsentDetailViewModel;
 import com.bsstandard.piece.data.viewmodel.ConsentViewModel;
 import com.bsstandard.piece.databinding.SlideupConsentBinding;
 import com.bsstandard.piece.databinding.SlideupPhoneBinding;
-import com.bsstandard.piece.view.adapter.ConsentAdapter;
+import com.bsstandard.piece.view.adapter.consent.ConsentAdapter;
 import com.bsstandard.piece.view.webview.ConsentDetailWebView;
 import com.bsstandard.piece.widget.utils.Division;
 import com.bsstandard.piece.widget.utils.LogUtil;

@@ -66,6 +66,8 @@
         <activity
             android:name=".view.main.MainActivity"
             android:screenOrientation="portrait" />
+        <activity android:name=".view.portfolioDetail.PortfolioDetailActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

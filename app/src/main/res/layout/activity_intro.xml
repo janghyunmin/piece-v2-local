@@ -79,17 +79,17 @@
             android:id="@+id/l_character"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            android:layout_marginTop="35dp"
+            android:layout_marginTop="70dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
             <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/hello"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/i_character"
+                android:layout_width="375dp"
+                android:layout_height="375dp"
                 />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

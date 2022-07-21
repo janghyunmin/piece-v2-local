@@ -1,4 +1,4 @@
-package com.bsstandard.piece.view.adapter;
+package com.bsstandard.piece.view.adapter.consent;
 
 import android.content.Context;
 import android.view.LayoutInflater;

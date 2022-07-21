@@ -8,6 +8,8 @@
         <item name="android:windowIsFloating">false</item>
         <item name="android:windowSoftInputMode">adjustResize</item>
 
+        <item name="android:windowActivityTransitions">true</item> <!-- recyclerview animation 처리 -->
+        <item name="android:windowContentTransitions">true</item>
         <!-- Status bar color. -->
         <item name="android:windowTranslucentStatus">false</item> <!-- StatusBar 를 반투명하게 설정한다. -->
         <item name="android:statusBarColor">@color/white</item> <!-- StatusBar 색상 -->
@@ -19,6 +21,7 @@
         <item name="android:editTextStyle">@style/customEditTextFontStyle</item>
         <item name="android:radioButtonStyle">@style/customRadioButtonFontStyle</item>
         <item name="android:checkboxStyle">@style/customCheckboxFontStyle</item>
+
 
 <!--        <item name="bottomSheetDialogTheme">@style/BottomSheetDialog</item>-->
 

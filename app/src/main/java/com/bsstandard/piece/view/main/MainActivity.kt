@@ -11,13 +11,18 @@ import android.view.WindowInsetsController
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.navigateUp
+import androidx.navigation.ui.setupActionBarWithNavController
 import com.bsstandard.piece.R
 import com.bsstandard.piece.base.BaseActivity
 import com.bsstandard.piece.data.datasource.shared.PrefsHelper
-import com.bsstandard.piece.data.viewmodel.PortfolioViewModel
 import com.bsstandard.piece.databinding.ActivityMainBinding
-import com.bsstandard.piece.view.fragment.FragmentMagazine
 import com.bsstandard.piece.view.fragment.FragmentHome
+import com.bsstandard.piece.view.fragment.FragmentMagazine
 import com.bsstandard.piece.view.fragment.FragmentMore
 import com.bsstandard.piece.view.fragment.FragmentWallet
 import com.bsstandard.piece.view.main.dialog.EventSheet
@@ -46,13 +51,14 @@ import java.util.*
 @AndroidEntryPoint
 class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
     private val mainViewModel by viewModels<MainViewModel>()
+    private lateinit var navController: NavController
     val manager = supportFragmentManager
 
+//    private val fragmentHome by lazy { FragmentHome() }
+//    private val fragmentMagazine by lazy { FragmentMagazine() }
+//    private val fragmentWallet by lazy { FragmentWallet() }
+//    private val fragmentMore by lazy { FragmentMore() }
 
-    private val fragmentHome by lazy { FragmentHome() }
-    private val fragmentMagazine by lazy { FragmentMagazine() }
-    private val fragmentWallet by lazy { FragmentWallet() }
-    private val fragmentMore by lazy { FragmentMore() }
 
 
     @SuppressLint("NewApi")
@@ -77,17 +83,16 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
             LogUtil.logE(PrefsHelper.read("accessToken", ""));
 
 
+            navController = nav_host_fragment.findNavController() // 바텀 네비게이션 컨트롤러 - jhm 2022/07/19
+
             toDayShow()
             initNavigation()
 
-            val transaction = manager.beginTransaction()
-            val fragment = FragmentHome()
-            transaction.replace(R.id.menu_frame_layout, fragment)
-            transaction.addToBackStack(null)
-            transaction.commit()
 
         }
+
     }
+
     override fun onStart() {
         LogUtil.logE("Main onStart..")
         super.onStart()
@@ -154,35 +159,24 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
         bottomNavigationView.run {
             setOnNavigationItemSelectedListener {
                 when(it.itemId) {
-                    R.id.navigation_home -> {
-                        changeFragment(fragmentHome)
+                    R.id.FragmentHome -> {
+                        navController.navigate(R.id.FragmentHome)
                     }
-                    R.id.navigation_magazine -> {
-                        changeFragment(fragmentMagazine)
+                    R.id.FragmentMagazine -> {
+                        navController.navigate(R.id.FragmentMagazine)
                     }
-                    R.id.navigation_wallet -> {
-                        changeFragment(fragmentWallet)
+                    R.id.FragmentWallet -> {
+                        navController.navigate(R.id.FragmentWallet)
                     }
-                    R.id.navigation_more -> {
-                        changeFragment(fragmentMore)
+                    R.id.FragmentMore -> {
+                        navController.navigate(R.id.FragmentMore)
                     }
                 }
                 true
             }
-            selectedItemId = R.id.navigation_home // 시작시 첫화면 보여주기
+            selectedItemId = R.id.FragmentHome // 시작시 첫화면 보여주기
         }
     }
-
-    private fun changeFragment(fragment: Fragment) {
-        supportFragmentManager
-            .beginTransaction()
-            .replace(R.id.menu_frame_layout, fragment)
-            .commit()
-    }
-
-
-
-
 
 
 

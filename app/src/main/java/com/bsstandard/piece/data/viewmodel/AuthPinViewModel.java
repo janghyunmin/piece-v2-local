@@ -10,8 +10,6 @@ import com.bsstandard.piece.data.repository.AuthPinRepository;
 import com.bsstandard.piece.widget.utils.LogUtil;
 import com.bsstandard.piece.widget.utils.SingleLiveEvent;
 
-import org.checkerframework.checker.units.qual.A;
-
 /**
  * packageName    : com.bsstandard.piece.data.viewmodel
  * fileName       : AuthPinViewModel
