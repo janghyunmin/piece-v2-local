@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_main"
+    app:startDestination="@id/FragmentHome">
+
+    <keep_state_fragment
+        android:id="@+id/FragmentHome"
+        android:name="com.bsstandard.piece.view.fragment.FragmentHome"
+        tools:layout="@layout/fragment_home"
+        android:label="FragmentHome"
+        >
+        <action
+            android:id="@+id/navToPortoflioDetailActivity"
+            app:destination="@id/PortfolioDetailActivity"
+            />
+    </keep_state_fragment>
+    <keep_state_fragment
+        android:id="@+id/FragmentMagazine"
+        android:name="com.bsstandard.piece.view.fragment.FragmentMagazine"
+        tools:layout="@layout/fragment_magazine"
+        android:label="FragmentMagazine"
+        />
+    <keep_state_fragment
+        android:id="@+id/FragmentWallet"
+        android:name="com.bsstandard.piece.view.fragment.FragmentWallet"
+        tools:layout="@layout/fragment_wallet"
+        android:label="FragmentWallet"
+        />
+    <keep_state_fragment
+        android:id="@+id/FragmentMore"
+        android:name="com.bsstandard.piece.view.fragment.FragmentMore"
+        tools:layout="@layout/fragment_more"
+        android:label="FragmentMore"
+        />
+    <activity
+        android:id="@+id/PortfolioDetailActivity"
+        android:name="com.bsstandard.piece.view.portfolioDetail.PortfolioDetailActivity"
+        tools:layout="@layout/activity_portfoliodetail">
+        <argument
+            android:name="portfolioImagePath"
+            app:argType="string"
+            />
+    </activity>
+</navigation>
+
