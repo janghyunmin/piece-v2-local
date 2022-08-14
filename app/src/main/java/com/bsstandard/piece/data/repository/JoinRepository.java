@@ -1,10 +1,13 @@
 package com.bsstandard.piece.data.repository;
 
+import android.app.Application;
+
 import androidx.lifecycle.MutableLiveData;
 
+import com.alibaba.fastjson.JSON;
 import com.bsstandard.piece.data.datamodel.dmodel.join.JoinModel;
 import com.bsstandard.piece.data.dto.JoinDTO;
-import com.bsstandard.piece.retrofit.RetrofitClient;
+import com.bsstandard.piece.di.hilt.ApiModule;
 import com.bsstandard.piece.retrofit.RetrofitService;
 import com.bsstandard.piece.widget.utils.LogUtil;
 
@@ -28,14 +31,15 @@ public class JoinRepository {
     private static JoinRepository joinRepository;
     private final MutableLiveData<JoinDTO> joinData = new MutableLiveData<>();
 
-    public static JoinRepository getInstance() {
+    public static JoinRepository getInstance(Application application) {
         if(joinRepository == null){
-            joinRepository = new JoinRepository();
+            joinRepository = new JoinRepository(application);
         }
         return joinRepository;
     }
-    public JoinRepository() {
-        mInstance = RetrofitClient.getService();
+    public JoinRepository(Application application) {
+//        mInstance = RetrofitClient.getService();
+        mInstance = ApiModule.INSTANCE.provideRetrofit().create(RetrofitService.class);
     }
 
     public MutableLiveData<JoinDTO> getJoinData(JoinModel joinModel){
@@ -44,8 +48,8 @@ public class JoinRepository {
             @Override
             public void onResponse(Call<JoinDTO> call, Response<JoinDTO> response) {
                 if(response.body()!=null){
-                    LogUtil.logE("회원가입 진행 response data : " + response.body().getData().toString());
-                    joinData.setValue(response.body());
+                    LogUtil.logE("회원가입 진행 response data : " + JSON.toJSONString(response.body().getData()));
+                    joinData.postValue(response.body());
                 }else{
                     LogUtil.logE("join response body null.. : " + response.code());
                     joinData.setValue(null);

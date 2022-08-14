@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.app.Application
 import android.net.Uri
 import android.os.Build
-import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.RequiresApi
@@ -13,7 +12,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bsstandard.piece.R
-import com.bsstandard.piece.data.dto.portfolio.PortfolioDTO
+import com.bsstandard.piece.data.dto.PortfolioDTO
 import com.bsstandard.piece.data.repository.PortfolioRepository
 import com.bsstandard.piece.view.adapter.portfolio.PortfolioAdapter
 import com.bsstandard.piece.widget.utils.DateConverter
@@ -56,14 +55,15 @@ class PortfolioViewModel(application: Application) : AndroidViewModel(applicatio
     fun getPortfolio() {
         repo.getPortfolios().subscribe(
             { PortfolioDTO ->
-                LogUtil.logE("dto : " + PortfolioDTO.data.data.size)
+                LogUtil.logE("포트폴리오 갯수 : " + PortfolioDTO.data.data.size)
 
+                portfolioList.clear()
                 for (i in ArrayList(PortfolioDTO.data.data).indices) {
                     portfolioList.add(PortfolioDTO.data.data[i])
                     portfolioAdapter.notifyDataSetChanged()
                 }
 
-            }, { throwable -> LogUtil.logE("Error!" + "") }
+            }, { throwable -> LogUtil.logE("포트폴리오 GET List Error!" + "") }
         )
     }
 
@@ -83,7 +83,6 @@ object BindingAdapter {
     @BindingAdapter("app:imageUrl")
     @JvmStatic
     fun loadImg(imageView: ImageView, url: String) {
-        LogUtil.logE("url : $url")
         var requestOptions = RequestOptions()
         requestOptions = requestOptions.transforms(CenterCrop(), RoundedCorners(30))
         Glide.with(imageView.context)
@@ -151,7 +150,6 @@ object BindingAdapter {
         val expectationProfitRate = percent
 
         val string = date;
-        LogUtil.logE("string " + string)
         val year = string.substring(0, 4)
         val month = string.substring(5, 7)
         val day = string.substring(8, 10)
@@ -202,7 +200,6 @@ object BindingAdapter {
             endDate,
             "MM/dd hh:mm"
         )
-        LogUtil.logE("최종값 : $soldOutText")
         return soldOutText
     }
 

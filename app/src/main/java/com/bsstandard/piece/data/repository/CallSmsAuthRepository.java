@@ -1,10 +1,12 @@
 package com.bsstandard.piece.data.repository;
 
+import android.app.Application;
+
 import androidx.lifecycle.MutableLiveData;
 
 import com.bsstandard.piece.data.datamodel.dmodel.SmsAuthModel;
 import com.bsstandard.piece.data.dto.CallSmsAuthDTO;
-import com.bsstandard.piece.retrofit.RetrofitClient;
+import com.bsstandard.piece.di.hilt.ApiModule;
 import com.bsstandard.piece.retrofit.RetrofitService;
 import com.bsstandard.piece.widget.utils.LogUtil;
 
@@ -29,15 +31,16 @@ public class CallSmsAuthRepository {
     private final MutableLiveData<CallSmsAuthDTO> callSmsAuthData = new MutableLiveData<>();
 
 
-    public static CallSmsAuthRepository getInstance(){
+    public static CallSmsAuthRepository getInstance(Application application){
         if(callSmsAuthRepository == null){
-            callSmsAuthRepository = new CallSmsAuthRepository();
+            callSmsAuthRepository = new CallSmsAuthRepository(application);
         }
         return callSmsAuthRepository;
     }
 
-    public CallSmsAuthRepository() {
-        mInstance = RetrofitClient.getService();
+    public CallSmsAuthRepository(Application application) {
+//      mInstance = RetrofitClient.getService();
+        mInstance = ApiModule.INSTANCE.provideRetrofit().create(RetrofitService.class);
     }
 
     public MutableLiveData<CallSmsAuthDTO> getCallSmsAuthData(SmsAuthModel smsAuthModel){
@@ -50,7 +53,7 @@ public class CallSmsAuthRepository {
                 LogUtil.logE("response getMessage : " + response.body().getMessage());
                 LogUtil.logE("response getData : " + response.body().getData().getRsltMsg());
                 if (response.body().getData()!=null){
-                    callSmsAuthData.setValue(response.body());
+                    callSmsAuthData.postValue(response.body());
                 } else {
                     LogUtil.logE("post /member/call_sms_auth error.. " + response.message());
                 }

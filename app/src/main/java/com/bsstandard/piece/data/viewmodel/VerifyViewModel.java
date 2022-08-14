@@ -30,7 +30,7 @@ public class VerifyViewModel extends AndroidViewModel {
 
     public VerifyViewModel(@NonNull Application application){
         super(application);
-        verifyRepository = new VerifyRepository();
+        verifyRepository = new VerifyRepository(application);
     }
     public SingleLiveEvent<SmsVerificationDTO> postCallVerifyData(SmsAuthModel smsAuthModel) {
         if(verifyData == null){

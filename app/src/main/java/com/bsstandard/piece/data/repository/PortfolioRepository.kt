@@ -1,30 +1,28 @@
 package com.bsstandard.piece.data.repository
 
 import android.app.Application
-import androidx.lifecycle.MutableLiveData
-import com.bsstandard.piece.data.dto.portfolio.PortfolioDTO
-import com.bsstandard.piece.retrofit.RetrofitClientV2
+import com.bsstandard.piece.data.dto.PortfolioDTO
+import com.bsstandard.piece.di.hilt.ApiModule
+import com.bsstandard.piece.retrofit.RetrofitService
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import java.util.*
 
 /**
  *packageName    : com.bsstandard.piece.data.repository
  * fileName       : PortfolioRepository
  * author         : piecejhm
  * date           : 2022/07/13
- * description    :
+ * description    : 포트폴리오 조회 repository
  * ===========================================================
  * DATE              AUTHOR             NOTE
  * -----------------------------------------------------------
  * 2022/07/13        piecejhm       최초 생성
  */
 class PortfolioRepository(application: Application){
+   val response = ApiModule.provideRetrofit().create(RetrofitService::class.java)
 
-   val response = RetrofitClientV2.retrofitService.getPortfolio()
-   private var portfolioData: MutableLiveData<PortfolioDTO> = MutableLiveData()
-   fun getPortfolios(): Observable<PortfolioDTO> = RetrofitClientV2.retrofitService
+   fun getPortfolios(): Observable<PortfolioDTO> = response
       .getPortfolio()
       .subscribeOn(Schedulers.io())
       .observeOn(AndroidSchedulers.mainThread())

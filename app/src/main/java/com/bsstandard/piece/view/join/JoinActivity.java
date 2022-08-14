@@ -12,6 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.bsstandard.piece.R;
@@ -69,8 +70,8 @@ public class JoinActivity extends AppCompatActivity implements View.OnClickListe
         joinBinding = DataBindingUtil.setContentView(this, R.layout.activity_join);
         joinBinding.setLifecycleOwner(this);
 
-        //joinViewModel = new ViewModelProvider(this, new JoinViewModelFactory()).get(JoinViewModel.class);
-        joinViewModel = ViewModelProviders.of(this).get(JoinViewModel.class);
+
+        joinViewModel = new ViewModelProvider(this).get(JoinViewModel.class);
         joinBinding.setJv(joinViewModel);
 
         // 통신사 선택 dialog

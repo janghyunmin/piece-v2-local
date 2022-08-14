@@ -29,7 +29,7 @@ public class MemberJoinViewModel extends AndroidViewModel {
 
     public MemberJoinViewModel(@NonNull Application application){
         super(application);
-        joinRepository = new JoinRepository();
+        joinRepository = new JoinRepository(application);
     }
 
     public MutableLiveData<JoinDTO> postCallJoinData(JoinModel joinModel){

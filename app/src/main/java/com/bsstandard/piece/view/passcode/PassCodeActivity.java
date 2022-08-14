@@ -11,22 +11,29 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.bsstandard.piece.R;
 import com.bsstandard.piece.data.datamodel.dmodel.MemberPinModel;
+import com.bsstandard.piece.data.datamodel.dmodel.consent.ConsentList;
 import com.bsstandard.piece.data.datamodel.dmodel.join.ConsentModel;
 import com.bsstandard.piece.data.datamodel.dmodel.join.DeviceInfoModel;
 import com.bsstandard.piece.data.datamodel.dmodel.join.JoinModel;
 import com.bsstandard.piece.data.datamodel.dmodel.join.NotificationInfoModel;
-import com.bsstandard.piece.data.datamodel.dmodel.consent.ConsentList;
 import com.bsstandard.piece.data.datasource.shared.PrefsHelper;
 import com.bsstandard.piece.data.dto.AuthPinDTO;
+import com.bsstandard.piece.data.dto.BaseDTO;
 import com.bsstandard.piece.data.dto.JoinDTO;
+import com.bsstandard.piece.data.dto.PostTokenDTO;
 import com.bsstandard.piece.data.viewmodel.AuthPinPutViewModel;
 import com.bsstandard.piece.data.viewmodel.AuthPinViewModel;
+import com.bsstandard.piece.data.viewmodel.GetAuthTokenViewModel;
 import com.bsstandard.piece.data.viewmodel.MemberJoinViewModel;
+import com.bsstandard.piece.data.viewmodel.PutTokenViewModel;
 import com.bsstandard.piece.databinding.ActivityPasscodeBinding;
+import com.bsstandard.piece.di.hilt.ApiModule;
+import com.bsstandard.piece.retrofit.RetrofitClient;
+import com.bsstandard.piece.retrofit.RetrofitService;
 import com.bsstandard.piece.view.join.JoinActivity;
 import com.bsstandard.piece.view.join.JoinSuccessActivity;
 import com.bsstandard.piece.view.main.MainActivity;
@@ -41,7 +48,14 @@ import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 /**
  * packageName    : com.bsstandard.piece.view.passcode
@@ -60,19 +74,19 @@ public class PassCodeActivity extends AppCompatActivity {
     /**
      * 공통 - jhm 2022/05/09
      **/
-    Context context;
-    public String PushToken = "";
+    private Context context;
     private ActivityPasscodeBinding binding;
     private PassCodeViewModel passCodeViewModel;
     private ArrayList<String> passCodeModelList = new ArrayList<>(); // 첫번째 간편비밀번호 저장 ArrayList
     private ArrayList<String> passCodeVerifyList = new ArrayList<>(); // 두번째 간편비밀번호 저장 ArrayList
+    public String PushToken = "";
     public CustomDialog customDialog;
 
 
     // 회원가입 진행 Model - jhm 2022/06/30
     private MemberJoinViewModel memberJoinViewModel;
     private JoinModel joinModel;
-    ArrayList<ConsentModel> consent = new ArrayList<>();
+    private ArrayList<ConsentModel> consent = new ArrayList<>();
 
     // 회원가입 후 완료 화면시 넘겨줄 데이터 - jhm 2022/07/03
     private String user_name = "";
@@ -80,10 +94,21 @@ public class PassCodeActivity extends AppCompatActivity {
     private String inputPinNumber;
     private String memberId;
 
+    // 재로그인시 accessToken 검증 - jhm 2022/08/08
+    private GetAuthTokenViewModel getAuthTokenViewModel;
+    // put refreshToken - jhm 2022/08/11
+    private PutTokenViewModel putTokenViewModel;
+
+
     // 비밀번호 재설정 이후 핀번호 검증 - jhm 2022/07/04
     private AuthPinViewModel authPinViewModel;
+
+    // 간편비밀번호 변경 - jhm 2022/08/08
     private AuthPinPutViewModel authPinPutViewModel;
     private MemberPinModel memberPinModel;
+
+
+    // 회원가입 유무 , 간편비밀번호 체크 변수 - jhm 2022/08/08
     public String isJoin;
     public String pinNumChk;
 
@@ -96,7 +121,16 @@ public class PassCodeActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_passcode);
         binding.setLifecycleOwner(this);
 
-        passCodeViewModel = ViewModelProviders.of(this).get(PassCodeViewModel.class);
+
+        // accessToken 검증 - jhm 2022/08/08
+        getAuthTokenViewModel = new ViewModelProvider(this).get(GetAuthTokenViewModel.class);
+        // 간편 비밀번호 검증 - jhm 2022/08/11
+        authPinViewModel = new ViewModelProvider(this).get(AuthPinViewModel.class);
+        // refreshToken 발급 - jhm 2022/08/11
+        //putTokenViewModel = new ViewModelProvider(this).get(PutTokenViewModel.class);
+
+
+        passCodeViewModel = new ViewModelProvider(this).get(PassCodeViewModel.class);
         binding.setPasscode(passCodeViewModel);
 
 
@@ -126,7 +160,9 @@ public class PassCodeActivity extends AppCompatActivity {
             if (!TextUtils.isEmpty(token)) {
                 Log.d("TAG", "retrieve token successful : " + token);
                 PushToken = token;
-            } else{
+                PrefsHelper.removeKey(context, "firebaseToken");
+                PrefsHelper.write("firebaseToken", PushToken);
+            } else {
                 Log.w("TAG", "token should not be null...");
             }
         }).addOnFailureListener(e -> {
@@ -135,7 +171,6 @@ public class PassCodeActivity extends AppCompatActivity {
             //handle cancel
         }).addOnCompleteListener(task -> Log.v("TAG", "This is the token : " + task.getResult()));
     }
-
 
 
     // 키패드에 랜덤으로 숫자를 뽑아 넣어준다. - jhm 2022/06/28
@@ -250,6 +285,7 @@ public class PassCodeActivity extends AppCompatActivity {
         });
     }
 
+
     // 회원가입 진행시 키패드 입력 로직
     public void PinNumInput() {
         binding.passcodeTitleVerify.setVisibility(View.INVISIBLE);
@@ -267,8 +303,7 @@ public class PassCodeActivity extends AppCompatActivity {
             PrefsHelper.write("inputPinNumber", inputPinNumber); // 최초 저장 및 새로 저장 - jhm 2022/07/06
             LogUtil.logE("inputPinNumber : " + inputPinNumber);
 
-
-            // 로그인 기록이 있다면 - jhm 2022/07/05
+            // 로그인 기록이 없다면 - jhm 2022/07/05
             if (isJoin.equals("false")) {
                 // 비밀번호 최초 등록
                 // 최초 회원가입 프로세스 실행 - jhm 2022/07/06
@@ -277,12 +312,12 @@ public class PassCodeActivity extends AppCompatActivity {
             } else {
                 // 이전에 회원가입시 등록한 핀번호를 불러온다.
                 LogUtil.logE("자동로그인 ");
-                String sharedNum = PrefsHelper.read("pinNumber", "");
+                String sharedNum = PrefsHelper.read("inputPinNumber", "");
                 LogUtil.logE("inputPinNumber : " + inputPinNumber); // 새로 입력한 핀번호 - jhm 2022/07/06
                 LogUtil.logE("sharedNum : " + sharedNum);
 
                 // 비밀번호 재설정 - jhm 2022/07/06
-                if(pinNumChk.equals("true")){
+                if (pinNumChk.equals("true")) {
                     PinNumberUpdate();
                 } else {
                     PinNumOneStep();
@@ -299,28 +334,94 @@ public class PassCodeActivity extends AppCompatActivity {
         KeyPadOnClick();
         PinNumberClear();
 
-        // 회원 PIN 번호 검증
-        authPinViewModel = ViewModelProviders.of(this).get(AuthPinViewModel.class);
-        authPinViewModel.getAuthData().observe(binding.getLifecycleOwner(), new Observer<AuthPinDTO>() {
+
+        getAuthTokenViewModel.getAuthTokenData().observe(this, new Observer<BaseDTO>() {
             @Override
-            public void onChanged(AuthPinDTO authPinDTO) {
-                if (authPinDTO != null) {
-                    if (authPinDTO.getStatus().equals("OK")) {
-                        Intent go_success = new Intent(context, MainActivity.class);
-                        startActivity(go_success);
-                        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                        finish();
-                    } else {
-                        PinNumberReset();
+            public void onChanged(BaseDTO baseDTO) {
+                if (baseDTO != null) {
+                    LogUtil.logE("dto not null..");
+                    if (baseDTO.getStatus().equals("OK")) {
+                        // accessToken 검증 성공 후 pin 인증 - jhm 2022/08/11
+                        // 회원 PIN 번호 검증
+                        authPinViewModel.getAuthData().observe(Objects.requireNonNull(binding.getLifecycleOwner()), new Observer<AuthPinDTO>() {
+                            @Override
+                            public void onChanged(AuthPinDTO authPinDTO) {
+                                if (authPinDTO != null) {
+                                    if (authPinDTO.getStatus().equals("OK")) {
+                                        Intent go_success = new Intent(context, MainActivity.class);
+                                        startActivity(go_success);
+                                        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                                        finish();
+                                    } else {
+                                        PinNumberReset();
+                                    }
+                                } else {
+                                    PinNumberReset();
+                                }
+                            }
+                        });
                     }
                 } else {
-                    PinNumberReset();
+                    // accessToken 검증 실패시 accessToken refresh - jhm 2022/08/11
+                    LogUtil.logE("accessToken 검증 실패.. token refresh 진행");
+
+                    String accessToken = PrefsHelper.read("accessToken", "");
+                    String deviceId = PrefsHelper.read("deviceId", "");
+                    String memberId = PrefsHelper.read("memberId", "");
+                    String refreshToken = PrefsHelper.read("refreshToken", "");
+
+                    LogUtil.logE("accessToken : " + accessToken);
+                    LogUtil.logE("deviceId : " + deviceId);
+                    LogUtil.logE("memberId : " + memberId);
+                    LogUtil.logE("refreshToken : " + refreshToken);
+
+                    HashMap<String, String> map = new HashMap<>();
+                    map.put("accessToken", "Bearer " + accessToken);
+                    map.put("deviceId", deviceId);
+                    map.put("grantType", "refresh_token");
+                    map.put("memberId", memberId);
+                    map.put("refreshToken", refreshToken);
+
+
+                    Call<PostTokenDTO> postToken = ApiModule.INSTANCE.provideRetrofit().create(RetrofitService.class).putRefreshToken(map);
+                    postToken.enqueue(new Callback<PostTokenDTO>() {
+                        @Override
+                        public void onResponse(Call<PostTokenDTO> call, Response<PostTokenDTO> response) {
+                            if (response.isSuccessful()) {
+                                LogUtil.logE("isSuccess Refresh..");
+                                PrefsHelper.removeToken("expiredAt");
+                                PrefsHelper.removeToken("accessToken");
+                                PrefsHelper.removeToken("refreshToken");
+
+                                PrefsHelper.write("expiredAt", response.body().getData().getExpiredAt());
+                                PrefsHelper.write("accessToken", response.body().getData().getAccessToken());
+                                PrefsHelper.write("refreshToken", response.body().getData().getRefreshToken());
+
+                                LogUtil.logE("expiredAt : " + response.body().getData().getExpiredAt());
+                                LogUtil.logE("accessToken : " + response.body().getData().getAccessToken());
+                                LogUtil.logE("refreshToken : " + response.body().getData().getRefreshToken());
+
+                                Intent go_success = new Intent(context, MainActivity.class);
+                                startActivity(go_success);
+                                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                                finish();
+                            } else {
+                                LogUtil.logE("response fail.. " + response.body().getStatus());
+                                LogUtil.logE("response fail.. " + response.body().getMessage());
+                                PinNumberReset();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<PostTokenDTO> call, Throwable t) {
+                            LogUtil.logE("isFail Refresh..");
+                        }
+                    });
                 }
             }
         });
-
-
     }
+
 
     // 간편비밀번호 재설정 Dialog - jhm 2022/07/05
     public void PinNumberReset() {
@@ -402,17 +503,16 @@ public class PassCodeActivity extends AppCompatActivity {
                     Bundle bundle = intent.getExtras();
 
                     user_name = PrefsHelper.read("name", "");
-                    PrefsHelper.write("pinNumber", inputPinNumber);
-                    pinNumber = PrefsHelper.read("pinNumber", ""); // 입력받아 저장해놓은 핀번호를 불러온다.
+                    PrefsHelper.write("inputPinNumber", inputPinNumber);
+                    pinNumber = PrefsHelper.read("inputPinNumber", ""); // 입력받아 저장해놓은 핀번호를 불러온다.
 
                     LogUtil.logE("user_name : " + user_name);
-                    LogUtil.logE("pinNumber : " + pinNumber);
+                    LogUtil.logE("inputPinNumber : " + pinNumber);
                     // 기기 ID - jhm 2022/06/30
                     String deviceId = DeviceInfoUtil.getDeviceId(context);
                     PrefsHelper.write("deviceId", deviceId);
 
 
-                    LogUtil.logE("division : " + division);
                     if (division.equals("최초")) {
                         LogUtil.logE("최초로 실행.." + division);
                         DeviceInfoModel deviceInfo = new DeviceInfoModel(
@@ -438,7 +538,7 @@ public class PassCodeActivity extends AppCompatActivity {
                         }
 
                         // 다음 회원가입 Join 진행 - jhm 2022/06/30
-                        memberJoinViewModel = ViewModelProviders.of(this).get(MemberJoinViewModel.class);
+                        memberJoinViewModel = new ViewModelProvider(this).get(MemberJoinViewModel.class);
 
                         // db에 생년월일 insert 시 "-" 추가 - jhm 2022/07/06
                         String userBirth = bundle.getString("birthDay");
@@ -472,58 +572,45 @@ public class PassCodeActivity extends AppCompatActivity {
 
                                 // 성공 후 Shared를 통하여 저장한다. - jhm 2022/07/03
                                 PrefsHelper.init(context);
-                                PrefsHelper.write("memberId", joinDTO.getData().getMemberId());
                                 PrefsHelper.write("name", user_name);
-                                PrefsHelper.write("pinNumber", pinNumber);
+                                PrefsHelper.write("inputPinNumber", pinNumber);
 
                                 PrefsHelper.write("isJoin", "true"); // 자동로그인 여부 - jhm 2022/07/06
                                 PrefsHelper.write("pinNumChk", "false"); // 비밀번호 재설정 여부 - jhm 2022/07/06
 
-                                PrefsHelper.removeKey(context,"accessToken");
                                 PrefsHelper.write("accessToken", joinDTO.getData().getAccessToken());
+                                PrefsHelper.write("deviceId", joinDTO.getData().getDeviceId());
+                                PrefsHelper.write("expiredAt", joinDTO.getData().getExpiredAt());
+                                PrefsHelper.write("memberId", joinDTO.getData().getMemberId());
+                                PrefsHelper.write("refreshToken", joinDTO.getData().getRefreshToken());
 
 
                             }
                         });
 
-                        authPinPutViewModel = ViewModelProviders.of(this).get(AuthPinPutViewModel.class);
-                        String _memberId = PrefsHelper.read("memberId", "");
-                        pinNumber = PrefsHelper.read("pinNumber", "");
-                        LogUtil.logE("최초가 아님 : " + pinNumber);
-
-
-                        memberPinModel = new MemberPinModel(_memberId, pinNumber);
-                        authPinPutViewModel.putCallAuthPinData(memberPinModel);
-                        authPinPutViewModel.authPinData.observe(binding.getLifecycleOwner(), new Observer<AuthPinDTO>() {
-                            @Override
-                            public void onChanged(AuthPinDTO authPinDTO) {
-                                LogUtil.logE("authPinDTO : " + authPinDTO.getStatus());
-                                PrefsHelper.write("pinNumber", pinNumber);
-
-                            }
-                        });
-
+                        // 최초 실행 아니고 로그인 되어있는 상태에서 재 진입시 아래 로직 실행 - jhm 2022/08/08
                     } else {
-                        authPinPutViewModel = ViewModelProviders.of(this).get(AuthPinPutViewModel.class);
+
+                        authPinPutViewModel = new ViewModelProvider(this).get(AuthPinPutViewModel.class);
                         String _memberId = PrefsHelper.read("memberId", "");
-                        pinNumber = PrefsHelper.read("pinNumber", "");
-                        LogUtil.logE("최초가 아님 : " + pinNumber);
+                        pinNumber = PrefsHelper.read("inputPinNumber", "");
+                        LogUtil.logE("최초로그인 아니고 핀번호 검증 실행 : " + pinNumber);
 
 
                         memberPinModel = new MemberPinModel(_memberId, pinNumber);
                         authPinPutViewModel.putCallAuthPinData(memberPinModel);
-                        authPinPutViewModel.authPinData.observe(binding.getLifecycleOwner(), new Observer<AuthPinDTO>() {
+                        authPinPutViewModel.authPinData.observe(Objects.requireNonNull(binding.getLifecycleOwner()), new Observer<AuthPinDTO>() {
                             @Override
                             public void onChanged(AuthPinDTO authPinDTO) {
                                 LogUtil.logE("authPinDTO : " + authPinDTO.getStatus());
-                                PrefsHelper.write("pinNumber", pinNumber);
+                                PrefsHelper.write("inputPinNumber", pinNumber);
 
                             }
                         });
                         PrefsHelper.write("pinNumChk", "false");
                     }
 
-                    // 회원가입 성공 후 토큰 발급 진행 - jhm 2022/07/01
+                    // 회원가입 성공 후 토큰 발급 진행완료 - jhm 2022/07/01
                     Intent go_success = new Intent(context, JoinSuccessActivity.class);
                     go_success.putExtra("name", user_name);
                     startActivity(go_success);
@@ -573,6 +660,7 @@ public class PassCodeActivity extends AppCompatActivity {
     }
 
 
+    // 간편비밀번호 초록색 점 표시 - jhm 2022/08/04
     public void setActiveReset() {
         binding.passcode1.setActivated(false);
         binding.passcode2.setActivated(false);

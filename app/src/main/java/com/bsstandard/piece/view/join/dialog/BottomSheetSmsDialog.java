@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.bsstandard.piece.R;
@@ -99,13 +100,13 @@ public class BottomSheetSmsDialog extends BottomSheetDialogFragment {
         view = smsDialogBinding.getRoot();
 
         // 인증번호 값 check - jhm 2022/06/24
-        smsViewModel = ViewModelProviders.of(this).get(SmsViewModel.class);
+        smsViewModel = new ViewModelProvider(this).get(SmsViewModel.class);
         smsDialogBinding.setSms(smsViewModel);
 
 
 
         /****************** 인증번호 재사용 ****************************************************************/
-        callSmsAuthViewModel = ViewModelProviders.of(this).get(CallSmsAuthViewModel.class); // req sms - jhm 2022/06/22
+        callSmsAuthViewModel = new ViewModelProvider(this).get(CallSmsAuthViewModel.class); // req sms - jhm 2022/06/22
         txSeqNo = getArguments().getString("txSeqNo");
         name = getArguments().getString("name");
 
@@ -122,7 +123,7 @@ public class BottomSheetSmsDialog extends BottomSheetDialogFragment {
 
 
         /****************** 인증번호 검증 ****************************************************************/
-        verifyViewModel = ViewModelProviders.of(this).get(VerifyViewModel.class);
+        verifyViewModel = new ViewModelProvider(this).get(VerifyViewModel.class);
 
         /***********************************************************************************************/
 

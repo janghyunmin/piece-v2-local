@@ -30,7 +30,7 @@ public class VersionViewModel extends AndroidViewModel {
 
     public VersionViewModel(@NonNull Application application) {
         super(application);
-        versionRepository = new VersionRepository();
+        versionRepository = new VersionRepository(application);
     }
     public MutableLiveData<VersionDTO> getVersionData(String deviceType){
         versionData = loadVersionData(deviceType);

@@ -1,35 +1,34 @@
 package com.bsstandard.piece.view.main
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.view.MenuItem
 import android.view.View
 import android.view.WindowInsetsController
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
-import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
-import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.plusAssign
+import androidx.navigation.ui.setupWithNavController
 import com.bsstandard.piece.R
 import com.bsstandard.piece.base.BaseActivity
 import com.bsstandard.piece.data.datasource.shared.PrefsHelper
 import com.bsstandard.piece.databinding.ActivityMainBinding
-import com.bsstandard.piece.view.fragment.FragmentHome
-import com.bsstandard.piece.view.fragment.FragmentMagazine
+import com.bsstandard.piece.view.common.LoginChkActivity
 import com.bsstandard.piece.view.fragment.FragmentMore
-import com.bsstandard.piece.view.fragment.FragmentWallet
+import com.bsstandard.piece.view.fragment.navigation.KeepStateNavigator
 import com.bsstandard.piece.view.main.dialog.EventSheet
-import com.bsstandard.piece.widget.utils.DeviceInfoUtil
 import com.bsstandard.piece.widget.utils.LogUtil
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.activity_main.*
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -53,11 +52,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
     private val mainViewModel by viewModels<MainViewModel>()
     private lateinit var navController: NavController
     val manager = supportFragmentManager
-
-//    private val fragmentHome by lazy { FragmentHome() }
-//    private val fragmentMagazine by lazy { FragmentMagazine() }
-//    private val fragmentWallet by lazy { FragmentWallet() }
-//    private val fragmentMore by lazy { FragmentMore() }
+    var mContext:Context = this@MainActivity
 
 
 
@@ -76,28 +71,18 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
             setNaviBarIconColor(true) // 네비게이션 true : 검정색
             setNaviBarBgColor("#ffffff") // 네비게이션 배경색
 
-            LogUtil.logE("deviceId : " + DeviceInfoUtil.getDeviceId(this@MainActivity))
-
 
             PrefsHelper.init(this@MainActivity)
-            LogUtil.logE(PrefsHelper.read("accessToken", ""));
+            LogUtil.logE("accessToken Main : "+ PrefsHelper.read("accessToken", ""));
+            LogUtil.logE("deviceId Main : "+ PrefsHelper.read("deviceId", ""));
+            LogUtil.logE("expiredAt Main : " + PrefsHelper.read("expiredAt", ""));
+            LogUtil.logE("memberId Main : " + PrefsHelper.read("memberId", ""));
+            LogUtil.logE("refreshToken Main : " + PrefsHelper.read("refreshToken", ""));
 
-
-            navController = nav_host_fragment.findNavController() // 바텀 네비게이션 컨트롤러 - jhm 2022/07/19
-
+            initNavController()
             toDayShow()
-            initNavigation()
-
-
         }
-
     }
-
-    override fun onStart() {
-        LogUtil.logE("Main onStart..")
-        super.onStart()
-    }
-
 
     // 오늘은 보지 않기 눌렀는지 chk - jhm 2022/07/08
     @RequiresApi(Build.VERSION_CODES.O)
@@ -145,49 +130,66 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
                 println("before")
                 PrefsHelper.write("toDayChk", "true")
             }
-            else -> {
-                println("equals")
-                PrefsHelper.write("toDayChk", "false")
-            }
+//            else -> {
+//                println("equals")
+//                PrefsHelper.write("toDayChk", "false")
+//            }
         }
     }
 
-    /**
-     * Navigation Call
-     * **/
-    private fun initNavigation() {
-        bottomNavigationView.run {
-            setOnNavigationItemSelectedListener {
-                when(it.itemId) {
-                    R.id.FragmentHome -> {
-                        navController.navigate(R.id.FragmentHome)
-                    }
-                    R.id.FragmentMagazine -> {
-                        navController.navigate(R.id.FragmentMagazine)
-                    }
-                    R.id.FragmentWallet -> {
-                        navController.navigate(R.id.FragmentWallet)
-                    }
-                    R.id.FragmentMore -> {
-                        navController.navigate(R.id.FragmentMore)
-                    }
+    // BottomNavigation + Controller - jhm 2022/07/24
+    // bottomNavigation fragment 재사용 방지 로직 추가 - jhm 2022/07/24
+    private fun initNavController() {
+        val navHostFragment = supportFragmentManager.findFragmentById(binding.navMainFragment.id) as NavHostFragment
+        val navController = navHostFragment.navController
+
+        //Custom Navigator 추가
+        val navigator = KeepStateNavigator(
+            mContext,
+            navHostFragment.childFragmentManager,
+            binding.navMainFragment.id
+        )
+        navController.navigatorProvider += navigator
+        // set navigation graph
+        navController.setGraph(R.navigation.nav_graph)
+        binding.bottomNav.setupWithNavController(navController)
+
+    }
+
+    // 로그인 여부에 따른 wallet , more 탭 분기 - jhm 2022/08/14
+    fun onClick(item: MenuItem) {
+        when(item.itemId){
+            R.id.FragmentWallet -> {
+                LogUtil.logE("wallet..")
+                if(!PrefsHelper.read("isJoin","").equals("true")) {
+                    val intent = Intent(this@MainActivity,LoginChkActivity::class.java)
+                    startActivity(intent)
+                } else {
+                    var navHostFragment = supportFragmentManager.findFragmentById(binding.navMainFragment.id) as NavHostFragment
+                    var navController = navHostFragment.navController
+                    navController.navigate(R.id.FragmentWallet)
                 }
-                true
             }
-            selectedItemId = R.id.FragmentHome // 시작시 첫화면 보여주기
+            R.id.FragmentMore -> {
+                LogUtil.logE("more..")
+                if(!PrefsHelper.read("isJoin","").equals("true")) {
+                    val intent = Intent(this@MainActivity,LoginChkActivity::class.java)
+                    startActivity(intent)
+                } else {
+                    var navHostFragment = supportFragmentManager.findFragmentById(binding.navMainFragment.id) as NavHostFragment
+                    var navController = navHostFragment.navController
+                    navController.navigate(R.id.FragmentMore)
+                }
+            }
         }
     }
-
-
-
 
     /** Util start **/
-
     /**
      * 상태바 아이콘 색상 지정
      * @param isBlack true : 검정색 / false : 흰색
      */
-    private fun setStatusBarIconColor(isBlack : Boolean) {
+    private fun setStatusBarIconColor(isBlack: Boolean) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             // android os 12에서 사용 가능
 
@@ -210,11 +212,12 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
         } // end if
 
     }
+
     /**
      * 상태바 배경 색상 지정
      * @param colorHexValue #ffffff 색상 값
      */
-    private fun setStatusBarBgColor(colorHexValue : String) {
+    private fun setStatusBarBgColor(colorHexValue: String) {
 
         // 상태바 배경색은 5.0부터 가능하나, 아이콘 색상은 6.0부터 변경 가능
         // -> 아이콘/배경색 모두 바뀌어야 의미가 있으므로 6.0으로 체크
@@ -223,6 +226,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
 
         } // end if
     }
+
     /**
      * 내비바 아이콘 색상 지정
      * @param isBlack true : 검정색 / false : 흰색
@@ -253,11 +257,12 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
 
         } // end if
     }
+
     /**
      * 내비바 배경 색상 설정
      * @param colorHexValue #ffffff 색상 값
      */
-    private fun setNaviBarBgColor(colorHexValue : String) {
+    private fun setNaviBarBgColor(colorHexValue: String) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             // 내비바 배경색은 8.0부터 지원한다.
             window.navigationBarColor = Color.parseColor(colorHexValue)
@@ -265,7 +270,10 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
         } // end if
 
     }
+
+
     /** Util end **/
+
 
 
 

@@ -1,11 +1,7 @@
 package com.bsstandard.piece
 
 import android.app.Application
-import com.bsstandard.piece.di.hilt.ApiModule
-import com.bumptech.glide.module.AppGlideModule
 import dagger.hilt.android.HiltAndroidApp
-import org.koin.android.ext.koin.androidContext
-import org.koin.core.context.startKoin
 
 /**
  *packageName    : com.bsstandard.piece

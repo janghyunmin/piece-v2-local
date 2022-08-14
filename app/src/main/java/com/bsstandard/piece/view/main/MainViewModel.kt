@@ -25,7 +25,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
 
     fun onClickButton(){
-        // TODO: Click 시 Room에 데이터를 추가해야 함.
         Toast.makeText(mApplication,"Click!",Toast.LENGTH_SHORT).show()
     }
 }

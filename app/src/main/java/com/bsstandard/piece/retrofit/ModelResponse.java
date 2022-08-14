@@ -10,7 +10,7 @@ import com.google.gson.annotations.SerializedName;
  * fileName       : ModelResponse
  * author         : piecejhm
  * date           : 2022/06/22
- * description    :
+ * description    : 기본 Response Body Model
  * ===========================================================
  * DATE              AUTHOR             NOTE
  * -----------------------------------------------------------

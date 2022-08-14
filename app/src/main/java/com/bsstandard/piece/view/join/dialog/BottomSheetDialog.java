@@ -14,6 +14,7 @@ import android.view.Window;
 
 import androidx.core.content.res.ResourcesCompat;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -154,9 +155,9 @@ public class BottomSheetDialog extends BottomSheetDialogFragment implements View
                 view = slideupConsentBinding.getRoot();
 
                 slideupConsentBinding.closeBtn.setOnClickListener(this::onClick);
-                consentViewModel = ViewModelProviders.of(this).get(ConsentViewModel.class); // 약관 조회 - jhm 2022/06/21
-                consentDetailViewModel = ViewModelProviders.of(this).get(ConsentDetailViewModel.class); // 약관 상세 조회 - jhm 2022/06/21
-                callSmsAuthViewModel = ViewModelProviders.of(this).get(CallSmsAuthViewModel.class); // req sms - jhm 2022/06/22
+                consentViewModel = new ViewModelProvider(this).get(ConsentViewModel.class); // 약관 조회 - jhm 2022/06/21
+                consentDetailViewModel = new ViewModelProvider(this).get(ConsentDetailViewModel.class); // 약관 상세 조회 - jhm 2022/06/21
+                callSmsAuthViewModel = new ViewModelProvider(this).get(CallSmsAuthViewModel.class); // req sms - jhm 2022/06/22
 
                 consentViewModel.getConsentData().observe(this, response -> {
                     progressDialog.show();
@@ -198,9 +199,9 @@ public class BottomSheetDialog extends BottomSheetDialogFragment implements View
         progressDialog.dismiss();
 
         // 모두 동의 초기 셋팅 로직 - jhm 2022/06/20
-        slideupConsentBinding.allChk.setChecked(true);
-        consentAdapter.selectAll();
-        setEnabledBtn(7);
+        slideupConsentBinding.allChk.setChecked(false);
+//        consentAdapter.selectAll();
+        setEnabledBtn(0);
 
 
         // 전체 체크박스 클릭시 - jhm 2022/06/21
@@ -236,7 +237,7 @@ public class BottomSheetDialog extends BottomSheetDialogFragment implements View
         });
 
         // 마케팅 선택 체크박스 로직 - jhm 2022/06/21
-        slideupConsentBinding.marketingAgree.setChecked(true);
+        slideupConsentBinding.marketingAgree.setChecked(false);
         slideupConsentBinding.marketingAgree.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

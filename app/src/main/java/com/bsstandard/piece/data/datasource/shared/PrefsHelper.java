@@ -47,6 +47,11 @@ public class PrefsHelper {
         prefsEditor.commit();
     }
 
+    public static void removeToken(String key){
+        prefsEditor.remove(key);
+        prefsEditor.commit();
+    }
+
     // Integer Shared - jhm 2022/07/04
     public static Integer read(String key,int defValue){
         return prefs.getInt(key,defValue);

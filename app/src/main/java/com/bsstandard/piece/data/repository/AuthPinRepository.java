@@ -1,9 +1,11 @@
 package com.bsstandard.piece.data.repository;
 
 
+import android.app.Application;
+
 import com.bsstandard.piece.data.datasource.shared.PrefsHelper;
 import com.bsstandard.piece.data.dto.AuthPinDTO;
-import com.bsstandard.piece.retrofit.RetrofitClient;
+import com.bsstandard.piece.di.hilt.ApiModule;
 import com.bsstandard.piece.retrofit.RetrofitService;
 import com.bsstandard.piece.widget.utils.LogUtil;
 import com.bsstandard.piece.widget.utils.SingleLiveEvent;
@@ -30,13 +32,14 @@ public class AuthPinRepository {
     private static AuthPinRepository authPinRepository;
     private final SingleLiveEvent<AuthPinDTO> authData = new SingleLiveEvent<>();
 
-    public static AuthPinRepository getInstance() {
+    public static AuthPinRepository getInstance(Application application) {
         if(authPinRepository == null){
-            authPinRepository = new AuthPinRepository();
+            authPinRepository = new AuthPinRepository(application);
         }
         return authPinRepository;
     }
-    public AuthPinRepository() { mInstance = RetrofitClient.getService(); }
+    public AuthPinRepository(Application application) { mInstance = ApiModule.INSTANCE.provideRetrofit().create(RetrofitService.class);
+    }
     public SingleLiveEvent<AuthPinDTO> getAuthData(){
         String memberId = PrefsHelper.read("memberId","");
         String pinNumber = PrefsHelper.read("inputPinNumber","");
@@ -54,11 +57,11 @@ public class AuthPinRepository {
             public void onResponse(Call<AuthPinDTO> call, Response<AuthPinDTO> response) {
                 if(response.isSuccessful()){
                     LogUtil.logE("핀번호 검증 성공");
-                    authData.setValue(response.body());
+                    authData.postValue(response.body());
                 }
                 else {
                     LogUtil.logE("핀번호 검증 실패.." + response.code());
-                    authData.setValue(response.body());
+                    authData.postValue(response.body());
                 }
             }
 

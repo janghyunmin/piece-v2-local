@@ -49,6 +49,10 @@
         </service>
 
         <activity
+            android:name=".view.common.LoginChkActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
             android:name=".view.intro.IntroActivity"
             android:screenOrientation="portrait" />
         <activity

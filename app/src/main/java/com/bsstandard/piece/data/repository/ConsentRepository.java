@@ -1,9 +1,11 @@
 package com.bsstandard.piece.data.repository;
 
+import android.app.Application;
+
 import androidx.lifecycle.MutableLiveData;
 
 import com.bsstandard.piece.data.dto.ConsentDTO;
-import com.bsstandard.piece.retrofit.RetrofitClient;
+import com.bsstandard.piece.di.hilt.ApiModule;
 import com.bsstandard.piece.retrofit.RetrofitService;
 import com.bsstandard.piece.widget.utils.LogUtil;
 import com.google.gson.Gson;
@@ -30,19 +32,20 @@ public class ConsentRepository {
     private static ConsentRepository consentRepository;
     private final MutableLiveData<ConsentDTO> consentData = new MutableLiveData<>();
 
-    public static ConsentRepository getInstance() {
+    public static ConsentRepository getInstance(Application application) {
         if (consentRepository == null) {
-            consentRepository = new ConsentRepository();
+            consentRepository = new ConsentRepository(application);
         }
         return consentRepository;
     }
 
-    public ConsentRepository() {
-        mInstance = RetrofitClient.getService();
+    public ConsentRepository(Application application) {
+//        mInstance = RetrofitClient.getService();
+        mInstance = ApiModule.INSTANCE.provideRetrofit().create(RetrofitService.class);
     }
 
     public MutableLiveData<ConsentDTO> getConsentData() {
-        Call<ConsentDTO> consentDAOCall = mInstance.getConsent();
+        Call<ConsentDTO> consentDAOCall = mInstance.getConsent("SIGN");
         consentDAOCall.enqueue(new Callback<ConsentDTO>() {
             @Override
             public void onResponse(Call<ConsentDTO> call, Response<ConsentDTO> response) {

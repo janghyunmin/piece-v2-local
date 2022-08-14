@@ -31,7 +31,7 @@
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_noti_custom.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_passcode.xml" value="0.32150658323755427" />
-        <entry key="app/src/main/res/layout/activity_portfoliodetail.xml" value="0.2151268115942029" />
+        <entry key="app/src/main/res/layout/activity_portfoliodetail.xml" value="0.22937622070312497" />
         <entry key="app/src/main/res/layout/activity_splash.xml" value="0.2884963768115942" />
         <entry key="app/src/main/res/layout/activity_success.xml" value="0.16544342041015625" />
         <entry key="app/src/main/res/layout/activity_test.xml" value="0.1336206896551724" />
@@ -46,10 +46,12 @@
         <entry key="app/src/main/res/layout/fragment_more.xml" value="0.32864583333333336" />
         <entry key="app/src/main/res/layout/fragment_wallet.xml" value="0.32864583333333336" />
         <entry key="app/src/main/res/layout/l_slide_popup.xml" value="0.2708333333333333" />
+        <entry key="app/src/main/res/layout/loginchk_layout.xml" value="0.14367370605468752" />
         <entry key="app/src/main/res/layout/permission_dialog.xml" value="0.23505434782608695" />
         <entry key="app/src/main/res/layout/popup_slideup.xml" value="0.280670166015625" />
         <entry key="app/src/main/res/layout/popup_slideup2.xml" value="0.2708333333333333" />
         <entry key="app/src/main/res/layout/portfolio_detail.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/portfolio_detail_content.xml" value="0.3104166666666667" />
         <entry key="app/src/main/res/layout/portfolio_item.xml" value="0.14197319141332654" />
         <entry key="app/src/main/res/layout/portfolio_local_item.xml" value="0.27444305419921877" />
         <entry key="app/src/main/res/layout/slide_up_dialog_base.xml" value="0.1" />
@@ -58,7 +60,7 @@
         <entry key="app/src/main/res/layout/slideup_phone.xml" value="0.3151041666666667" />
         <entry key="app/src/main/res/layout/sms_dialog.xml" value="0.36964569091796873" />
         <entry key="app/src/main/res/layout/view_custom_notification.xml" value="0.134375" />
-        <entry key="app/src/main/res/menu/navi_menu.xml" value="0.3375" />
+        <entry key="app/src/main/res/menu/navi_menu.xml" value="0.1" />
       </map>
     </option>
   </component>

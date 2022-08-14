@@ -28,7 +28,7 @@ public class CallSmsAuthViewModel extends AndroidViewModel {
 
     public CallSmsAuthViewModel(@NonNull Application application){
         super(application);
-        callSmsAuthRepository = new CallSmsAuthRepository();
+        callSmsAuthRepository = new CallSmsAuthRepository(application);
     }
     public MutableLiveData<CallSmsAuthDTO> postCallSmsAuthData(SmsAuthModel smsAuthModel){
         if(callSmsAuthData == null){

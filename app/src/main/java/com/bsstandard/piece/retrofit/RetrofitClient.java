@@ -1,6 +1,8 @@
 package com.bsstandard.piece.retrofit;
 
+import com.bsstandard.piece.data.datasource.shared.PrefsHelper;
 import com.bsstandard.piece.widget.utils.Division;
+import com.bsstandard.piece.widget.utils.LogUtil;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -14,18 +16,18 @@ import okhttp3.Request;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 /**
  * packageName    : com.bsstandard.piece.api
  * fileName       : ApiClient
  * author         : piecejhm
  * date           : 2022/06/10
- * description    :
+ * description    : Retrofit Base Client Module
  * ===========================================================
  * DATE              AUTHOR             NOTE
  * -----------------------------------------------------------
  * 2022/06/10        piecejhm       최초 생성
+ * 2022/08/08        piecejhm       현재파일 사용 안함 , hilt ApiModule 클래스 통합으로 이전
  */
 
 public class RetrofitClient {
@@ -72,7 +74,7 @@ public class RetrofitClient {
 
     public static class AuthenticationInterceptor implements Interceptor {
 
-        private String authToken;
+        private String authToken = PrefsHelper.read("accessToken","");
 
         public AuthenticationInterceptor(String token) {
             this.authToken = token;
@@ -82,11 +84,18 @@ public class RetrofitClient {
         public okhttp3.Response intercept(Chain chain) throws IOException {
             Request original = chain.request();
 
-            Request.Builder builder = original.newBuilder()
-                    .header("Authorization", authToken);
+            if(original.header("No-Authentication") == null) {
+                if(!authToken.isEmpty()) {
+                    String finalToken = "Bearer " + authToken;
+                    LogUtil.logE("Token : " + finalToken);
+                    original = original.newBuilder()
+                            .addHeader("Authorization",finalToken)
+                            .build();
+                }
+            }
 
-            Request request = builder.build();
-            return chain.proceed(request);
+
+            return chain.proceed(original);
         }
     }
 }

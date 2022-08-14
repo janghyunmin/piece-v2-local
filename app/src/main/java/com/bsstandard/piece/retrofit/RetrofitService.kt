@@ -4,7 +4,7 @@ import com.bsstandard.piece.data.datamodel.dmodel.MemberPinModel
 import com.bsstandard.piece.data.datamodel.dmodel.SmsAuthModel
 import com.bsstandard.piece.data.datamodel.dmodel.join.JoinModel
 import com.bsstandard.piece.data.dto.*
-import com.bsstandard.piece.data.dto.portfolio.PortfolioDTO
+import com.bsstandard.piece.data.dto.PortfolioDTO
 import io.reactivex.Observable
 import retrofit2.Call
 import retrofit2.http.*
@@ -26,8 +26,9 @@ interface RetrofitService {
     fun getVersion(@Path("deviceType") deviceType: String?): Call<VersionDTO?>?
 
     // 약관 목록 조회 - jhm 2022/06/21
-    @get:GET("board/consent")
-    val consent: Call<ConsentDTO?>?
+    @GET("board/consent")
+    fun getConsent(@Query("consentDvn") consentDvn: String): Call<ConsentDTO?>?
+    //val consent: Call<ConsentDTO?>?
 
     // 약관 동의 상세 조회 - jhm 2022/06/21
     @GET("board/consent/{consentCode}")
@@ -45,6 +46,23 @@ interface RetrofitService {
     @POST("member/join")
     fun PostMemberJoin(@Body joinModel: JoinModel?): Call<JoinDTO?>?
 
+    // accessToken 검증 요청 - jhm 2022/07/31
+    @GET("member/auth")
+    fun getAccessToken(@HeaderMap headers: Map<String?, String?>?): Call<BaseDTO?>?
+
+    // accessToken 생성 요청 - jhm 2022/08/04
+    @POST("member/auth")
+    suspend fun postAccessToken(
+        @Header("deviceId") deviceId: String?,
+        @Header("grantType") grantType: String?,
+        @Header("memberId") memberId: String?
+    ): Observable<PostTokenDTO?>?
+
+    // accessToken refresh 요청 - jhm 2022/08/04
+    @PUT("member/auth")
+    fun putRefreshToken(@HeaderMap headers: HashMap<String, String>): Call<PostTokenDTO?>?
+
+
     // 회원 PIN 번호 검증 - jhm 2022/07/04
     @GET("member/auth/pin")
     fun getAuthPin(@HeaderMap headers: Map<String?, String?>?): Call<AuthPinDTO?>?
@@ -58,7 +76,6 @@ interface RetrofitService {
 
     @GET("portfolio")
     fun getPortfolio() : Observable<PortfolioDTO>
-
 
 
 }

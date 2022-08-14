@@ -30,7 +30,7 @@ public class AuthPinPutViewModel extends AndroidViewModel {
 
     public AuthPinPutViewModel(@NonNull Application application) {
         super(application);
-        authPinPutRepository = new AuthPinPutRepository();
+        authPinPutRepository = new AuthPinPutRepository(application);
     }
     public SingleLiveEvent<AuthPinDTO> putCallAuthPinData(MemberPinModel memberPinModel) {
         if(authPinData == null) {

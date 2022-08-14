@@ -18,6 +18,7 @@ import com.bsstandard.piece.databinding.FragmentHomeBinding
 import com.bsstandard.piece.view.adapter.portfolio.PortfolioAdapter
 import com.bsstandard.piece.widget.utils.LogUtil
 import dagger.hilt.android.AndroidEntryPoint
+import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.portfolio_item.*
 
 
@@ -40,6 +41,7 @@ class FragmentHome : Fragment(){
     private val binding get() = _binding!!
 
     private lateinit var vm: PortfolioViewModel
+    private var disposable: Disposable? = null
 
     companion object {
         fun newInstance(): FragmentHome {
@@ -51,7 +53,13 @@ class FragmentHome : Fragment(){
     // 프래그먼트를 포함하고 있는 액티비티에 붙었을 때 - jhm 2022/07/15
     override fun onAttach(context: Context) {
         super.onAttach(context)
+    }
 
+    // 메모리 누수 방지를 위해 자원 해제 - jhm 2022/08/08
+    override fun onDestroy() {
+        super.onDestroy()
+        disposable?.let { disposable!!.dispose() }
+        
     }
 
 
@@ -62,7 +70,6 @@ class FragmentHome : Fragment(){
         savedInstanceState: Bundle?
     ): View? {
         _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
-
 
         vm = ViewModelProvider(this)[PortfolioViewModel::class.java]
         vm.vewInit(binding.portfolioRv)

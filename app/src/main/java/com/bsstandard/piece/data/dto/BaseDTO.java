@@ -2,7 +2,6 @@ package com.bsstandard.piece.data.dto;
 
 import androidx.work.Data;
 
-import com.bsstandard.piece.data.dto.portfolio.PortfolioDTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 

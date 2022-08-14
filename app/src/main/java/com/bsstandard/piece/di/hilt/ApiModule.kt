@@ -1,5 +1,7 @@
 package com.bsstandard.piece.di.hilt
 
+import com.bsstandard.piece.data.datasource.shared.PrefsHelper
+import com.bsstandard.piece.di.hilt.ApiModule.token
 import com.bsstandard.piece.retrofit.RetrofitService
 import com.bsstandard.piece.widget.utils.Division
 import com.bsstandard.piece.widget.utils.LogUtil
@@ -8,8 +10,11 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.Response
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.android.BuildConfig
 import retrofit2.Retrofit
@@ -33,9 +38,11 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object ApiModule {
+    val token: String = PrefsHelper.read("accessToken","")
 
     @Provides
     fun provideBaseUrl() = Division.PIECE_API_V2_DEV
+    //fun provideBaseUrl() = Division.PIECE_API_V2_PROD
 
     @Singleton
     @Provides
@@ -45,10 +52,10 @@ object ApiModule {
 
     @Singleton
     @Provides
-    fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
+    fun provideRetrofit(): Retrofit {
         return Retrofit.Builder()
             .baseUrl(provideBaseUrl())
-            .client(okHttpClient)
+            .client(provideOkHttpClient(OAuthInterceptor("Bearer ",token),provideLoggingInterceptor()))
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create()) // Rx도 사용하기 때문에 추가 필요.
             .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
             .build()
@@ -60,7 +67,6 @@ object ApiModule {
         headerInterceptor: Interceptor,
         LoggerInterceptor: HttpLoggingInterceptor,
     ): OkHttpClient {
-
         val okHttpClientBuilder = OkHttpClient().newBuilder()
         okHttpClientBuilder.connectTimeout(60, TimeUnit.SECONDS)
         okHttpClientBuilder.readTimeout(60, TimeUnit.SECONDS)
@@ -71,25 +77,12 @@ object ApiModule {
         return okHttpClientBuilder.build()
     }
 
-    @Provides
-    @Singleton
-    fun provideHeaderInterceptor(): Interceptor {
-        return Interceptor { chain ->
-            with(chain) {
-                val newRequest = request().newBuilder()
-                    .addHeader("", "")
-                    .addHeader("", "")
-                    .build()
-                proceed(newRequest)
-            }
-        }
-    }
 
     @Provides
     @Singleton
     fun provideLoggingInterceptor(): HttpLoggingInterceptor {
         return HttpLoggingInterceptor { message ->
-            LogUtil.logE(message)
+            LogUtil.logE("message : $message")
         }.let {
             if (BuildConfig.DEBUG) {
                 it.setLevel(HttpLoggingInterceptor.Level.BODY)
@@ -99,4 +92,14 @@ object ApiModule {
         }
     }
 
+}
+
+// 해당 Interceptor 에서 header token 을 가로챈다. - jhm 2022/08/11
+class OAuthInterceptor(private val tokenType: String, private val accessToken: String) : Interceptor {
+    override fun intercept(chain: Interceptor.Chain): okhttp3.Response {
+        var request = chain.request()
+        request = request.newBuilder().header("Authorization", "$tokenType $accessToken").build()
+
+        return chain.proceed(request)
+    }
 }

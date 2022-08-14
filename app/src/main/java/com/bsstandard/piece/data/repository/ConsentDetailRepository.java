@@ -1,9 +1,11 @@
 package com.bsstandard.piece.data.repository;
 
+import android.app.Application;
+
 import androidx.lifecycle.MutableLiveData;
 
 import com.bsstandard.piece.data.dto.ConsentDetailDTO;
-import com.bsstandard.piece.retrofit.RetrofitClient;
+import com.bsstandard.piece.di.hilt.ApiModule;
 import com.bsstandard.piece.retrofit.RetrofitService;
 import com.bsstandard.piece.widget.utils.LogUtil;
 
@@ -27,15 +29,16 @@ public class ConsentDetailRepository {
     private static ConsentDetailRepository consentDetailRepository;
     private final MutableLiveData<ConsentDetailDTO> consentDetailData = new MutableLiveData<>();
 
-    public static ConsentDetailRepository getInstance() {
+    public static ConsentDetailRepository getInstance(Application application) {
         if (consentDetailRepository == null) {
-            consentDetailRepository = new ConsentDetailRepository();
+            consentDetailRepository = new ConsentDetailRepository(application);
         }
         return consentDetailRepository;
     }
 
-    public ConsentDetailRepository() {
-        mInstance = RetrofitClient.getService();
+    public ConsentDetailRepository(Application application) {
+//      mInstance = RetrofitClient.getService();
+        mInstance = ApiModule.INSTANCE.provideRetrofit().create(RetrofitService.class);
     }
 
     public MutableLiveData<ConsentDetailDTO> getConsentDetailData(String consentCode) {

@@ -28,7 +28,7 @@ public class AuthPinViewModel extends AndroidViewModel {
 
     public AuthPinViewModel(@NonNull Application application) {
         super(application);
-        authPinRepository = new AuthPinRepository();
+        authPinRepository = new AuthPinRepository(application);
     }
 
     public SingleLiveEvent<AuthPinDTO> getAuthData() {

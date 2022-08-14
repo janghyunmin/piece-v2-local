@@ -1,7 +1,9 @@
 package com.bsstandard.piece.data.repository;
 
+import android.app.Application;
+
 import com.bsstandard.piece.data.dto.VersionDTO;
-import com.bsstandard.piece.retrofit.RetrofitClient;
+import com.bsstandard.piece.di.hilt.ApiModule;
 import com.bsstandard.piece.retrofit.RetrofitService;
 import com.bsstandard.piece.widget.utils.LogUtil;
 import com.bsstandard.piece.widget.utils.SingleLiveEvent;
@@ -30,16 +32,16 @@ public class VersionRepository {
 
 
     // Repository Singleton - jhm 2022/06/17
-    public static VersionRepository getInstance(){
+    public static VersionRepository getInstance(Application application){
         if(versionRepository == null){
-            versionRepository = new VersionRepository();
-
+            versionRepository = new VersionRepository(application);
         }
         return versionRepository;
     }
 
-    public VersionRepository(){
-        mInterface = RetrofitClient.getService();
+    public VersionRepository(Application application){
+//        mInterface = RetrofitClient.getService();
+        mInterface = ApiModule.INSTANCE.provideRetrofit().create(RetrofitService.class);
     }
 
     public SingleLiveEvent<VersionDTO> getVersionData(String deviceType){
@@ -47,11 +49,14 @@ public class VersionRepository {
         versionDataCall.enqueue(new Callback<VersionDTO>() {
             @Override
             public void onResponse(Call<VersionDTO> call, Response<VersionDTO> response) {
-                if(response.body()!= null){
-                    LogUtil.logE("get Version : " + response.message());
-                    versionData.setValue(response.body());
-                }else {
+                try {
+                    if(response.body()!= null){
+                        LogUtil.logE("get Version : " + response.message());
+                        versionData.postValue(response.body());
+                    }
+                }catch (Exception e){
                     LogUtil.logE("get Version Error " + response.message());
+                    e.printStackTrace();
                 }
             }
 

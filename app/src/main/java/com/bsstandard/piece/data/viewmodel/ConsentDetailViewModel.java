@@ -27,7 +27,7 @@ public class ConsentDetailViewModel extends AndroidViewModel {
 
     public ConsentDetailViewModel(@NonNull Application application){
         super(application);
-        consentDetailRepository = new ConsentDetailRepository();
+        consentDetailRepository = new ConsentDetailRepository(application);
     }
     public MutableLiveData<ConsentDetailDTO> getConsentDetailData(String consentCode) {
         consentDetailData = loadConsentDetailData(consentCode);

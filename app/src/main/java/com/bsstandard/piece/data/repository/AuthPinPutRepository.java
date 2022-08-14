@@ -1,9 +1,11 @@
 package com.bsstandard.piece.data.repository;
 
+import android.app.Application;
+
 import com.bsstandard.piece.data.datamodel.dmodel.MemberPinModel;
 import com.bsstandard.piece.data.datasource.shared.PrefsHelper;
 import com.bsstandard.piece.data.dto.AuthPinDTO;
-import com.bsstandard.piece.retrofit.RetrofitClient;
+import com.bsstandard.piece.di.hilt.ApiModule;
 import com.bsstandard.piece.retrofit.RetrofitService;
 import com.bsstandard.piece.widget.utils.LogUtil;
 import com.bsstandard.piece.widget.utils.SingleLiveEvent;
@@ -30,13 +32,15 @@ public class AuthPinPutRepository {
     private static AuthPinPutRepository authPinPutRepository;
     private final SingleLiveEvent<AuthPinDTO> authPutData = new SingleLiveEvent<>();
 
-    public static AuthPinPutRepository getInstance() {
+    public static AuthPinPutRepository getInstance(Application application) {
         if(authPinPutRepository == null){
-            authPinPutRepository = new AuthPinPutRepository();
+            authPinPutRepository = new AuthPinPutRepository(application);
         }
         return authPinPutRepository;
     }
-    public AuthPinPutRepository() { mInstance = RetrofitClient.getService(); }
+//    public AuthPinPutRepository() { mInstance = RetrofitClient.getService(); }
+    public AuthPinPutRepository(Application application) { mInstance = ApiModule.INSTANCE.provideRetrofit().create(RetrofitService.class);
+    }
     public SingleLiveEvent<AuthPinDTO> putAuthData(MemberPinModel memberPinModel) {
         String accessToken = PrefsHelper.read("accessToken","");
         String deviceId = PrefsHelper.read("deviceId","");
@@ -58,10 +62,10 @@ public class AuthPinPutRepository {
                 if(response.isSuccessful()) {
                     if(response.body().getStatus().equals("OK")){
                         LogUtil.logE("회원 간편비밀번호 변경 성공..");
-                        authPutData.setValue(response.body());
+                        authPutData.postValue(response.body());
                     } else {
                         LogUtil.logE("회원 간편비밀번호 변경 실패..");
-                        authPutData.setValue(null);
+                        authPutData.postValue(null);
                     }
                 }
             }
@@ -74,7 +78,4 @@ public class AuthPinPutRepository {
         });
         return authPutData;
     }
-
-
-
 }

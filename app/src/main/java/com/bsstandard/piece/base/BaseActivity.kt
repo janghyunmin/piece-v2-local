@@ -68,4 +68,6 @@ abstract class BaseActivity<T : ViewDataBinding>(
         super.onDestroy()
         compositeDisposable.clear()
     }
+
+
 }
