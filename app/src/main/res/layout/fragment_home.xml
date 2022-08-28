@@ -1,30 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    >
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <variable
             name="home"
             type="com.bsstandard.piece.data.viewmodel.PortfolioViewModel" />
     </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_width="match_parent"
+            android:layout_height="80dp">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/top_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="22dp"
+                android:layout_marginTop="23dp"
+                android:text="포트폴리오"
+                android:textColor="@color/c_4a4d55"
+                android:textSize="25dp"
+                app:fontFamily="@font/pretendard_extrabold"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/noti_icon"
+                android:layout_width="18dp"
+                android:layout_height="22dp"
+                android:layout_marginTop="23dp"
+                android:layout_marginEnd="28dp"
+                android:background="@drawable/noti_icon"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/portfolio_rv"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginStart="22dp"
-            android:layout_marginBottom="20dp"
             android:layout_marginEnd="22dp"
-            android:layout_marginTop="20dp"
             android:background="@color/white"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/layout"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"/>

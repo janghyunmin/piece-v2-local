@@ -4,11 +4,13 @@
     <item
         android:id="@+id/FragmentHome"
         android:icon="@drawable/tab1_icon"
+        android:onClick="onClick"
         android:title=""
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/FragmentMagazine"
         android:icon="@drawable/tab2_icon"
+        android:onClick="onClick"
         android:title=""
         app:showAsAction="ifRoom" />
     <item

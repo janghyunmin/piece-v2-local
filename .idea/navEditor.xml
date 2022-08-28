@@ -49,6 +49,15 @@
                             <option name="y" value="356" />
                           </Point>
                         </option>
+                        <option name="myPositions">
+                          <map>
+                            <entry key="navToLoginChkActivity">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
+                          </map>
+                        </option>
                       </LayoutPositions>
                     </value>
                   </entry>

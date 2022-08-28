@@ -14,7 +14,7 @@ import java.util.List;
  * fileName       : PortfolioDTo
  * author         : piecejhm
  * date           : 2022/07/14
- * description    :
+ * description    : PortfolioDTO Class
  * ===========================================================
  * DATE              AUTHOR             NOTE
  * -----------------------------------------------------------

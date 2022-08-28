@@ -19,7 +19,7 @@ import com.bsstandard.piece.widget.utils.LogUtil
  * fileName       : PortfolioAdapter
  * author         : piecejhm
  * date           : 2022/07/14
- * description    :
+ * description    : 포트폴리오 리스트 Adapter
  * ===========================================================
  * DATE              AUTHOR             NOTE
  * -----------------------------------------------------------
@@ -73,41 +73,8 @@ class PortfolioAdapter(viewModel: PortfolioViewModel, val context: Context) :
                     }
                 }
                 mLastClickTime = SystemClock.elapsedRealtime()
-//                onPortfolioDetail(
-//                    portfolioViewModel.getPortoflioItem().get(pos).representThumbnailImagePath,
-//                    portfolioViewModel.getPortoflioItem().get(pos).portfolioId
-//                )
             }
 
-
-            // 포트폴리오 상세로 가기위해 portfolioID 값 참조 - jhm 2022/07/18
-//            binding.portfolioImg.setOnClickListener {
-//                binding.portfolioImg.transitionName = portfolioViewModel.getPortoflioItem().get(pos).portfolioId
-//            //    onPortfolioDetail(binding.portfolioImg.transitionName, portfolioViewModel.getPortoflioItem().get(pos).portfolioId)
-//
-//                val intent = Intent(this@PortfolioAdapter, PortfolioDetailActivity::class.java)
-//                intent.putExtra("transitionName",binding.portfolioImg.transitionName)
-//                intent.putExtra("portfolioId",portfolioViewModel.getPortoflioItem().get(pos).portfolioId)
-//                var options : ActivityOptions = ActivityOptions.makeSceneTransitionAnimation(
-//                    this@PortfolioAdapter as Activity?
-//                )
-//                context.startActivity(intent,options.toBundle())
-//            }
-//        }
-
-
         }
-
-//        //  포트폴리오 상세 이동 - jhm 2022/07/18
-//        fun onPortfolioDetail(representThumbnailImagePath: String, portfolioId: String) {
-//            LogUtil.logE("transitionName : $representThumbnailImagePath")
-//            LogUtil.logE("onclick : $portfolioId")
-//
-//            val options = ActivityOptions.makeSceneTransitionAnimation(context, binding.portfolioImg,representThumbnailImagePath)
-//            val intent = Intent(context, PortfolioDetailActivity::class.java)
-//            intent.putExtra("transitionName", representThumbnailImagePath)
-//            intent.putExtra("portfolioId", portfolioId)
-//            context.startActivity(intent, options.toBundle())
-//        }
     }
 }

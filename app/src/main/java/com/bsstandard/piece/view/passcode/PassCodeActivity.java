@@ -387,34 +387,40 @@ public class PassCodeActivity extends AppCompatActivity {
                     postToken.enqueue(new Callback<PostTokenDTO>() {
                         @Override
                         public void onResponse(Call<PostTokenDTO> call, Response<PostTokenDTO> response) {
-                            if (response.isSuccessful()) {
-                                LogUtil.logE("isSuccess Refresh..");
-                                PrefsHelper.removeToken("expiredAt");
-                                PrefsHelper.removeToken("accessToken");
-                                PrefsHelper.removeToken("refreshToken");
+                            try {
+                                if (response.isSuccessful()) {
+                                    LogUtil.logE("isSuccess Refresh..");
+                                    PrefsHelper.removeToken("expiredAt");
+                                    PrefsHelper.removeToken("accessToken");
+                                    PrefsHelper.removeToken("refreshToken");
 
-                                PrefsHelper.write("expiredAt", response.body().getData().getExpiredAt());
-                                PrefsHelper.write("accessToken", response.body().getData().getAccessToken());
-                                PrefsHelper.write("refreshToken", response.body().getData().getRefreshToken());
+                                    PrefsHelper.write("expiredAt", response.body().getData().getExpiredAt());
+                                    PrefsHelper.write("accessToken", response.body().getData().getAccessToken());
+                                    PrefsHelper.write("refreshToken", response.body().getData().getRefreshToken());
 
-                                LogUtil.logE("expiredAt : " + response.body().getData().getExpiredAt());
-                                LogUtil.logE("accessToken : " + response.body().getData().getAccessToken());
-                                LogUtil.logE("refreshToken : " + response.body().getData().getRefreshToken());
+                                    LogUtil.logE("expiredAt : " + response.body().getData().getExpiredAt());
+                                    LogUtil.logE("accessToken : " + response.body().getData().getAccessToken());
+                                    LogUtil.logE("refreshToken : " + response.body().getData().getRefreshToken());
 
-                                Intent go_success = new Intent(context, MainActivity.class);
-                                startActivity(go_success);
-                                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                                finish();
-                            } else {
+                                    Intent go_success = new Intent(context, MainActivity.class);
+                                    startActivity(go_success);
+                                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                                    finish();
+                                }
+                            } catch (Exception ex) {
+                                // 에러발생시 초기 화면으로 return 시키기 - jhm 2022/08/22
                                 LogUtil.logE("response fail.. " + response.body().getStatus());
                                 LogUtil.logE("response fail.. " + response.body().getMessage());
                                 PinNumberReset();
+                                ex.printStackTrace();
                             }
+
                         }
 
                         @Override
                         public void onFailure(Call<PostTokenDTO> call, Throwable t) {
                             LogUtil.logE("isFail Refresh..");
+                            PinNumberReset();
                         }
                     });
                 }

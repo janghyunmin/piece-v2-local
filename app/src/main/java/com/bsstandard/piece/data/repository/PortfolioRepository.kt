@@ -19,6 +19,8 @@ import io.reactivex.schedulers.Schedulers
  * -----------------------------------------------------------
  * 2022/07/13        piecejhm       최초 생성
  */
+
+
 class PortfolioRepository(application: Application){
    val response = ApiModule.provideRetrofit().create(RetrofitService::class.java)
 
@@ -28,7 +30,7 @@ class PortfolioRepository(application: Application){
       .observeOn(AndroidSchedulers.mainThread())
 
 
-   // singleton pattern
+   // singleton pattern - jhm 2022/08/15
    companion object {
       private var instance: PortfolioRepository? = null
 

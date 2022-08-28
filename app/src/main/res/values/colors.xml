@@ -63,6 +63,10 @@
     <color name="c_ffffff">#FFFFFF</color>
     <color name="c_f9f9f9">#F9F9F9</color>
     <color name="c_f2f3f4">#F2F3F4</color>
+    <color name="c_eaf7fa">#EAF7FA</color>
+    <color name="c_66c8bd">#66C8BD</color>
+    <color name="c_51a7e7">#51A7E7</color>
+    <color name="c_817dd7">#817DD7</color>
 
     <!-- DIM COLOR -->
     <color name="c35_1a1a1a">#591A1A1A</color>
@@ -73,6 +77,8 @@
     <color name="c_EAECF0">#EAECF0</color>
 
 
+    <!-- Portfolio Detail -->
+    <color name="c_lalala">#1a1a1a</color>
 
 
 

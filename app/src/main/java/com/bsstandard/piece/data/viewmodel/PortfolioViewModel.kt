@@ -34,7 +34,7 @@ import java.util.*
  * fileName       : PortfolioViewModel
  * author         : piecejhm
  * date           : 2022/07/13
- * description    :
+ * description    : 포트폴리오 조회 ViewModel
  * ===========================================================
  * DATE              AUTHOR             NOTE
  * -----------------------------------------------------------
@@ -67,10 +67,9 @@ class PortfolioViewModel(application: Application) : AndroidViewModel(applicatio
         )
     }
 
-    fun vewInit(recyclerView: RecyclerView) {
+    fun viewInit(recyclerView: RecyclerView) {
         recyclerView.adapter = portfolioAdapter
         recyclerView.layoutManager = LinearLayoutManager(getApplication())
-
     }
 
     fun getPortoflioItem(): List<PortfolioDTO.Data.Datum> {

@@ -154,6 +154,7 @@
 
         // slidinguppanel _jhm_2022/04/22
         const val SLIDE_UP_PANEL = "3.4.0"
+        const val SLIDE_UP_PANEL_HANNESA = "4.2.1"
 
         // Debug log Shared _jhm_2022/04/22
         const val STETHO = "1.4.1"
@@ -214,6 +215,8 @@
         const val TEST_RUNNER = " 1.4.0"
         const val EXT_JUNIT = "1.1.3"
         const val ESPRESSO_CORE = "3.4.0"
+
+        const val MPCHART = "v3.1.0"
 
 
     }
@@ -425,5 +428,7 @@
         const val FLOATING_SEARCHVIEW = "com.github.arimorty:floatingsearchview:${Versions.FLOATING_SEARCHVIEW}"
         const val IMAGE_CROPPER = "com.theartofdev.edmodo:android-image-cropper:${Versions.IMAGE_CROPPER}"
         const val DISCRETE_SCROLLVIEW = "com.yarolegovich:discrete-scrollview:${Versions.DISCRETE_SCROLLVIEW}"
+        const val SLIDE_UP_PANEL_HANNESA = "com.github.hannesa2:AndroidSlidingUpPanel:${Versions.SLIDE_UP_PANEL_HANNESA}"
+        const val MPCHART = "com.github.PhilJay:MPAndroidChart:${Versions.MPCHART}"
 
     }

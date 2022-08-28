@@ -63,17 +63,17 @@ public class GetAuthTokenRepository {
             public void onResponse(Call<BaseDTO> call, Response<BaseDTO> response) {
                 if(response.isSuccessful()) {
                     LogUtil.logE("accessToken 검증 성공" + response.body());
-                    tokenData.setValue(response.body());
+                    tokenData.postValue(response.body());
                 } else {
                     LogUtil.logE("accessToken 검증 실패" + response.body());
-                    tokenData.setValue(response.body());
+                    tokenData.postValue(response.body());
                 }
             }
 
             @Override
             public void onFailure(Call<BaseDTO> call, Throwable t) {
                     LogUtil.logE("get /member/auth error.." + t);
-                    tokenData.setValue(null);
+                    tokenData.postValue(null);
             }
         });
         return tokenData;

@@ -1,14 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
 
-    <TextView
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="magazine"
+            type="com.bsstandard.piece.data.viewmodel.MagazineViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="라운지 탭 입니다."
-        android:textColor="@color/black"
-        />
+        android:background="@color/white">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/scroll_layout"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/content_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/top_img"
+                    android:layout_width="match_parent"
+                    android:layout_height="530dp"
+                    android:background="@drawable/magazine_test"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.google.android.material.tabs.TabLayout
+                    android:id="@+id/tabs"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:tabTextAppearance="@style/tab_text"
+                    app:tabGravity="fill"
+                    app:tabSelectedTextColor="@color/c_131313"
+                    app:tabTextColor="@color/c_dadce3"
+                    app:tabIndicatorColor="@color/c_131313"
+                    app:tabIndicatorAnimationMode="elastic"
+                    app:tabIndicatorFullWidth="false"
+                    app:tabIndicatorHeight="2dp"
+                    app:tabMode="scrollable"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical|center_horizontal"
+                    app:layout_constraintTop_toBottomOf="@+id/top_img"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    />
+
+                <FrameLayout
+                    android:id="@+id/tabContent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tabs">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/magazineRv"
+                        android:overScrollMode="never"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+
+                </FrameLayout>
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.core.widget.NestedScrollView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

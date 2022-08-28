@@ -7,6 +7,7 @@ import androidx.navigation.NavDestination
 import androidx.navigation.NavOptions
 import androidx.navigation.Navigator
 import androidx.navigation.fragment.FragmentNavigator
+import com.bsstandard.piece.data.datasource.shared.PrefsHelper
 import com.bsstandard.piece.widget.utils.LogUtil
 
 /**
@@ -55,12 +56,12 @@ class KeepStateNavigator(
         LogUtil.logE("최초 생성 Fragment : $fragment")
         if (fragment == null) {
             val className = destination.className
+            LogUtil.logE("className : $className" )
             fragment = manager.fragmentFactory.instantiate(context.classLoader, className)
             transaction.add(containerId, fragment, tag)    // add로 fragment 최초 생성 (add)
             LogUtil.logE("add 최초 생성 fragment : $containerId + $fragment")
 
         } else {
-
             transaction.show(fragment)  // 이미 생성되어 있던 fragment 라면 show
             LogUtil.logE("이미 생성되어있던 fragment : $fragment")
         }

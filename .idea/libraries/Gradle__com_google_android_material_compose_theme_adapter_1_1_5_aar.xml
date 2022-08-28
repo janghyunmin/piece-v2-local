@@ -1,9 +1,9 @@
 <component name="libraryTable">
   <library name="Gradle: com.google.android.material:compose-theme-adapter:1.1.5@aar">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/09d1d06d0e99d25b9b4282667b9ce5c4/transformed/jetified-compose-theme-adapter-1.1.5/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/09d1d06d0e99d25b9b4282667b9ce5c4/transformed/jetified-compose-theme-adapter-1.1.5/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/09d1d06d0e99d25b9b4282667b9ce5c4/transformed/jetified-compose-theme-adapter-1.1.5/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/722e5bbd3b251da3911e96f570553fe9/transformed/jetified-compose-theme-adapter-1.1.5/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/722e5bbd3b251da3911e96f570553fe9/transformed/jetified-compose-theme-adapter-1.1.5/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/722e5bbd3b251da3911e96f570553fe9/transformed/jetified-compose-theme-adapter-1.1.5/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.android.material/compose-theme-adapter/1.1.5/a1497a138d254ba64590cb7dab27741ae0c4d43a/compose-theme-adapter-1.1.5-javadoc.jar!/" />

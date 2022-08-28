@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:sothree="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/c_ffffff">
 
     <data>
 
@@ -14,98 +17,1244 @@
 
         <variable
             name="pos"
-            type="Integer" />
+            type="int" />
 
         <variable
             name="activity"
             type="com.bsstandard.piece.view.portfolioDetail.PortfolioDetailActivity" />
+
     </data>
 
-    <FrameLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/parent"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/white">
+        android:layout_height="match_parent">
 
-
-        <androidx.coordinatorlayout.widget.CoordinatorLayout
+        <ImageView
+            android:id="@+id/portfolio_img"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fitsSystemWindows="true">
+            android:fitsSystemWindows="true"
+            android:transitionName="@{portfolioViewModel.portoflioItem.get(pos).representThumbnailImagePath}"
+            app:layout_collapseMode="parallax"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
 
-            <androidx.recyclerview.widget.RecyclerView
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/top_layout"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_marginTop="44dp"
+            android:background="@android:color/transparent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/back_img"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="16dp"
+                android:background="@drawable/arrow_left_white"
+                android:onClick="@{() -> activity.onBackButton()}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/share_img"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginRight="16dp"
+                android:background="@drawable/share_icon_white"
+                android:onClick="@{() -> activity.onShareButton()}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <!-- Bottom sheet -->
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:animateLayoutChanges="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/top_layout">
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+                android:orientation="vertical"
+                app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
-            <com.google.android.material.appbar.AppBarLayout
+                <!-- Main content -->
+
+            </LinearLayout>
+
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/bottom_sheet"
                 android:layout_width="match_parent"
-                android:layout_height="545dp"
-                android:fitsSystemWindows="true"
-                android:theme="@style/ThemeOverlay.AppCompat.ActionBar">
+                android:layout_height="match_parent"
+                android:background="@color/c_ffffff"
+                android:descendantFocusability="beforeDescendants"
+                android:focusableInTouchMode="true"
+                android:orientation="vertical"
+                android:padding="10dp"
+                app:behavior_hideable="false"
+                app:behavior_peekHeight="350dp"
+                app:cardCornerRadius="20dp"
+                app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
-                <com.google.android.material.appbar.CollapsingToolbarLayout
+
+                <androidx.core.widget.NestedScrollView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:fitsSystemWindows="true"
-                    app:contentScrim="?attr/colorControlNormal"
-                    app:expandedTitleMarginEnd="64dp"
-                    app:expandedTitleMarginStart="48dp"
-                    app:layout_scrollFlags="scroll|exitUntilCollapsed">
+                    android:layout_marginBottom="50dp">
 
-                    <ImageView
-                        android:id="@+id/portfolio_img"
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/content_layout"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:fitsSystemWindows="true"
-                        android:transitionName="@{portfolioViewModel.portoflioItem.get(pos).representThumbnailImagePath}"
-                        app:layout_collapseMode="parallax"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintRight_toRightOf="parent" />
+                        android:layout_height="match_parent">
 
-                    <androidx.appcompat.widget.Toolbar
-                        android:layout_width="match_parent"
-                        android:layout_height="80dp"
-                        app:layout_collapseMode="pin"
-                        app:popupTheme="@style/Widget.Material3.PopupMenu.Overflow">
+                        <TextView
+                            android:id="@+id/title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="16dp"
+                            android:layout_marginTop="20dp"
+                            android:fontFamily="@font/pretendard_extrabold"
+                            android:text="판매 현황"
+                            android:textColor="@color/c_131313"
+                            android:textSize="20dp"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/status"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp"
+                            android:layout_marginRight="16dp"
+                            android:fontFamily="@font/pretendard_bold"
+                            android:lineHeight="25dp"
+                            android:textColor="@color/c_10cfc9"
+                            android:textSize="16dp"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+
+                        <!-- progressbar layout start -->
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/status_bar_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="120dp"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginTop="70dp"
+                            android:layout_marginEnd="16dp"
+                            android:background="@drawable/layout_round_ffffff"
+                            android:elevation="5dp"
+                            app:layout_constraintTop_toBottomOf="@+id/title">
+
+                            <TextView
+                                android:id="@+id/title_1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="15dp"
+                                android:fontFamily="@font/pretendard_extrabold"
+                                android:lineHeight="20dp"
+                                android:text="판매 누적 금액"
+                                android:textColor="@color/c_8c919f"
+                                android:textSize="14dp"
+                                app:layout_constraintBottom_toBottomOf="@id/status_bar_layout"
+                                app:layout_constraintLeft_toLeftOf="@id/status_bar_layout"
+                                app:layout_constraintTop_toTopOf="@id/status_bar_layout" />
+
+                            <TextView
+                                android:id="@+id/sell_price"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="15dp"
+                                android:fontFamily="@font/pretendard_extrabold"
+                                android:lineHeight="20dp"
+                                android:textColor="@color/c_131313"
+                                android:textSize="20dp"
+                                app:layout_constraintLeft_toLeftOf="@id/status_bar_layout"
+                                app:layout_constraintTop_toBottomOf="@+id/title_1" />
+
+                            <TextView
+                                android:id="@+id/percent"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="15dp"
+                                android:fontFamily="@font/pretendard_extrabold"
+                                android:lineHeight="34dp"
+                                android:text="83%"
+                                android:textColor="@color/c_10cfc9"
+                                android:textSize="26dp"
+                                app:layout_constraintBottom_toBottomOf="@+id/sell_price"
+                                app:layout_constraintRight_toRightOf="@id/status_bar_layout" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+                        <!-- progressbar layout end -->
+
+                        <!-- 총 판매금액 , 판개기간 layout start -->
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/content_info_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="90dp"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginTop="20dp"
+                            android:layout_marginEnd="16dp"
+                            android:background="@drawable/layout_round_f3fcfd"
+                            app:layout_constraintTop_toBottomOf="@+id/status_bar_layout">
+
+                            <TextView
+                                android:id="@+id/title_2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="15dp"
+                                android:layout_marginTop="15dp"
+                                android:fontFamily="@font/pretendard_extrabold"
+                                android:lineHeight="20dp"
+                                android:text="총 판매 금액"
+                                android:textColor="@color/c_10cfc9"
+                                android:textSize="16dp"
+                                app:layout_constraintLeft_toLeftOf="@id/content_info_layout"
+                                app:layout_constraintTop_toTopOf="@id/content_info_layout" />
+
+                            <TextView
+                                android:id="@+id/total_price_title"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="15dp"
+                                android:layout_marginTop="15dp"
+                                android:fontFamily="@font/pretendard_extrabold"
+                                android:lineHeight="20dp"
+                                android:text="총 판매 금액"
+                                android:textColor="@color/c_10cfc9"
+                                android:textSize="16dp"
+                                app:layout_constraintLeft_toLeftOf="@id/content_info_layout"
+                                app:layout_constraintTop_toTopOf="@id/content_info_layout" />
+
+                            <TextView
+                                android:id="@+id/price"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="15dp"
+                                android:fontFamily="@font/pretendard_extrabold"
+                                android:lineHeight="20dp"
+                                android:textColor="@color/c_757983"
+                                android:textSize="16dp"
+                                app:layout_constraintBottom_toBottomOf="@+id/total_price_title"
+                                app:layout_constraintRight_toRightOf="@id/content_info_layout"
+                                app:layout_constraintTop_toTopOf="@id/total_price_title" />
+
+                            <TextView
+                                android:id="@+id/sell_date_title"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="15dp"
+                                android:layout_marginTop="10dp"
+                                android:fontFamily="@font/pretendard_extrabold"
+                                android:lineHeight="20dp"
+                                android:text="판매 기간"
+                                android:textColor="@color/c_10cfc9"
+                                android:textSize="16dp"
+                                app:layout_constraintLeft_toLeftOf="@id/content_info_layout"
+                                app:layout_constraintTop_toBottomOf="@+id/total_price_title" />
+
+                            <TextView
+                                android:id="@+id/date"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="15dp"
+                                android:fontFamily="@font/pretendard_extrabold"
+                                android:lineHeight="20dp"
+                                android:textColor="@color/c_757983"
+                                android:textSize="16dp"
+                                app:layout_constraintBottom_toBottomOf="@+id/sell_date_title"
+                                app:layout_constraintRight_toRightOf="@id/content_info_layout"
+                                app:layout_constraintTop_toTopOf="@id/sell_date_title" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+                        <!-- 총 판매금액 , 판개기간 layout end -->
+
+                        <View
+                            android:id="@+id/line"
+                            android:layout_width="match_parent"
+                            android:layout_height="10dp"
+                            android:layout_marginTop="20dp"
+                            android:background="@color/c_f9f9f9"
+                            app:layout_constraintTop_toBottomOf="@+id/content_info_layout" />
 
                         <androidx.constraintlayout.widget.ConstraintLayout
-                            android:id="@+id/top_layout"
+                            android:id="@+id/buy_point_layout"
                             android:layout_width="match_parent"
-                            android:layout_height="80dp"
-                            android:background="@android:color/transparent"
-                            app:layout_constraintTop_toTopOf="parent">
+                            android:layout_height="wrap_content"
+                            app:layout_constraintTop_toBottomOf="@+id/line">
 
-                            <androidx.appcompat.widget.AppCompatImageView
-                                android:id="@+id/back_img"
-                                android:layout_width="24dp"
-                                android:layout_height="24dp"
-                                android:background="@drawable/arrow_left_white"
-                                android:onClick="@{() -> activity.onBackButton()}"
-                                app:layout_constraintBottom_toBottomOf="parent"
+
+                            <TextView
+                                android:id="@+id/buy_point_title"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="16dp"
+                                android:layout_marginTop="20dp"
+                                android:fontFamily="@font/pretendard_extrabold"
+                                android:text="구매 포인트"
+                                android:textColor="@color/c_131313"
+                                android:textSize="20dp"
+                                app:layout_constraintLeft_toLeftOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:id="@+id/purchase_layout"
+                                android:layout_width="match_parent"
+                                android:layout_height="105dp"
+                                android:layout_marginStart="16dp"
+                                android:layout_marginTop="20dp"
+                                android:layout_marginEnd="16dp"
+                                android:background="@drawable/layout_round_f9f9f9"
+                                app:layout_constraintTop_toBottomOf="@+id/buy_point_title">
+
+                                <androidx.recyclerview.widget.RecyclerView
+                                    android:id="@+id/purchaseGuidesRv"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintLeft_toLeftOf="parent"
+                                    app:layout_constraintRight_toRightOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent" />
+
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <View
+                            android:id="@+id/line2"
+                            android:layout_width="match_parent"
+                            android:layout_height="10dp"
+                            android:layout_marginTop="20dp"
+                            android:background="@color/c_f9f9f9"
+                            app:layout_constraintTop_toBottomOf="@+id/buy_point_layout" />
+
+
+                        <!-- 판매 정보 layout start -->
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/sell_info_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintTop_toBottomOf="@+id/line2">
+
+                            <TextView
+                                android:id="@+id/sell_info_title"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="16dp"
+                                android:layout_marginTop="20dp"
+                                android:fontFamily="@font/pretendard_extrabold"
+                                android:text="판매 정보"
+                                android:textColor="@color/c_131313"
+                                android:textSize="20dp"
+                                app:layout_constraintLeft_toLeftOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:id="@+id/sell_info_item_layout"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="16dp"
+                                android:layout_marginTop="20dp"
+                                android:layout_marginEnd="16dp"
+                                app:layout_constraintTop_toBottomOf="@+id/sell_info_title">
+
+                                <HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent">
+
+                                    <androidx.constraintlayout.widget.ConstraintLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content">
+
+                                        <!-- 판매정보 - 운용기간 layout start -->
+                                        <androidx.constraintlayout.widget.ConstraintLayout
+                                            android:id="@+id/date_layout"
+                                            android:layout_width="120dp"
+                                            android:layout_height="120dp"
+                                            android:background="@drawable/layout_round_f9f9f9"
+                                            app:layout_constraintBottom_toBottomOf="parent"
+                                            app:layout_constraintTop_toTopOf="parent">
+
+                                            <androidx.appcompat.widget.AppCompatTextView
+                                                android:id="@+id/date_title"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:layout_marginStart="10dp"
+                                                android:layout_marginTop="10dp"
+                                                android:fontFamily="@font/pretendard_extrabold"
+                                                android:lineHeight="25dp"
+                                                android:text="운용 기간"
+                                                android:textColor="@color/c_757983"
+                                                android:textSize="16dp"
+                                                app:layout_constraintLeft_toLeftOf="parent"
+                                                app:layout_constraintTop_toTopOf="parent" />
+
+                                            <androidx.appcompat.widget.AppCompatImageView
+                                                android:id="@+id/info_icon"
+                                                android:layout_width="24dp"
+                                                android:layout_height="24dp"
+                                                android:background="@drawable/info_icon"
+                                                app:layout_constraintBottom_toBottomOf="@+id/date_title"
+                                                app:layout_constraintLeft_toRightOf="@+id/date_title"
+                                                app:layout_constraintTop_toTopOf="@+id/date_title" />
+
+                                            <androidx.appcompat.widget.AppCompatTextView
+                                                android:id="@+id/oper_date"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:fontFamily="@font/pretendard_bold"
+                                                android:lineHeight="25dp"
+                                                android:textColor="@color/c_10cfc9"
+                                                android:textSize="16dp"
+                                                app:layout_constraintLeft_toLeftOf="@+id/date_title"
+                                                app:layout_constraintTop_toBottomOf="@+id/date_title" />
+
+
+                                            <androidx.appcompat.widget.AppCompatImageView
+                                                android:id="@+id/calendar_icon"
+                                                android:layout_width="37dp"
+                                                android:layout_height="37dp"
+                                                android:layout_marginRight="10dp"
+                                                android:layout_marginBottom="10dp"
+                                                android:background="@drawable/calendar_icon"
+                                                app:layout_constraintBottom_toBottomOf="parent"
+                                                app:layout_constraintRight_toRightOf="parent" />
+                                        </androidx.constraintlayout.widget.ConstraintLayout>
+                                        <!-- 판매정보 - 운용기간 layout end -->
+
+
+                                        <!-- 판매정보 - 예상시세 layout start -->
+                                        <androidx.constraintlayout.widget.ConstraintLayout
+                                            android:id="@+id/rate_layout"
+                                            android:layout_width="120dp"
+                                            android:layout_height="120dp"
+                                            android:layout_marginLeft="15dp"
+                                            android:background="@drawable/layout_round_f9f9f9"
+                                            app:layout_constraintBottom_toBottomOf="parent"
+                                            app:layout_constraintLeft_toRightOf="@+id/date_layout"
+                                            app:layout_constraintTop_toTopOf="parent">
+
+                                            <androidx.appcompat.widget.AppCompatTextView
+                                                android:id="@+id/rate_title"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:layout_marginStart="10dp"
+                                                android:layout_marginTop="10dp"
+                                                android:fontFamily="@font/pretendard_extrabold"
+                                                android:lineHeight="25dp"
+                                                android:text="예상 수익률"
+                                                android:textColor="@color/c_757983"
+                                                android:textSize="16dp"
+                                                app:layout_constraintLeft_toLeftOf="parent"
+                                                app:layout_constraintTop_toTopOf="parent" />
+
+                                            <androidx.appcompat.widget.AppCompatTextView
+                                                android:id="@+id/rate_text"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:fontFamily="@font/pretendard_bold"
+                                                android:lineHeight="25dp"
+                                                android:textColor="@color/c_10cfc9"
+                                                android:textSize="16dp"
+                                                app:layout_constraintLeft_toLeftOf="@+id/rate_title"
+                                                app:layout_constraintTop_toBottomOf="@+id/rate_title" />
+
+                                            <androidx.appcompat.widget.AppCompatImageView
+                                                android:id="@+id/rate_icon"
+                                                android:layout_width="37dp"
+                                                android:layout_height="37dp"
+                                                android:layout_marginRight="10dp"
+                                                android:layout_marginBottom="10dp"
+                                                android:background="@drawable/rate_icon"
+                                                app:layout_constraintBottom_toBottomOf="parent"
+                                                app:layout_constraintRight_toRightOf="parent" />
+                                        </androidx.constraintlayout.widget.ConstraintLayout>
+                                        <!-- 판매정보 - 예상시세 layout end -->
+
+                                        <!-- 판매정보 - 판매 수량 layout start -->
+                                        <androidx.constraintlayout.widget.ConstraintLayout
+                                            android:id="@+id/amount_layout"
+                                            android:layout_width="120dp"
+                                            android:layout_height="120dp"
+                                            android:layout_marginLeft="15dp"
+                                            android:background="@drawable/layout_round_f9f9f9"
+                                            app:layout_constraintBottom_toBottomOf="parent"
+                                            app:layout_constraintLeft_toRightOf="@+id/rate_layout"
+                                            app:layout_constraintTop_toTopOf="parent">
+
+                                            <androidx.appcompat.widget.AppCompatTextView
+                                                android:id="@+id/amount_title"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:layout_marginStart="10dp"
+                                                android:layout_marginTop="10dp"
+                                                android:fontFamily="@font/pretendard_extrabold"
+                                                android:lineHeight="25dp"
+                                                android:text="판매 수량"
+                                                android:textColor="@color/c_757983"
+                                                android:textSize="16dp"
+                                                app:layout_constraintLeft_toLeftOf="parent"
+                                                app:layout_constraintTop_toTopOf="parent" />
+
+                                            <androidx.appcompat.widget.AppCompatTextView
+                                                android:id="@+id/amount_text"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:fontFamily="@font/pretendard_bold"
+                                                android:lineHeight="25dp"
+                                                android:textColor="@color/c_10cfc9"
+                                                android:textSize="16dp"
+                                                app:layout_constraintLeft_toLeftOf="@+id/amount_title"
+                                                app:layout_constraintTop_toBottomOf="@+id/amount_title" />
+
+                                            <androidx.appcompat.widget.AppCompatImageView
+                                                android:id="@+id/amount_icon"
+                                                android:layout_width="37dp"
+                                                android:layout_height="37dp"
+                                                android:layout_marginRight="10dp"
+                                                android:layout_marginBottom="10dp"
+                                                android:background="@drawable/sell_amount_icon"
+                                                app:layout_constraintBottom_toBottomOf="parent"
+                                                app:layout_constraintRight_toRightOf="parent" />
+                                        </androidx.constraintlayout.widget.ConstraintLayout>
+                                        <!-- 판매정보 - 판매 수량 layout end -->
+
+
+                                        <!-- 판매정보 - 판매 단위 layout start -->
+                                        <androidx.constraintlayout.widget.ConstraintLayout
+                                            android:id="@+id/unit_layout"
+                                            android:layout_width="120dp"
+                                            android:layout_height="120dp"
+                                            android:layout_marginLeft="15dp"
+                                            android:background="@drawable/layout_round_f9f9f9"
+                                            app:layout_constraintBottom_toBottomOf="parent"
+                                            app:layout_constraintLeft_toRightOf="@+id/amount_layout"
+                                            app:layout_constraintTop_toTopOf="parent">
+
+                                            <androidx.appcompat.widget.AppCompatTextView
+                                                android:id="@+id/unit_title"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:layout_marginStart="10dp"
+                                                android:layout_marginTop="10dp"
+                                                android:fontFamily="@font/pretendard_extrabold"
+                                                android:lineHeight="25dp"
+                                                android:text="판매 단위"
+                                                android:textColor="@color/c_757983"
+                                                android:textSize="16dp"
+                                                app:layout_constraintLeft_toLeftOf="parent"
+                                                app:layout_constraintTop_toTopOf="parent" />
+
+                                            <androidx.appcompat.widget.AppCompatTextView
+                                                android:id="@+id/unit_text"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:fontFamily="@font/pretendard_bold"
+                                                android:lineHeight="25dp"
+                                                android:textColor="@color/c_10cfc9"
+                                                android:textSize="16dp"
+                                                app:layout_constraintLeft_toLeftOf="@+id/unit_title"
+                                                app:layout_constraintTop_toBottomOf="@+id/unit_title" />
+
+
+                                            <androidx.appcompat.widget.AppCompatImageView
+                                                android:id="@+id/unit_icon"
+                                                android:layout_width="37dp"
+                                                android:layout_height="37dp"
+                                                android:layout_marginRight="10dp"
+                                                android:layout_marginBottom="10dp"
+                                                android:background="@drawable/sell_unit_icon"
+                                                app:layout_constraintBottom_toBottomOf="parent"
+                                                app:layout_constraintRight_toRightOf="parent" />
+                                        </androidx.constraintlayout.widget.ConstraintLayout>
+                                        <!-- 판매정보 - 판매 수량 layout end -->
+                                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                                </HorizontalScrollView>
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+                        <!-- 판매 정보 layout end -->
+
+                        <!-- PIECE 종합 등급 layout start -->
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/grade_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="210dp"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginTop="20dp"
+                            android:layout_marginEnd="16dp"
+                            android:background="@drawable/layout_round_ffffff"
+                            android:elevation="5dp"
+                            app:layout_constraintTop_toBottomOf="@+id/sell_info_layout">
+
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:id="@+id/grade_title"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="20dp"
+                                android:layout_marginTop="21.5dp"
+                                android:fontFamily="@font/pretendard_extrabold"
+                                android:lineHeight="25dp"
+                                android:text="PIECE 종합등급"
+                                android:textColor="@color/c_757983"
+                                android:textSize="16dp"
                                 app:layout_constraintLeft_toLeftOf="parent"
                                 app:layout_constraintTop_toTopOf="parent" />
 
                             <androidx.appcompat.widget.AppCompatImageView
-                                android:id="@+id/share_img"
+                                android:id="@+id/grade_icon"
                                 android:layout_width="24dp"
                                 android:layout_height="24dp"
-                                android:layout_marginRight="16dp"
-                                android:background="@drawable/share_icon_white"
-                                android:onClick="@{() -> activity.onShareButton()}"
-                                app:layout_constraintBottom_toBottomOf="parent"
+                                android:background="@drawable/info_icon"
+                                app:layout_constraintBottom_toBottomOf="@+id/grade_title"
+                                app:layout_constraintLeft_toRightOf="@+id/grade_title"
+                                app:layout_constraintTop_toTopOf="@+id/grade_title" />
+
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:id="@+id/grade"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="20dp"
+                                android:layout_marginEnd="20dp"
+                                android:fontFamily="@font/pretendard_extrabold"
+                                android:lineHeight="28dp"
+                                android:textColor="@color/c_757983"
+                                android:textSize="20dp"
                                 app:layout_constraintRight_toRightOf="parent"
                                 app:layout_constraintTop_toTopOf="parent" />
 
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:id="@+id/chart_layout1"
+                                android:layout_width="100dp"
+                                android:layout_height="120dp"
+                                android:layout_marginStart="10dp"
+                                android:layout_marginTop="20dp"
+                                app:layout_constraintLeft_toLeftOf="parent"
+                                app:layout_constraintTop_toBottomOf="@+id/grade_title">
+
+                                <androidx.appcompat.widget.AppCompatTextView
+                                    android:id="@+id/score_1"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="25dp"
+                                    android:layout_marginEnd="5dp"
+                                    android:fontFamily="@font/pretendard_bold"
+                                    android:textColor="@color/c_66c8bd"
+                                    android:textSize="16dp"
+                                    app:layout_constraintBottom_toBottomOf="@+id/progressbar_1"
+                                    app:layout_constraintLeft_toLeftOf="@+id/progressbar_1"
+                                    app:layout_constraintRight_toRightOf="@+id/progressbar_1"
+                                    app:layout_constraintTop_toTopOf="@+id/progressbar_1" />
+
+                                <androidx.appcompat.widget.AppCompatTextView
+                                    android:id="@+id/text"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/pretendard_bold"
+                                    android:text="점"
+                                    android:textColor="@color/c_66c8bd"
+                                    android:textSize="8dp"
+                                    app:layout_constraintBottom_toBottomOf="@+id/progressbar_1"
+                                    app:layout_constraintLeft_toRightOf="@+id/score_1"
+                                    app:layout_constraintTop_toTopOf="@+id/progressbar_1" />
+
+                                <ProgressBar
+                                    android:id="@+id/progressbar_1"
+                                    style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                                    android:layout_width="100dp"
+                                    android:layout_height="100dp"
+                                    android:indeterminate="false"
+                                    android:max="100"
+                                    android:progressBackgroundTint="@color/c_eaf7fa"
+                                    android:progressDrawable="@drawable/circle_progressbar"
+                                    android:progressTint="@color/c_66c8bd"
+                                    app:layout_constraintLeft_toLeftOf="parent"
+                                    app:layout_constraintRight_toRightOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent" />
+
+                                <androidx.appcompat.widget.AppCompatTextView
+                                    android:id="@+id/state1"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/pretendard_regular"
+                                    android:text="안정성"
+                                    android:textColor="@color/c_8c919f"
+                                    android:textSize="10dp"
+                                    app:layout_constraintLeft_toLeftOf="parent"
+                                    app:layout_constraintRight_toRightOf="parent"
+                                    app:layout_constraintTop_toBottomOf="@+id/progressbar_1" />
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:id="@+id/chart_layout2"
+                                android:layout_width="100dp"
+                                android:layout_height="120dp"
+                                android:layout_marginStart="10dp"
+                                android:layout_marginTop="20dp"
+                                app:layout_constraintLeft_toRightOf="@+id/chart_layout1"
+                                app:layout_constraintRight_toLeftOf="@+id/chart_layout3"
+                                app:layout_constraintTop_toBottomOf="@+id/grade_title">
+
+                                <androidx.appcompat.widget.AppCompatTextView
+                                    android:id="@+id/score_2"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="25dp"
+                                    android:layout_marginEnd="5dp"
+                                    android:fontFamily="@font/pretendard_bold"
+                                    android:lineHeight="25dp"
+                                    android:textColor="@color/c_51a7e7"
+                                    android:textSize="16dp"
+                                    app:layout_constraintBottom_toBottomOf="@+id/progressbar_2"
+                                    app:layout_constraintLeft_toLeftOf="@+id/progressbar_2"
+                                    app:layout_constraintRight_toRightOf="@+id/progressbar_2"
+                                    app:layout_constraintTop_toTopOf="@+id/progressbar_2" />
+
+                                <androidx.appcompat.widget.AppCompatTextView
+                                    android:id="@+id/text2"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/pretendard_bold"
+                                    android:text="점"
+                                    android:textColor="@color/c_51a7e7"
+                                    android:textSize="8dp"
+                                    app:layout_constraintBottom_toBottomOf="@+id/progressbar_2"
+                                    app:layout_constraintLeft_toRightOf="@+id/score_2"
+                                    app:layout_constraintTop_toTopOf="@+id/progressbar_2" />
+
+                                <ProgressBar
+                                    android:id="@+id/progressbar_2"
+                                    style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                                    android:layout_width="100dp"
+                                    android:layout_height="100dp"
+                                    android:indeterminate="false"
+                                    android:max="100"
+                                    android:progressBackgroundTint="@color/c_eaf7fa"
+                                    android:progressDrawable="@drawable/circle_progressbar"
+                                    android:progressTint="@color/c_51a7e7"
+                                    app:layout_constraintLeft_toLeftOf="parent"
+                                    app:layout_constraintRight_toRightOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent" />
+
+                                <androidx.appcompat.widget.AppCompatTextView
+                                    android:id="@+id/state2"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/pretendard_regular"
+                                    android:text="환금성"
+                                    android:textColor="@color/c_8c919f"
+                                    android:textSize="10dp"
+                                    app:layout_constraintLeft_toLeftOf="parent"
+                                    app:layout_constraintRight_toRightOf="parent"
+                                    app:layout_constraintTop_toBottomOf="@+id/progressbar_2" />
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:id="@+id/chart_layout3"
+                                android:layout_width="100dp"
+                                android:layout_height="120dp"
+                                android:layout_marginStart="10dp"
+                                android:layout_marginTop="20dp"
+                                app:layout_constraintRight_toRightOf="parent"
+                                app:layout_constraintTop_toBottomOf="@+id/grade_title">
+
+                                <androidx.appcompat.widget.AppCompatTextView
+                                    android:id="@+id/score_3"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="25dp"
+                                    android:layout_marginEnd="5dp"
+                                    android:fontFamily="@font/pretendard_bold"
+                                    android:lineHeight="25dp"
+                                    android:textColor="@color/c_817dd7"
+                                    android:textSize="16dp"
+                                    app:layout_constraintBottom_toBottomOf="@+id/progressbar_3"
+                                    app:layout_constraintLeft_toLeftOf="@+id/progressbar_3"
+                                    app:layout_constraintRight_toRightOf="@+id/progressbar_3"
+                                    app:layout_constraintTop_toTopOf="@+id/progressbar_3" />
+
+                                <androidx.appcompat.widget.AppCompatTextView
+                                    android:id="@+id/text3"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/pretendard_bold"
+                                    android:text="점"
+                                    android:textColor="@color/c_817dd7"
+                                    android:textSize="8dp"
+                                    app:layout_constraintBottom_toBottomOf="@+id/progressbar_3"
+                                    app:layout_constraintLeft_toRightOf="@+id/score_3"
+                                    app:layout_constraintTop_toTopOf="@+id/progressbar_3" />
+
+                                <ProgressBar
+                                    android:id="@+id/progressbar_3"
+                                    style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                                    android:layout_width="100dp"
+                                    android:layout_height="100dp"
+                                    android:indeterminate="false"
+                                    android:max="100"
+                                    android:progressBackgroundTint="@color/c_eaf7fa"
+                                    android:progressDrawable="@drawable/circle_progressbar"
+                                    android:progressTint="@color/c_817dd7"
+                                    app:layout_constraintLeft_toLeftOf="parent"
+                                    app:layout_constraintRight_toRightOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent" />
+
+                                <androidx.appcompat.widget.AppCompatTextView
+                                    android:id="@+id/state3"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/pretendard_regular"
+                                    android:text="수익성"
+                                    android:textColor="@color/c_8c919f"
+                                    android:textSize="10dp"
+                                    app:layout_constraintLeft_toLeftOf="parent"
+                                    app:layout_constraintRight_toRightOf="parent"
+                                    app:layout_constraintTop_toBottomOf="@+id/progressbar_3" />
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
                         </androidx.constraintlayout.widget.ConstraintLayout>
-                    </androidx.appcompat.widget.Toolbar>
+                        <!-- PIECE 종합 등급 layout end -->
 
-                </com.google.android.material.appbar.CollapsingToolbarLayout>
-            </com.google.android.material.appbar.AppBarLayout>
+                        <!-- 포트폴리오 정보 layout start -->
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/portfolio_info_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginTop="20dp"
+                            android:layout_marginEnd="16dp"
+                            android:background="@drawable/layout_round_ffffff"
+                            android:elevation="5dp"
+                            app:layout_constraintTop_toBottomOf="@+id/grade_layout">
 
-            <include layout="@layout/portfolio_detail_content" />
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:id="@+id/text_1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="15dp"
+                                android:layout_marginTop="15dp"
+                                android:fontFamily="@font/pretendard_bold"
+                                android:lineHeight="20dp"
+                                android:text="포트폴리오"
+                                android:textColor="@color/c_757983"
+                                android:textSize="14dp"
+                                app:layout_constraintLeft_toLeftOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:id="@+id/info_title"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="15dp"
+                                android:layout_marginEnd="15dp"
+                                android:fontFamily="@font/pretendard_regular"
+                                android:lineHeight="20dp"
+                                android:textColor="@color/c_757983"
+                                android:textSize="14dp"
+                                app:layout_constraintRight_toRightOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:id="@+id/text_2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="15dp"
+                                android:layout_marginTop="15dp"
+                                android:fontFamily="@font/pretendard_bold"
+                                android:lineHeight="20dp"
+                                android:text="구성"
+                                android:textColor="@color/c_757983"
+                                android:textSize="14dp"
+                                app:layout_constraintLeft_toLeftOf="parent"
+                                app:layout_constraintTop_toBottomOf="@+id/text_1" />
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/productsRv"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="30dp"
+                                android:layout_marginEnd="15dp"
+                                app:layout_constraintRight_toRightOf="parent"
+                                app:layout_constraintLeft_toRightOf="@+id/text_2"
+                                app:layout_constraintTop_toTopOf="@+id/text_2" />
+
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:id="@+id/text_3"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="15dp"
+                                android:layout_marginTop="15dp"
+                                android:fontFamily="@font/pretendard_bold"
+                                android:lineHeight="20dp"
+                                android:text="총 판매 금액"
+                                android:textColor="@color/c_757983"
+                                android:textSize="14dp"
+                                app:layout_constraintLeft_toLeftOf="parent"
+                                app:layout_constraintTop_toBottomOf="@+id/productsRv" />
+
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:id="@+id/all_amount"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="15dp"
+                                android:fontFamily="@font/pretendard_regular"
+                                android:lineHeight="20dp"
+                                android:textColor="@color/c_757983"
+                                android:textSize="14dp"
+                                app:layout_constraintRight_toRightOf="parent"
+                                app:layout_constraintTop_toTopOf="@+id/text_3" />
+
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:id="@+id/text_4"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="15dp"
+                                android:layout_marginTop="15dp"
+                                android:fontFamily="@font/pretendard_bold"
+                                android:lineHeight="20dp"
+                                android:text="구매가능금액"
+                                android:textColor="@color/c_757983"
+                                android:textSize="14dp"
+                                app:layout_constraintLeft_toLeftOf="parent"
+                                app:layout_constraintTop_toBottomOf="@+id/text_3" />
+
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:id="@+id/purchase_amount"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="15dp"
+                                android:fontFamily="@font/pretendard_regular"
+                                android:lineHeight="20dp"
+                                android:textColor="@color/c_757983"
+                                android:textSize="14dp"
+                                app:layout_constraintRight_toRightOf="parent"
+                                app:layout_constraintTop_toTopOf="@+id/text_4" />
+
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:id="@+id/purchase_amount_count"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="15dp"
+                                android:fontFamily="@font/pretendard_regular"
+                                android:lineHeight="20dp"
+                                android:textColor="@color/c_757983"
+                                android:textSize="10dp"
+                                app:layout_constraintRight_toRightOf="parent"
+                                app:layout_constraintTop_toBottomOf="@+id/purchase_amount" />
+
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:id="@+id/text_5"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="15dp"
+                                android:layout_marginTop="15dp"
+                                android:layout_marginBottom="15dp"
+                                android:fontFamily="@font/pretendard_bold"
+                                android:lineHeight="20dp"
+                                android:text="운용 기간"
+                                android:textColor="@color/c_757983"
+                                android:textSize="14dp"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintLeft_toLeftOf="parent"
+                                app:layout_constraintTop_toBottomOf="@+id/text_4" />
+
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:id="@+id/oper_date_detail"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="15dp"
+                                android:fontFamily="@font/pretendard_regular"
+                                android:lineHeight="20dp"
+                                android:textColor="@color/c_757983"
+                                android:textSize="14dp"
+                                app:layout_constraintRight_toRightOf="parent"
+                                app:layout_constraintTop_toTopOf="@+id/text_5" />
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+                        <!-- 포트폴리오 정보 layout end -->
+
+                        <View
+                            android:id="@+id/line3"
+                            android:layout_width="match_parent"
+                            android:layout_height="10dp"
+                            android:layout_marginTop="74dp"
+                            android:background="@color/c_f9f9f9"
+                            app:layout_constraintTop_toBottomOf="@+id/portfolio_info_layout" />
+
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/portfolio_composition_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintTop_toBottomOf="@+id/line3">
+
+                            <TextView
+                                android:id="@+id/portfolio_composition_title"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="16dp"
+                                android:layout_marginTop="20dp"
+                                android:fontFamily="@font/pretendard_extrabold"
+                                android:text="포트폴리오 구성"
+                                android:textColor="@color/c_131313"
+                                android:textSize="20dp"
+                                app:layout_constraintLeft_toLeftOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/compositionRv"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="16dp"
+                                android:layout_marginTop="20dp"
+                                app:layout_constraintLeft_toLeftOf="parent"
+                                app:layout_constraintRight_toRightOf="parent"
+                                app:layout_constraintTop_toBottomOf="@+id/portfolio_composition_title" />
+
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:id="@+id/composition_item_layout"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="16dp"
+                                android:layout_marginEnd="16dp"
+                                android:layout_marginTop="20dp"
+                                app:layout_constraintTop_toBottomOf="@+id/compositionRv"
+                                >
+
+                                <androidx.appcompat.widget.AppCompatImageView
+                                    android:id="@+id/image_path"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:layout_constraintLeft_toLeftOf="parent"
+                                    android:layout_width="166dp"
+                                    android:layout_height="166dp"
+                                    />
+
+                                <androidx.appcompat.widget.AppCompatTextView
+                                    android:id="@+id/productionYear"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:layout_constraintLeft_toRightOf="@+id/image_path"
+                                    android:layout_marginLeft="11dp"
+                                    android:layout_marginTop="15dp"
+                                    app:fontFamily="@font/pretendard_regular"
+                                    android:textSize="12dp"
+                                    android:lineHeight="16dp"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/c_b8bcc8"
+                                    />
+
+                                <androidx.appcompat.widget.AppCompatTextView
+                                    android:id="@+id/productTitle"
+                                    app:layout_constraintTop_toBottomOf="@+id/productionYear"
+                                    app:layout_constraintLeft_toRightOf="@+id/image_path"
+                                    android:layout_marginLeft="11dp"
+                                    app:fontFamily="@font/pretendard_extrabold"
+                                    android:textSize="16dp"
+                                    android:lineHeight="25dp"
+                                    android:textColor="@color/c_292a2e"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"/>
+
+                                <androidx.appcompat.widget.AppCompatTextView
+                                    android:id="@+id/author"
+                                    app:layout_constraintTop_toBottomOf="@+id/productTitle"
+                                    app:layout_constraintLeft_toRightOf="@+id/image_path"
+                                    android:layout_marginLeft="11dp"
+                                    app:fontFamily="@font/pretendard_regular"
+                                    android:textSize="14dp"
+                                    android:lineHeight="20dp"
+                                    android:textColor="@color/c_8c919f"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"/>
+
+                                <androidx.appcompat.widget.AppCompatTextView
+                                    android:id="@+id/productMaterial"
+                                    app:layout_constraintBottom_toTopOf="@+id/productSize"
+                                    app:layout_constraintLeft_toRightOf="@+id/image_path"
+                                    android:layout_marginLeft="11dp"
+                                    app:fontFamily="@font/pretendard_regular"
+                                    android:textSize="12dp"
+                                    android:lineHeight="16dp"
+                                    android:textColor="@color/c_8c919f"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"/>
+
+
+                                <androidx.appcompat.widget.AppCompatTextView
+                                    android:id="@+id/productSize"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintLeft_toRightOf="@+id/image_path"
+                                    android:layout_marginLeft="11dp"
+                                    android:layout_marginBottom="15dp"
+                                    app:fontFamily="@font/pretendard_regular"
+                                    android:textSize="12dp"
+                                    android:lineHeight="16dp"
+                                    android:textColor="@color/c_8c919f"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"/>
+
+
+
+
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <View
+                            android:id="@+id/line4"
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="20dp"
+                            android:background="@color/c_eaecf0"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginEnd="16dp"
+                            app:layout_constraintTop_toBottomOf="@+id/portfolio_composition_layout" />
+
+
+
+
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/portfolio_evidence_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp"
+                            app:layout_constraintTop_toBottomOf="@+id/line4">
+
+                            <TextView
+                                android:id="@+id/portfolio_evidence_title"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="16dp"
+                                android:layout_marginTop="20dp"
+                                android:fontFamily="@font/pretendard_extrabold"
+                                android:text="증빙 구성"
+                                android:textColor="@color/c_131313"
+                                android:textSize="16dp"
+                                app:layout_constraintLeft_toLeftOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/evidenceRv"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="16dp"
+                                android:layout_marginTop="10dp"
+                                app:layout_constraintLeft_toLeftOf="parent"
+                                app:layout_constraintRight_toRightOf="parent"
+                                app:layout_constraintTop_toBottomOf="@+id/portfolio_evidence_title" />
+
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:id="@+id/i_button"
+                                android:layout_width="match_parent"
+                                android:layout_height="48dp"
+                                android:background="@drawable/layout_round_ffffff_1b"
+                                android:textColor="@color/c_10cfc9"
+                                android:textSize="14dp"
+                                android:gravity="center"
+                                android:text="포트폴리오 자세히 보기"
+                                app:fontFamily="@font/pretendard_bold"
+                                android:layout_marginStart="16dp"
+                                android:layout_marginEnd="16dp"
+                                android:layout_marginTop="20dp"
+                                app:layout_constraintTop_toBottomOf="@+id/evidenceRv"
+                                app:layout_constraintLeft_toLeftOf="parent"
+                                app:layout_constraintRight_toRightOf="parent"
+                                 />
+
+
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <View
+                            android:id="@+id/line5"
+                            android:layout_width="match_parent"
+                            android:layout_height="10dp"
+                            android:layout_marginTop="20dp"
+                            android:background="@color/c_eaecf0"
+                            app:layout_constraintTop_toBottomOf="@+id/portfolio_evidence_layout" />
+
+
+                        <!-- 유의사항 layout start -->
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/portfolio_notie_parent"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginEnd="16dp"
+                            android:background="@drawable/layout_round_f3fcfd"
+                            app:layout_constraintTop_toBottomOf="@+id/line5">
+
+
+                                <TextView
+                                    android:id="@+id/portfolio_notice_title"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="16dp"
+                                    android:layout_marginTop="20dp"
+                                    android:fontFamily="@font/pretendard_bold"
+                                    android:text="유의사항"
+                                    android:textColor="@color/c_10cfc9"
+                                    android:textSize="16dp"
+                                    app:layout_constraintLeft_toLeftOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent" />
+
+
+                               <androidx.constraintlayout.widget.ConstraintLayout
+                                   android:id="@+id/content"
+                                   android:layout_width="match_parent"
+                                   android:layout_height="wrap_content"
+                                   app:layout_constraintLeft_toLeftOf="parent"
+                                   app:layout_constraintRight_toRightOf="parent"
+                                   android:layout_marginStart="15dp"
+                                   android:layout_marginEnd="15dp"
+                                   android:layout_marginTop="5dp"
+                                   app:layout_constraintTop_toBottomOf="@+id/portfolio_notice_title"
+                                   >
+
+                                   <TextView
+                                       android:id="@+id/content_text"
+                                       android:layout_width="wrap_content"
+                                       android:layout_height="wrap_content"
+                                       android:textSize="14dp"
+                                       android:fontFamily="@font/pretendard_regular"
+                                       android:lineHeight="20dp"
+                                       android:textColor="@color/c_757983"
+                                       />
+
+                               </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+                        <!-- 유의사항 layout end -->
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+<!--                    <View-->
+<!--                        android:id="@+id/line4"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="10dp"-->
+<!--                        android:layout_marginTop="20dp"-->
+<!--                        android:background="@color/c_f9f9f9"-->
+<!--                        app:layout_constraintTop_toBottomOf="@+id/portfolio_composition_layout" />-->
+
+
+                </androidx.core.widget.NestedScrollView>
+            </androidx.cardview.widget.CardView>
+
 
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
-
-
-    </FrameLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

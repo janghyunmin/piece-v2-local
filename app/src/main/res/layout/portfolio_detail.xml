@@ -15,7 +15,7 @@
 
         <variable
             name="portfolio_detail"
-            type="com.bsstandard.piece.data.viewmodel.PortfolioDetailViewModel" />
+            type="com.bsstandard.piece.view.portfolioDetail.PortfolioDetailViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

@@ -12,7 +12,7 @@
         <item name="android:windowContentTransitions">true</item>
         <!-- Status bar color. -->
         <item name="android:windowTranslucentStatus">false</item> <!-- StatusBar 를 반투명하게 설정한다. -->
-        <item name="android:statusBarColor">@color/white</item> <!-- StatusBar 색상 -->
+        <item name="android:statusBarColor">@color/trans</item> <!-- StatusBar 색상 -->
         <item name="android:windowDrawsSystemBarBackgrounds">true</item> <!-- StatusBar를 백그라운드 위에 그린다. -->
         <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
 

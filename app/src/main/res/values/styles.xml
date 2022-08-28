@@ -31,5 +31,10 @@
         <item name="android:textColorHint">@color/c_b8bcc8</item> <!-- 힌트 텍스트 색상 -->
     </style>
 
+    <style name="tab_text" parent="TextAppearance.Design.Tab">
+        <item name="android:textSize">16dp</item>
+        <item name="android:textColor">#131313</item>
+        <item name="android:fontFamily">@font/pretendard_bold</item>
+    </style>
 
 </resources>

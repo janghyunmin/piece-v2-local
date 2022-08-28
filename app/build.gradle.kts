@@ -241,6 +241,8 @@ dependencies {
 
     /** { Lib } - jhm 2022/05/02 **/
     implementation(Libs.FAST_JSON)
+    implementation(Libs.SLIDE_UP_PANEL_HANNESA)
+    implementation(Libs.MPCHART)
 
 
 }

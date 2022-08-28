@@ -74,8 +74,19 @@ interface RetrofitService {
         @Body memberPinModel: MemberPinModel?
     ): Call<AuthPinDTO?>?
 
+    // 포트폴리오 조회 - jhm 2022/08/17
     @GET("portfolio")
     fun getPortfolio() : Observable<PortfolioDTO>
+
+    // 포트폴리오 상세 조회 - jhm 2022/08/17
+    @GET("portfolio/{portfolioId}")
+    //fun getPortfolioDetail(@Path("portfolioId") portfolioId:String?) : Observable<PortfolioDetailDTO> // Observable 방식 - jhm 2022/08/19
+    //fun getPortfolioDetail(@Path("portfolioId") portfolioId: String?) : Call<PortfolioDetailDTO> // Call방식 - jhm 2022/08/19
+    suspend fun getPortfolioDetail(@Path("portfolioId") portfolioId: String?) : PortfolioDetailDTO
+
+
+    @GET("board/magazine")
+    fun getMagazine(@Query("magazineType") magazineType: String) : Observable<MagazineDTO>
 
 
 }

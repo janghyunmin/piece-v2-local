@@ -39,6 +39,10 @@
         android:name="com.bsstandard.piece.view.portfolioDetail.PortfolioDetailActivity"
         tools:layout="@layout/activity_portfoliodetail">
         <argument
+            android:name="portfolioId"
+            app:argType="string"
+            />
+        <argument
             android:name="portfolioImagePath"
             app:argType="string"
             />

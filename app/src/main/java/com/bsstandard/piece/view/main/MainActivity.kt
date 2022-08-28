@@ -8,14 +8,13 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.view.MenuItem
-import android.view.View
-import android.view.WindowInsetsController
+import android.view.*
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.FragmentTransaction
 import androidx.navigation.NavController
-import androidx.navigation.Navigation
-import androidx.navigation.findNavController
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.plusAssign
 import androidx.navigation.ui.setupWithNavController
@@ -24,11 +23,11 @@ import com.bsstandard.piece.base.BaseActivity
 import com.bsstandard.piece.data.datasource.shared.PrefsHelper
 import com.bsstandard.piece.databinding.ActivityMainBinding
 import com.bsstandard.piece.view.common.LoginChkActivity
-import com.bsstandard.piece.view.fragment.FragmentMore
 import com.bsstandard.piece.view.fragment.navigation.KeepStateNavigator
 import com.bsstandard.piece.view.main.dialog.EventSheet
 import com.bsstandard.piece.widget.utils.LogUtil
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.activity_main.*
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -52,8 +51,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
     private val mainViewModel by viewModels<MainViewModel>()
     private lateinit var navController: NavController
     val manager = supportFragmentManager
-    var mContext:Context = this@MainActivity
-
+    var mContext: Context = this@MainActivity
 
 
     @SuppressLint("NewApi")
@@ -71,10 +69,9 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
             setNaviBarIconColor(true) // 네비게이션 true : 검정색
             setNaviBarBgColor("#ffffff") // 네비게이션 배경색
 
-
             PrefsHelper.init(this@MainActivity)
-            LogUtil.logE("accessToken Main : "+ PrefsHelper.read("accessToken", ""));
-            LogUtil.logE("deviceId Main : "+ PrefsHelper.read("deviceId", ""));
+            LogUtil.logE("accessToken Main : " + PrefsHelper.read("accessToken", ""));
+            LogUtil.logE("deviceId Main : " + PrefsHelper.read("deviceId", ""));
             LogUtil.logE("expiredAt Main : " + PrefsHelper.read("expiredAt", ""));
             LogUtil.logE("memberId Main : " + PrefsHelper.read("memberId", ""));
             LogUtil.logE("refreshToken Main : " + PrefsHelper.read("refreshToken", ""));
@@ -140,8 +137,10 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
     // BottomNavigation + Controller - jhm 2022/07/24
     // bottomNavigation fragment 재사용 방지 로직 추가 - jhm 2022/07/24
     private fun initNavController() {
-        val navHostFragment = supportFragmentManager.findFragmentById(binding.navMainFragment.id) as NavHostFragment
-        val navController = navHostFragment.navController
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(binding.navMainFragment.id) as NavHostFragment
+        val transaction: FragmentTransaction = manager.beginTransaction()
+        var navController = navHostFragment.navController
 
         //Custom Navigator 추가
         val navigator = KeepStateNavigator(
@@ -149,40 +148,73 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
             navHostFragment.childFragmentManager,
             binding.navMainFragment.id
         )
+
+        LogUtil.logE("id : " + binding.navMainFragment.id)
+
         navController.navigatorProvider += navigator
         // set navigation graph
         navController.setGraph(R.navigation.nav_graph)
+
         binding.bottomNav.setupWithNavController(navController)
+
 
     }
 
+    private fun showBottomNav() {
+        binding.bottomNav.visibility = View.VISIBLE
+    }
+
+    private fun hideBottomNav() {
+        binding.bottomNav.visibility = View.GONE
+    }
+
+
     // 로그인 여부에 따른 wallet , more 탭 분기 - jhm 2022/08/14
     fun onClick(item: MenuItem) {
-        when(item.itemId){
+        var navHostFragment =
+            supportFragmentManager.findFragmentById(binding.navMainFragment.id) as NavHostFragment
+        val transaction: FragmentTransaction = manager.beginTransaction()
+
+
+        when (item.itemId) {
+            R.id.FragmentHome -> {
+                var navController = navHostFragment.navController
+                navController.navigate(R.id.FragmentHome)
+                transaction.addToBackStack(null)
+            }
+            R.id.FragmentMagazine -> {
+                var navController = navHostFragment.navController
+                navController.navigate(R.id.FragmentMagazine)
+                transaction.addToBackStack(null)
+            }
             R.id.FragmentWallet -> {
                 LogUtil.logE("wallet..")
-                if(!PrefsHelper.read("isJoin","").equals("true")) {
-                    val intent = Intent(this@MainActivity,LoginChkActivity::class.java)
+                if (!PrefsHelper.read("isJoin", "").equals("true")) {
+                    val intent = Intent(this@MainActivity, LoginChkActivity::class.java)
                     startActivity(intent)
                 } else {
-                    var navHostFragment = supportFragmentManager.findFragmentById(binding.navMainFragment.id) as NavHostFragment
                     var navController = navHostFragment.navController
                     navController.navigate(R.id.FragmentWallet)
+                    transaction.addToBackStack(null)
                 }
             }
             R.id.FragmentMore -> {
                 LogUtil.logE("more..")
-                if(!PrefsHelper.read("isJoin","").equals("true")) {
-                    val intent = Intent(this@MainActivity,LoginChkActivity::class.java)
+                if (!PrefsHelper.read("isJoin", "").equals("true")) {
+                    val intent = Intent(this@MainActivity, LoginChkActivity::class.java)
                     startActivity(intent)
                 } else {
-                    var navHostFragment = supportFragmentManager.findFragmentById(binding.navMainFragment.id) as NavHostFragment
                     var navController = navHostFragment.navController
                     navController.navigate(R.id.FragmentMore)
+                    transaction.addToBackStack(null)
                 }
             }
         }
+        transaction.setReorderingAllowed(true) // 화면전환간 애니메이션 정상 동작 처리 - jhm 2022/08/16
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+        transaction.commit()
     }
+
 
     /** Util start **/
     /**
@@ -274,7 +306,12 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
 
     /** Util end **/
 
-
-
+    private fun setStatusBar(){
+        val w: Window = window
+        w.setFlags(
+            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
+        )
+    }
 
 }

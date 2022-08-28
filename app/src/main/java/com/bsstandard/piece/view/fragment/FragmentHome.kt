@@ -35,7 +35,6 @@ import kotlinx.android.synthetic.main.portfolio_item.*
  */
 
 @AndroidEntryPoint
-
 class FragmentHome : Fragment(){
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
@@ -72,7 +71,7 @@ class FragmentHome : Fragment(){
         _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
 
         vm = ViewModelProvider(this)[PortfolioViewModel::class.java]
-        vm.vewInit(binding.portfolioRv)
+        vm.viewInit(binding.portfolioRv)
         vm.getPortfolio()
         binding.home = vm
         binding.lifecycleOwner = viewLifecycleOwner
@@ -86,12 +85,11 @@ class FragmentHome : Fragment(){
                 val extras = FragmentNavigatorExtras(
                     portfolio_img to id.toString()
                 )
-                val action = FragmentHomeDirections.navToPortoflioDetailActivity(portfolioImagePath)
+                val action = FragmentHomeDirections.navToPortoflioDetailActivity(portfolioId,portfolioImagePath)
                 findNavController().navigate(action, extras)
 
             }
         })
-
         return binding.root
     }
 
@@ -105,7 +103,4 @@ class FragmentHome : Fragment(){
         super.onDestroyView()
         _binding = null
     }
-
-
-
 }
