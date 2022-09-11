@@ -28,7 +28,7 @@
         android:usesCleartextTraffic="true">
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
-            android:value="@string/default_notification_channel_id"/>
+            android:value="@string/default_notification_channel_id" />
 
         <activity
             android:name="com.bsstandard.piece.view.splash.SplashActivity"
@@ -44,7 +44,7 @@
             android:name=".firebase.MyFirebaseMessagingService"
             android:exported="false">
             <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
 
@@ -70,8 +70,37 @@
         <activity
             android:name=".view.main.MainActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".view.portfolioDetail.PortfolioDetailActivity"
+        <activity
+            android:name=".view.portfolioDetail.PortfolioDetailActivity"
             android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".view.webview.MagazineDetailWebView"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".view.bookmark.BookMarkActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".view.myInfo.MyInfoActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".view.notice.NoticeActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".view.webview.NoticeDetailWebView"
+            android:screenOrientation="portrait" />
+
+        <activity android:name=".view.event.EventActivity"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".view.webview.EventDetailWebView"
+            android:screenOrientation="portrait"/>
+
+
     </application>
 
 </manifest>

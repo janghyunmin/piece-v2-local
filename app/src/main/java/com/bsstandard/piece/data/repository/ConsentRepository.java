@@ -55,6 +55,7 @@ public class ConsentRepository {
                     consentData.setValue(response.body());
                 } else {
                     LogUtil.logE("get Consent Error " + response.message());
+                    consentData.setValue(response.body());
                 }
             }
 
@@ -66,6 +67,4 @@ public class ConsentRepository {
         });
         return consentData;
     }
-
-
 }

@@ -1,5 +1,6 @@
 package com.bsstandard.piece.view.adapter.consent;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -57,6 +58,7 @@ public class ConsentAdapter extends RecyclerView.Adapter<ConsentAdapter.ViewHold
     }
     public void setDetailClick(ConcentDetail itemDetail) { this.itemDetail = itemDetail;}
 
+    @SuppressLint("NotifyDataSetChanged")
     public void selectAll(){
         isAllChk = true;
         notifyDataSetChanged();
@@ -85,11 +87,12 @@ public class ConsentAdapter extends RecyclerView.Adapter<ConsentAdapter.ViewHold
 
 
 
+    @SuppressLint("CheckResult")
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         itemList = consentList.get(position);
 
-        if(holder instanceof ViewHolder){
+        if(holder != null){
             ((ViewHolder) holder).item_text.setText(consentList.get(position).getConsentTitle());
             ((ViewHolder) holder).item_agree.setOnCheckedChangeListener(null); // 체크박스 초기화 - jhm 2022/06/20
             holder.item_agree.setOnClickListener(new View.OnClickListener() {

@@ -2,16 +2,11 @@ package com.bsstandard.piece.view.portfolioDetail
 
 import android.annotation.SuppressLint
 import android.app.Application
-import android.view.View
-import androidx.compose.ui.test.isSelected
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.bsstandard.piece.R
-import com.bsstandard.piece.data.dto.PortfolioDTO
 import com.bsstandard.piece.data.dto.PortfolioDetailDTO
 import com.bsstandard.piece.data.repository.PortfolioDetailRepository
 import com.bsstandard.piece.view.adapter.portfolio.PortfolioDetailCompositionAdapter
@@ -103,9 +98,6 @@ class PortfolioDetailViewModel(application: Application) : AndroidViewModel(appl
                             portfolioDetailEvidenceAdapter.notifyDataSetChanged()
                         }
                     }
-
-
-
 
                 } else {
                     LogUtil.logE("포트폴리오 상세 try Error !")

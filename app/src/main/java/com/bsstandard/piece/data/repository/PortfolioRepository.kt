@@ -13,7 +13,7 @@ import io.reactivex.schedulers.Schedulers
  * fileName       : PortfolioRepository
  * author         : piecejhm
  * date           : 2022/07/13
- * description    : 포트폴리오 조회 repository
+ * description    : 포트폴리오 조회 Repository
  * ===========================================================
  * DATE              AUTHOR             NOTE
  * -----------------------------------------------------------

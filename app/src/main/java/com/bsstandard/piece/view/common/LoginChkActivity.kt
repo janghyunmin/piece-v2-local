@@ -2,15 +2,18 @@ package com.bsstandard.piece.view.common
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.view.WindowInsetsController
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
 import com.bsstandard.piece.R
-import com.bsstandard.piece.base.BaseActivity
 import com.bsstandard.piece.databinding.LoginchkLayoutBinding
+import com.bsstandard.piece.view.intro.IntroActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -26,18 +29,41 @@ import dagger.hilt.android.AndroidEntryPoint
  */
 
 @AndroidEntryPoint
-class LoginChkActivity : BaseActivity<LoginchkLayoutBinding>(R.layout.loginchk_layout) {
+class LoginChkActivity : AppCompatActivity() {
+    private lateinit var loginBinding: LoginchkLayoutBinding
+
     var mContext: Context = this@LoginChkActivity
+
 
     @SuppressLint("NewApi")
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setStatusBarIconColor(false) // 상태바 아이콘 true : 검정색
+        loginBinding = DataBindingUtil.setContentView(this,R.layout.loginchk_layout)
+        loginBinding.lifecycleOwner = this@LoginChkActivity
+        loginBinding.loginChk = this@LoginChkActivity
+
+        setStatusBarIconColor(true) // 상태바 아이콘 true : 검정색
         setStatusBarBgColor("#ffffff") // 상태바 배경색상 설정
         setNaviBarIconColor(false) // 네비게이션 true : 검정색
         setNaviBarBgColor("#ffffff") // 네비게이션 배경색
+
+
+        // 닫기 onClick - jhm 2022/08/31
+        loginBinding.closeIcon.setOnClickListener {
+            view -> finish()
+        }
+
+
+        // 시작하기 화면으로 이동 onClick - jhm 2022/08/31
+        loginBinding.iButton.setOnClickListener {
+            val intent = Intent(mContext, IntroActivity::class.java)
+            Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+            startActivity(intent)
+            finishAffinity() // 이전 앱 화면 모두 제거 및 앱스택 제거 - jhm 2022/08/31
+        }
 
 
 

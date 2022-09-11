@@ -1,6 +1,7 @@
 package com.bsstandard.piece.data.repository
 
 import android.app.Application
+import com.bsstandard.piece.data.datasource.shared.PrefsHelper
 import com.bsstandard.piece.data.dto.MagazineDTO
 import com.bsstandard.piece.di.hilt.ApiModule
 import com.bsstandard.piece.retrofit.RetrofitService
@@ -22,40 +23,51 @@ import io.reactivex.schedulers.Schedulers
 
 class MagazineRepository(application: Application) {
     val response = ApiModule.provideRetrofit().create(RetrofitService::class.java)
+    val accessToken: String = PrefsHelper.read("accessToken","")
+    val deviceId: String = PrefsHelper.read("deviceId","")
+    val memberId:String = PrefsHelper.read("memberId","")
+
+
+    // 비로그인 전용 라운지 조회  - jhm 2022/08/30
+    fun getNoMemberMagazine(magazineType:String): Observable<MagazineDTO> = response
+        .getNoMemberMagazine(magazineType)
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+
 
     // 라운지 전체 - jhm 2022/08/28
-    fun getMagazine(): Observable<MagazineDTO> = response
-        .getMagazine("")
+    fun getMagazine(magazineType: String): Observable<MagazineDTO> = response
+        .getMagazine("Bearer $accessToken",deviceId,memberId , magazineType)
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
 
     // 라운지 - 포트폴리오 - jhm 2022/08/28
     fun getMagazinePortfolio() : Observable<MagazineDTO> = response
-        .getMagazine("MZT0201")
+        .getMagazine("Bearer $accessToken",deviceId,memberId,"MZT0201")
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
 
     // 라운지 - 핀테크 - jhm 2022/08/28
     fun getMagazineFintech() : Observable<MagazineDTO> = response
-        .getMagazine("MZT0101")
+        .getMagazine("Bearer $accessToken",deviceId,memberId,"MZT0101")
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
 
     // 라운지 - 핫플레이스 - jhm 2022/08/28
     fun getMagazinePlace() : Observable<MagazineDTO> = response
-        .getMagazine("MZT0102")
+        .getMagazine("Bearer $accessToken",deviceId,memberId,"MZT0102")
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
 
     // 라운지 - 쿨피플 - jhm 2022/08/28
     fun getMagazinePeople() : Observable<MagazineDTO> = response
-        .getMagazine("MZT0103")
+        .getMagazine("Bearer $accessToken",deviceId,memberId,"MZT0103")
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
 
     // 라운지 - 잘알못 - jhm 2022/08/28
     fun getMagazineJal() : Observable<MagazineDTO> = response
-        .getMagazine("MZT0104")
+        .getMagazine("Bearer $accessToken",deviceId,memberId,"MZT0104")
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
 

@@ -28,6 +28,10 @@
     <string name="re_password">재설정</string>
     <string name="dismiss">닫기</string>
 
+    <!-- dialog Address -->
+    <string name="add_title">주소 등록 완료</string>
+    <string name="add_sub_title">주소가 성공적으로 등록되었어요.</string>
+
     <!-- intro -->
     <string name="i_beta_text"><u>서비스 둘러보기</u></string>
 
@@ -93,6 +97,12 @@
         • 전자상거래 등에서의 소비자보호에 관한 법률(전자상거래법)에 따라 계약을 체결한 소비자는 구매 후 7일 이내 청약을 철회할 수 있습니다.\n
     </string>
 
+
+
+    <!-- 내정보 상세 -->
+    <string name="re_auth"><u>재인증</u></string>
+    <string name="address_change"><u>주소 변경</u></string>
+    <string name="email_change"><u>이메일 변경</u></string>
 
 
 </resources>

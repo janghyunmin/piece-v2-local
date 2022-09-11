@@ -3,6 +3,14 @@ package com.bsstandard.piece.data.datasource.shared;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.bsstandard.piece.data.dto.MemberDTO;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * packageName    : com.bsstandard.piece.data.datasource.shared
  * fileName       : PrefsHelper
@@ -71,7 +79,36 @@ public class PrefsHelper {
         prefsEditor.commit();
     }
 
+    // arrayList put - jhm 2022/09/05
+    public static void writeList(String key , List<MemberDTO.Data.Consent> values) {
+        JSONArray jsonArray = new JSONArray();
+        for( int index = 0; index < values.size(); index++ ) {
+            jsonArray.put(values.get(index));
+        }
+        if(!values.isEmpty()) {
+            prefsEditor.putString(key,jsonArray.toString());
+        } else {
+            prefsEditor.putString(key, null);
+        }
+        prefsEditor.commit();
+    }
 
-
+    // arrayList get - jhm 2022/09/05
+    public static ArrayList<String> getStringArrayPref(Context context, String key) {
+        String json = prefs.getString(key,null);
+        ArrayList<String> datas = new ArrayList<String>();
+        if (json != null) {
+            try {
+                JSONArray jsonArray = new JSONArray(json);
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    String data = jsonArray.optString(i);
+                    datas.add(data);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return datas;
+    }
 }
 

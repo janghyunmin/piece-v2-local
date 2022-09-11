@@ -44,7 +44,7 @@
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/midTitle"
-                android:layout_width="wrap_content"
+                android:layout_width="220dp"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/pretendard_bold"
                 android:lineHeight="25dp"
@@ -64,6 +64,7 @@
                 android:textColor="@color/c_131313"
                 android:textFontWeight="400"
                 android:textSize="14dp"
+                android:layout_marginTop="5dp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/midTitle"
                 app:magazineSmallTitle="@{magazineViewModel.magazineItem.get(pos).smallTitle}" />
@@ -84,7 +85,7 @@
                 android:layout_height="40dp"
                 android:layout_marginRight="5dp"
                 android:layout_marginBottom="5dp"
-                android:background="@drawable/bookmark_non_select"
+                android:background="@drawable/bookmark_selector"
                 app:layout_constraintBottom_toBottomOf="@+id/thumnailPath"
                 app:layout_constraintRight_toRightOf="@+id/thumnailPath" />
 

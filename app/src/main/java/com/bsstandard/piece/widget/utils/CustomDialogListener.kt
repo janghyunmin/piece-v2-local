@@ -13,7 +13,9 @@ package com.bsstandard.piece.widget.utils
  */
 
 interface CustomDialogListener {
-    fun onOkButtonClicked() // 버전 업데이트 확인 버튼 Listener
+    // 버전 업데이트 확인 버튼 Listener - jhm 2022/08/05
+    // 주소 등록 완료 확인 버튼 - jhm 2022/09/07
+    fun onOkButtonClicked()
 }
 interface CustomDialogPassCodeListener {
     fun onCancleButtonClicked() // 비밀번호 재설정 버튼 취소 Listener

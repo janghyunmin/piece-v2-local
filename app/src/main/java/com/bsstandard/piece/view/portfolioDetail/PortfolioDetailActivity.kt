@@ -10,7 +10,6 @@ import android.view.View
 import android.view.Window
 import android.view.WindowInsetsController
 import android.view.WindowManager
-import android.widget.LinearLayout
 import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.Observer
@@ -20,8 +19,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bsstandard.piece.R
 import com.bsstandard.piece.base.BaseActivity
-import com.bsstandard.piece.data.datasource.shared.PrefsHelper
-import com.bsstandard.piece.data.dto.PortfolioDetailDTO
 import com.bsstandard.piece.databinding.ActivityPortfoliodetailBinding
 import com.bsstandard.piece.view.adapter.portfolio.PortfolioDetailCompositionAdapter
 import com.bsstandard.piece.view.adapter.portfolio.PortfolioDetailEvidenceAdapter
@@ -43,13 +40,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.products_item_composition_layout.view.*
 import java.text.DateFormat
-import java.text.DecimalFormat
 import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.ZoneId
-import java.time.ZonedDateTime
-import java.time.format.DateTimeFormatter
 import java.util.*
 
 
@@ -178,7 +169,7 @@ class PortfolioDetailActivity :
             vm.getPortfolioDetail(portfolioId)
             vm.detailResponse.observe(this@PortfolioDetailActivity, Observer {
 
-                LogUtil.logE("reponse : ${it.data.createdAt}")
+                LogUtil.logE("portfolio Detail response : ${it.data.createdAt}")
 
 
                 // 판매 현황 상태값 - jhm 2022/08/19
@@ -361,7 +352,6 @@ class PortfolioDetailActivity :
 
 
 
-    @SuppressLint("SimpleDateFormat", "SetTextI18n")
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onStart() {
         super.onStart()

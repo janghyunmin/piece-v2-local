@@ -11,10 +11,8 @@ import android.os.Looper
 import android.view.*
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentTransaction
 import androidx.navigation.NavController
-import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.plusAssign
 import androidx.navigation.ui.setupWithNavController
@@ -27,7 +25,6 @@ import com.bsstandard.piece.view.fragment.navigation.KeepStateNavigator
 import com.bsstandard.piece.view.main.dialog.EventSheet
 import com.bsstandard.piece.widget.utils.LogUtil
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.activity_main.*
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -77,7 +74,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
             LogUtil.logE("refreshToken Main : " + PrefsHelper.read("refreshToken", ""));
 
             initNavController()
-            toDayShow()
+            
+            //toDayShow() // 메인 이벤트 바텀 시트 - jhm 2022/08/31
         }
     }
 

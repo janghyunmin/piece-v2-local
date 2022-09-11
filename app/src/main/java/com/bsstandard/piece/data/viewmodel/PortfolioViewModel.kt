@@ -63,7 +63,7 @@ class PortfolioViewModel(application: Application) : AndroidViewModel(applicatio
                     portfolioAdapter.notifyDataSetChanged()
                 }
 
-            }, { throwable -> LogUtil.logE("포트폴리오 GET List Error!" + "") }
+            }, { throwable -> LogUtil.logE("포트폴리오 GET List Error!" + throwable.message) }
         )
     }
 
@@ -75,7 +75,6 @@ class PortfolioViewModel(application: Application) : AndroidViewModel(applicatio
     fun getPortoflioItem(): List<PortfolioDTO.Data.Datum> {
         return portfolioList;
     }
-
 }
 
 object BindingAdapter {

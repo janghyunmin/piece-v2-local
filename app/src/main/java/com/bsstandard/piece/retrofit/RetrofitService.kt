@@ -3,8 +3,10 @@ package com.bsstandard.piece.retrofit
 import com.bsstandard.piece.data.datamodel.dmodel.MemberPinModel
 import com.bsstandard.piece.data.datamodel.dmodel.SmsAuthModel
 import com.bsstandard.piece.data.datamodel.dmodel.join.JoinModel
+import com.bsstandard.piece.data.datamodel.dmodel.magazine.MemberBookmarkRegModel
+import com.bsstandard.piece.data.datamodel.dmodel.magazine.MemberBookmarkRemoveModel
+import com.bsstandard.piece.data.datamodel.dmodel.member.MemberModifyModel
 import com.bsstandard.piece.data.dto.*
-import com.bsstandard.piece.data.dto.PortfolioDTO
 import io.reactivex.Observable
 import retrofit2.Call
 import retrofit2.http.*
@@ -74,19 +76,106 @@ interface RetrofitService {
         @Body memberPinModel: MemberPinModel?
     ): Call<AuthPinDTO?>?
 
+    // 회원 정보 조회 - jhm 2022/09/03
+//    @GET("member")
+//    fun getMember(@HeaderMap headers: Map<String?, String?>?): Call<MemberDTO?>?
+    @GET("member")
+    fun getMember(
+        @Header("accessToken") accessToken: String?,
+        @Header("deviceId") deviceId: String?,
+        @Header("memberId") memberId: String?,
+    ): Observable<MemberDTO>
+
+
+    // 회원 정보 수정 요청 - jhm 2022/09/05
+    @PUT("member")
+    fun putMember(
+        @HeaderMap headers: HashMap<String?, String?>,
+        @Body memberModifyModel: MemberModifyModel?
+    ): Call<MemberPutDTO?>?
+
+
     // 포트폴리오 조회 - jhm 2022/08/17
     @GET("portfolio")
-    fun getPortfolio() : Observable<PortfolioDTO>
+    fun getPortfolio(): Observable<PortfolioDTO>
 
     // 포트폴리오 상세 조회 - jhm 2022/08/17
     @GET("portfolio/{portfolioId}")
     //fun getPortfolioDetail(@Path("portfolioId") portfolioId:String?) : Observable<PortfolioDetailDTO> // Observable 방식 - jhm 2022/08/19
     //fun getPortfolioDetail(@Path("portfolioId") portfolioId: String?) : Call<PortfolioDetailDTO> // Call방식 - jhm 2022/08/19
-    suspend fun getPortfolioDetail(@Path("portfolioId") portfolioId: String?) : PortfolioDetailDTO
+    suspend fun getPortfolioDetail(@Path("portfolioId") portfolioId: String?): PortfolioDetailDTO
 
 
+    // 매거진(라운지) 조회 (비로그인 전용)- jhm 2022/08/29
     @GET("board/magazine")
-    fun getMagazine(@Query("magazineType") magazineType: String) : Observable<MagazineDTO>
+    fun getNoMemberMagazine(@Query("magazineType") magazineType: String): Observable<MagazineDTO>
 
+    @GET("board/magazine/{magazineId}")
+    suspend fun getMagazineDetail(@Path("magazineId") magazineId: String?): MagazineDetailDTO
+
+    // 매거진(라운지) 조회 (회원 전용) - jhm 2022/08/30
+    @GET("member/magazine")
+    fun getMagazine(
+        @Header("accessToken") accessToken: String?,
+        @Header("deviceId") deviceId: String?,
+        @Header("memberId") memberId: String?,
+        @Query("magazineType") magazineType: String
+    ): Observable<MagazineDTO>
+
+    // 회원 북마크 조회 - jhm 2022/09/04
+    @GET("member/bookmark")
+    fun getBookMark(
+        @Header("accessToken") accessToken: String?,
+        @Header("deviceId") deviceId: String?,
+        @Header("memberId") memberId: String?
+    ): Observable<BookMarkDTO>
+
+    // 매거진(라운지) 북마크 요청 - jhm 2022/08/29
+    @POST("member/bookmark")
+    fun updateBookMark(
+        @Header("accessToken") accessToken: String?,
+        @Header("deviceId") deviceId: String?,
+        @Header("memberId") memberId: String?,
+        @Body memberBookmarkRegModel: MemberBookmarkRegModel?
+    ): Call<BaseDTO>
+
+    // 매거진(라운지) 북마크 삭제 요청 - jhm 2022/08/30
+    @HTTP(method = "DELETE", path = "member/bookmark", hasBody = true)
+    fun deleteBookMark(
+        @Header("accessToken") accessToken: String?,
+        @Header("deviceId") deviceId: String?,
+        @Header("memberId") memberId: String?,
+        @Body memberBookmarkRemoveModel: MemberBookmarkRemoveModel?
+    ): Call<BaseDTO>
+
+
+    // 내정보 상세 주소검색 - jhm 2022/09/04
+    @GET("common/location")
+//    fun getSearchAddress(
+//        @Query("countPerPage") countPerPage: Int ,
+//        @Query("currentPage") currentPage: Int,
+//        @Query("keyword") keyword:String ): Call<LocationDTO?>?
+    fun getSearchAddress(@Query("keyword") keyword: String): Call<LocationDTO?>?
+
+
+
+
+
+    // board 공지사항 조회 - jhm 2022/09/10
+    @GET("board")
+    fun getNotice(@Query ("boardType") boardType: String): Observable<BoardDTO>
+
+    // board 공지사항 상세 조회 - jhm 2022/09/11
+    @GET("board/detail/{boardId}")
+    suspend fun getNoticeDetail(@Path("boardId") boardId: String): BoardDetailDTO
+
+
+    // 이벤트 목록 조회 - jhm 2022/09/11
+    @GET("board/event")
+    fun getEvent(): Observable<EventDTO>
+    
+    // 이벤트 상세 조회 - jhm 2022/09/11
+    @GET("board/event/{eventId}")
+    suspend fun getEventDetail(@Path("eventId") eventId: String) : EventDetailDTO
 
 }

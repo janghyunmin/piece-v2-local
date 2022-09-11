@@ -48,6 +48,7 @@ public class Division {
     public static final String DIALOG_J_SMS = "sms"; // SMS 문자발송 Dialog
     public static final String PIN_VIEWTYPE_1 = "최초";
     public static final String PIN_VIEWTYPE_2 = "재인증";
+    public static final String DIALOG_ADDRESS_CONFIRM = "address"; // 주소변경 완료 후 Dialog - jhm 2022/09/07
 
 
 

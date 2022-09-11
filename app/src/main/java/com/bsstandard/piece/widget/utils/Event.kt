@@ -1,7 +1,5 @@
 package com.bsstandard.piece.widget.utils
 
-import java.util.concurrent.atomic.AtomicBoolean
-
 /**
  *packageName    : com.bsstandard.piece.widget.utils
  * fileName       : Event
@@ -15,17 +13,25 @@ import java.util.concurrent.atomic.AtomicBoolean
  */
 
 
-open class Event<out T>(
-    private val content: T
-) {
-    val hasBeenHandled = AtomicBoolean(false)
+open class Event<out T>(private val content: T) {
 
-    fun getContentIfNotHandled(handleContent: (T) -> Unit) {
-        if (!hasBeenHandled.get()) {
-            hasBeenHandled.set(true)
-            handleContent(content)
+    var hasBeenHandled = false
+        private set // Allow external read but not write
+
+    /**
+     * Returns the content and prevents its use again.
+     */
+    fun getContentIfNotHandled(): T? {
+        return if (hasBeenHandled) {
+            null
+        } else {
+            hasBeenHandled = true
+            content
         }
     }
 
-    fun peekContent() = content
+    /**
+     * Returns the content, even if it's already been handled.
+     */
+    fun peekContent(): T = content
 }

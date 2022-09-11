@@ -1,6 +1,5 @@
 package com.bsstandard.piece.widget.utils
 
-import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.graphics.Color
@@ -9,10 +8,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import androidx.databinding.DataBindingUtil
 import com.bsstandard.piece.R
+import com.bsstandard.piece.databinding.AddressDialogBinding
 import com.bsstandard.piece.databinding.CDialogBinding
 import com.bsstandard.piece.databinding.CDialogPasswordBinding
-import kotlinx.android.synthetic.main.c_dialog.*
-import kotlinx.android.synthetic.main.c_dialog_password.*
 
 /**
  *packageName    : com.bsstandard.piece.widget.utils
@@ -40,6 +38,9 @@ class CustomDialog(
     // 비밀번호 재설정 Dialog binding
     private lateinit var cDialogPasswordBinding: CDialogPasswordBinding
 
+    // 주소 등록 완료 Dialog binding - jhm 2022/09/07
+    private lateinit var addressDialogBinding: AddressDialogBinding
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,7 +59,7 @@ class CustomDialog(
                 // 다이얼로그 배경 제거
                 window!!.setDimAmount(0f)
                 // 다이얼로그 사이즈 조절
-                context.dialogResize(this, 0.8f, 0.3f)
+                context.dialogResize(this, 1f, 0.3f)
 
                 cDialogBinding.apply {
                     // 버튼 클릭 시 리스너 메소드 호출
@@ -77,8 +78,9 @@ class CustomDialog(
                     null, false
                 )
                 setContentView(cDialogPasswordBinding.root)
+
                 // 다이얼로그 사이즈 조절
-                context.dialogResize(this, 0.9f, 0.3f)
+                context.dialogResize(this, 1f, 0.3f)
 
                 cDialogPasswordBinding.apply {
                     cancleBtn.setOnClickListener {
@@ -87,6 +89,27 @@ class CustomDialog(
 
                     rePassword.setOnClickListener {
                         listener_p.onRetryPassCodeButtonClicked()
+                    }
+                }
+
+            }
+
+            "address" -> {
+                LogUtil.logE("주소 등록 완료 Dialog 호출")
+                addressDialogBinding = DataBindingUtil.inflate(
+                    LayoutInflater.from(context),
+                    R.layout.address_dialog,
+                    null, false
+                )
+
+                setContentView(addressDialogBinding.root)
+
+                // 다이얼로그 사이즈 조절
+                context.dialogResize(this, 1f, 0.3f)
+
+                addressDialogBinding.apply {
+                    okBtn.setOnClickListener {
+                        listener_c.onOkButtonClicked()
                     }
                 }
 

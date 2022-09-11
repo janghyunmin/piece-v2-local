@@ -20,9 +20,6 @@ public class MagazineDTO {
     @SerializedName("status")
     @Expose
     private String status;
-    @SerializedName("statusCode")
-    @Expose
-    private Integer statusCode;
     @SerializedName("message")
     @Expose
     private String message;
@@ -36,14 +33,6 @@ public class MagazineDTO {
 
     public void setStatus(String status) {
         this.status = status;
-    }
-
-    public Integer getStatusCode() {
-        return statusCode;
-    }
-
-    public void setStatusCode(Integer statusCode) {
-        this.statusCode = statusCode;
     }
 
     public String getMessage() {
@@ -144,6 +133,9 @@ public class MagazineDTO {
             @SerializedName("createdAt")
             @Expose
             private String createdAt;
+            @SerializedName("isFavorite")
+            @Expose
+            private String isFavorite;
 
             public String getMagazineId() {
                 return magazineId;
@@ -233,7 +225,15 @@ public class MagazineDTO {
                 this.createdAt = createdAt;
             }
 
-        }
+            public String getIsFavorite() {
+                return isFavorite;
+            }
 
+            public void setIsFavorite(String isFavorite) {
+                this.isFavorite = isFavorite;
+            }
+
+        }
     }
+
 }

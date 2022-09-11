@@ -5,6 +5,7 @@ import android.app.Application;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.bsstandard.piece.data.viewmodel.BookMarkViewModel;
 import com.bsstandard.piece.data.viewmodel.VersionViewModel;
 
 import io.reactivex.rxjava3.annotations.NonNull;
@@ -20,6 +21,7 @@ import io.reactivex.rxjava3.annotations.NonNull;
  * -----------------------------------------------------------
  * 2022/06/13        piecejhm       최초 생성
  */
+
 public class ViewModelFactory implements ViewModelProvider.Factory {
     private Application application;
 
@@ -30,6 +32,9 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
     @NonNull
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> aClass){
-        return (T) new VersionViewModel(application);
+        if(aClass.isAssignableFrom(VersionViewModel.class)) {
+            return (T) new VersionViewModel(application);
+        }
+        throw new IllegalArgumentException("Unkown ViewModel Class..");
     }
 }

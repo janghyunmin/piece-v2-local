@@ -50,6 +50,8 @@ public class JoinRepository {
                 if(response.body()!=null){
                     LogUtil.logE("회원가입 진행 response data : " + JSON.toJSONString(response.body().getData()));
                     joinData.postValue(response.body());
+
+
                 }else{
                     LogUtil.logE("join response body null.. : " + response.code());
                     joinData.setValue(null);

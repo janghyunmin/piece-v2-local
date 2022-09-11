@@ -25,7 +25,7 @@
 
     <style name="Piece_EditText" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorControlNormal">@color/c_eaecf0</item> <!-- 활성화 되지 않은 밑줄 색상 -->
-        <item name="colorControlActivated">@color/c_4a4d55</item> <!-- 활성화 됐을때 밑줄 색상 -->
+        <item name="colorControlActivated">@color/c_131313</item> <!-- 활성화 됐을때 밑줄 색상 -->
         <item name="android:editTextColor">@color/c_4a4d55</item> <!-- 텍스트 색상 -->
         <item name="android:textColorHighlight">@color/c_4a4d55</item> <!-- 선택됐을때 텍스트 색상 -->
         <item name="android:textColorHint">@color/c_b8bcc8</item> <!-- 힌트 텍스트 색상 -->

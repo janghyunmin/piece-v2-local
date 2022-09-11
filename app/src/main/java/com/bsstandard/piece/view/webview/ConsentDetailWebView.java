@@ -14,7 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
 import com.bsstandard.piece.R;
-import com.bsstandard.piece.databinding.ActivityWebviewBinding;
+import com.bsstandard.piece.databinding.ActivityConsentWebviewBinding;
 
 /**
  * packageName    : com.bsstandard.piece.view.webview
@@ -29,7 +29,7 @@ import com.bsstandard.piece.databinding.ActivityWebviewBinding;
  */
 public class ConsentDetailWebView extends AppCompatActivity {
 
-    private ActivityWebviewBinding binding;
+    private ActivityConsentWebviewBinding binding;
     private String consentTitle = "";
     private String consentContents = "";
 
@@ -37,7 +37,7 @@ public class ConsentDetailWebView extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_webview);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_consent_webview);
         binding.setLifecycleOwner(this);
 
         // 오른쪽에서 왼쪽으로 슬라이딩 하면서 켜짐 - jhm 2022/06/22

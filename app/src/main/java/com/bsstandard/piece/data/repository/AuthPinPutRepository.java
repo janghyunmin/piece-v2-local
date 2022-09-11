@@ -39,8 +39,7 @@ public class AuthPinPutRepository {
         return authPinPutRepository;
     }
 //    public AuthPinPutRepository() { mInstance = RetrofitClient.getService(); }
-    public AuthPinPutRepository(Application application) { mInstance = ApiModule.INSTANCE.provideRetrofit().create(RetrofitService.class);
-    }
+    public AuthPinPutRepository(Application application) { mInstance = ApiModule.INSTANCE.provideRetrofit().create(RetrofitService.class); }
     public SingleLiveEvent<AuthPinDTO> putAuthData(MemberPinModel memberPinModel) {
         String accessToken = PrefsHelper.read("accessToken","");
         String deviceId = PrefsHelper.read("deviceId","");

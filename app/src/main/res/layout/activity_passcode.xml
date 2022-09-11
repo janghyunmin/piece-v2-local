@@ -321,10 +321,11 @@
                     <TextView
                         android:id="@+id/clear"
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:gravity="center"
                         android:layout_weight="1"
-                        android:background="@drawable/clear_icon"
+                        android:drawableStart="@drawable/keypad_clear_icon_1"
+                        android:paddingLeft="40dp"
                         />
                 </LinearLayout>
             </LinearLayout>
