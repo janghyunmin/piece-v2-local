@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="addressViewModel"
+            type="com.bsstandard.piece.data.viewmodel.AddressViewModel" />
+
+        <variable
+            name="pos"
+            type="Integer" />
+    </data>
+
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/parent_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        >
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            >
+
+           <TextView
+               android:id="@+id/title_1"
+               android:text="도로명"
+               android:textSize="12dp"
+               android:lineHeight="16dp"
+               app:layout_constraintLeft_toLeftOf="parent"
+               app:layout_constraintTop_toTopOf="parent"
+               android:fontFamily="@font/pretendard_regular"
+               android:textColor="@color/c_8c919f"
+               android:layout_width="50dp"
+               android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/roadAddr"
+                android:text=""
+                android:textSize="16dp"
+                android:lineHeight="16dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toRightOf="@+id/title_1"
+                android:layout_marginStart="10dp"
+                android:fontFamily="@font/pretendard_bold"
+                android:textColor="@color/c_292a2e"
+                android:layout_width="280dp"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/title_2"
+                android:text="지번"
+                android:textSize="12dp"
+                android:lineHeight="16dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/roadAddr"
+                android:fontFamily="@font/pretendard_regular"
+                android:layout_marginTop="11dp"
+                android:textColor="@color/c_8c919f"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/jibunAddr"
+                android:text=""
+                android:textSize="14dp"
+                android:lineHeight="20dp"
+                android:layout_marginStart="10dp"
+                app:layout_constraintTop_toTopOf="@+id/title_2"
+                app:layout_constraintBottom_toBottomOf="@+id/title_2"
+                app:layout_constraintLeft_toRightOf="@+id/title_2"
+                android:fontFamily="@font/pretendard_regular"
+                android:textColor="@color/c_4a4d55"
+                android:layout_width="280dp"
+                android:layout_height="wrap_content"/>
+
+            <View
+                android:id="@+id/line"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="20dp"
+                android:background="@color/c_f2f3f4"
+                app:layout_constraintTop_toBottomOf="@+id/jibunAddr" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</layout>

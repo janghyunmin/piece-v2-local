@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="activity"
+            type="com.bsstandard.piece.view.myInfo.MyInfoActivity" />
+        <variable
+            name="memberVm"
+            type="com.bsstandard.piece.data.viewmodel.GetUserViewModel" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/top_layout"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/back_img"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:background="@drawable/arrow_left"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    />
+
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/top_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="내 정보"
+                    android:textColor="@color/c_4a4d55"
+                    android:textSize="16dp"
+                    android:lineHeight="25dp"
+                    app:fontFamily="@font/pretendard_regular"
+                    app:layout_constraintTop_toTopOf="@+id/back_img"
+                    app:layout_constraintBottom_toBottomOf="@+id/back_img"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/section_1"
+                app:layout_constraintTop_toBottomOf="@+id/top_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="40dp"
+                >
+
+                <TextView
+                    android:id="@+id/title_1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="본인 확인 정보"
+                    android:fontFamily="@font/pretendard_bold"
+                    android:textSize="16dp"
+                    android:lineHeight="25dp"
+                    android:textColor="@color/c_4a4d55"
+                    />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/reAuth"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/re_auth"
+                    android:fontFamily="@font/pretendard_regular"
+                    android:textSize="16dp"
+                    android:lineHeight="25dp"
+                    app:layout_constraintRight_toRightOf="parent"
+                    android:textColor="@color/c_10cfc9"
+                    />
+
+                <TextView
+                    android:id="@+id/title_2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="30dp"
+                    app:layout_constraintTop_toBottomOf="@+id/title_1"
+                    android:text="이름"
+                    android:fontFamily="@font/pretendard_regular"
+                    android:textSize="16dp"
+                    android:lineHeight="25dp"
+                    android:textColor="@color/c_8c919f"
+                    />
+
+                <TextView
+                    android:id="@+id/userName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="30dp"
+                    app:layout_constraintTop_toBottomOf="@+id/title_1"
+                    app:layout_constraintRight_toRightOf="parent"
+                    android:fontFamily="@font/pretendard_bold"
+                    android:textSize="16dp"
+                    android:lineHeight="25dp"
+                    android:textColor="@color/c_4a4d55"
+                    />
+
+                <TextView
+                    android:id="@+id/title_3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="30dp"
+                    app:layout_constraintTop_toBottomOf="@+id/title_2"
+                    android:text="생년월일"
+                    android:fontFamily="@font/pretendard_regular"
+                    android:textSize="16dp"
+                    android:lineHeight="25dp"
+                    android:textColor="@color/c_8c919f"
+                    />
+
+                <TextView
+                    android:id="@+id/userBirth"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="30dp"
+                    app:layout_constraintTop_toBottomOf="@+id/title_2"
+                    app:layout_constraintRight_toRightOf="parent"
+                    android:fontFamily="@font/pretendard_bold"
+                    android:textSize="16dp"
+                    android:lineHeight="25dp"
+                    android:textColor="@color/c_4a4d55"
+                    />
+
+                <TextView
+                    android:id="@+id/title_4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="30dp"
+                    app:layout_constraintTop_toBottomOf="@+id/title_3"
+                    android:text="휴대폰 번호"
+                    android:fontFamily="@font/pretendard_regular"
+                    android:textSize="16dp"
+                    android:lineHeight="25dp"
+                    android:textColor="@color/c_8c919f"
+                    />
+
+                <TextView
+                    android:id="@+id/userPhone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="30dp"
+                    app:layout_constraintTop_toBottomOf="@+id/title_3"
+                    app:layout_constraintRight_toRightOf="parent"
+                    android:fontFamily="@font/pretendard_bold"
+                    android:textSize="16dp"
+                    android:lineHeight="25dp"
+                    android:textColor="@color/c_4a4d55"
+                    />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <View
+                android:id="@+id/line"
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:layout_marginTop="20dp"
+                android:background="@color/c_f2f3f4"
+                app:layout_constraintTop_toBottomOf="@+id/section_1" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/section_2"
+                app:layout_constraintTop_toBottomOf="@+id/line"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="20dp"
+                >
+
+                <TextView
+                    android:id="@+id/title_5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="등록된 주소"
+                    android:fontFamily="@font/pretendard_bold"
+                    android:textSize="16dp"
+                    android:lineHeight="25dp"
+                    android:textColor="@color/c_4a4d55"
+                    />
+
+                <TextView
+                    android:id="@+id/address"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/address_change"
+                    android:fontFamily="@font/pretendard_regular"
+                    android:textSize="16dp"
+                    android:lineHeight="25dp"
+                    app:layout_constraintRight_toRightOf="parent"
+                    android:textColor="@color/c_10cfc9"
+                    />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/no_address"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@+id/address"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    android:layout_marginTop="30dp"
+                    android:visibility="visible"
+                    android:gravity="center"
+                    android:textSize="16dp"
+                    android:lineHeight="25dp"
+                    android:fontFamily="@font/pretendard_bold"
+                    android:textColor="@color/c_b8bcc8"
+                    android:text="등록된 주소가 없어요."
+                    />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/baseAddress"
+                    android:layout_width="300dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@+id/address"
+                    app:layout_constraintRight_toRightOf="parent"
+                    android:layout_marginTop="30dp"
+                    android:visibility="gone"
+                    android:textSize="16dp"
+                    android:lineHeight="25dp"
+                    android:gravity="right"
+                    android:fontFamily="@font/pretendard_bold"
+                    android:textColor="@color/c_4a4d55"
+                    android:text=""
+                    />
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/detailAddress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@+id/baseAddress"
+                    app:layout_constraintRight_toRightOf="parent"
+                    android:visibility="gone"
+                    android:textSize="16dp"
+                    android:lineHeight="25dp"
+                    android:gravity="right"
+                    android:fontFamily="@font/pretendard_regular"
+                    android:textColor="@color/c_4a4d55"
+                    android:text=""
+                    />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <View
+                android:id="@+id/line_2"
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:layout_marginTop="20dp"
+                android:background="@color/c_f2f3f4"
+                app:layout_constraintTop_toBottomOf="@+id/section_2" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/section_3"
+                app:layout_constraintTop_toBottomOf="@+id/line_2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="20dp"
+                >
+
+                <TextView
+                    android:id="@+id/title_6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="등록된 이메일"
+                    android:fontFamily="@font/pretendard_bold"
+                    android:textSize="16dp"
+                    android:lineHeight="25dp"
+                    android:textColor="@color/c_4a4d55"
+                    />
+
+                <TextView
+                    android:id="@+id/email_change"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/email_change"
+                    android:fontFamily="@font/pretendard_regular"
+                    android:textSize="16dp"
+                    android:lineHeight="25dp"
+                    app:layout_constraintRight_toRightOf="parent"
+                    android:textColor="@color/c_10cfc9"
+                    />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/no_email"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@+id/email"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    android:layout_marginTop="30dp"
+                    android:visibility="visible"
+                    android:gravity="center"
+                    android:textSize="16dp"
+                    android:lineHeight="25dp"
+                    android:fontFamily="@font/pretendard_bold"
+                    android:textColor="@color/c_b8bcc8"
+                    android:text="등록된 이메일이 없어요."
+                    />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/email"
+                    android:layout_width="300dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@+id/email_change"
+                    app:layout_constraintRight_toRightOf="parent"
+                    android:layout_marginTop="30dp"
+                    android:visibility="gone"
+                    android:textSize="16dp"
+                    android:lineHeight="25dp"
+                    android:gravity="right"
+                    android:fontFamily="@font/pretendard_bold"
+                    android:textColor="@color/c_4a4d55"
+                    android:text="test@test.com"
+                    />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

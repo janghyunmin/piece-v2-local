@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="noticeVm"
+            type="com.bsstandard.piece.data.viewmodel.NoticeViewModel" />
+
+        <variable
+            name="pos"
+            type="Integer" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/noticeDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12dp"
+            android:lineHeight="16dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="16dp"
+            android:fontFamily="@font/pretendard_regular"
+            android:textColor="@color/c_b8bcc8"
+            app:createdAt="@{noticeVm.noticeItem.get(pos).createdAt}"
+            />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/noticeTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16dp"
+            android:lineHeight="25dp"
+            app:layout_constraintTop_toBottomOf="@+id/noticeDate"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_marginTop="5dp"
+            android:layout_marginStart="16dp"
+            android:fontFamily="@font/pretendard_bold"
+            android:textColor="@color/c_4a4d55"
+            app:title="@{noticeVm.noticeItem.get(pos).title}"
+            />
+
+        <View
+            android:id="@+id/line"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="20dp"
+            android:background="@color/c_f2f3f4"
+            app:layout_constraintTop_toBottomOf="@+id/noticeTitle" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
