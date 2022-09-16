@@ -42,6 +42,8 @@ class CustomDialog(
     private lateinit var addressDialogBinding: AddressDialogBinding
 
 
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -112,7 +114,6 @@ class CustomDialog(
                         listener_c.onOkButtonClicked()
                     }
                 }
-
             }
         }
 

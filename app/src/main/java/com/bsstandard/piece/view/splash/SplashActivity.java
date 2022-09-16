@@ -129,6 +129,11 @@ public class SplashActivity extends AppCompatActivity {
 
             CustomDialogListener customDialogListener = new CustomDialogListener() {
                 @Override
+                public void onCancelButtonClicked() {
+
+                }
+
+                @Override
                 public void onOkButtonClicked() {
                     LogUtil.logE("업데이트 하러 이동");
                     Intent intent = new Intent(Intent.ACTION_VIEW);

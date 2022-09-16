@@ -1,9 +1,9 @@
 <component name="libraryTable">
   <library name="Gradle: androidx.lifecycle:lifecycle-viewmodel-compose:2.5.0-alpha04@aar">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/1f03004bf0bd6e75e2edda624d58de6a/transformed/jetified-lifecycle-viewmodel-compose-2.5.0-alpha04/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/1f03004bf0bd6e75e2edda624d58de6a/transformed/jetified-lifecycle-viewmodel-compose-2.5.0-alpha04/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/1f03004bf0bd6e75e2edda624d58de6a/transformed/jetified-lifecycle-viewmodel-compose-2.5.0-alpha04/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/3b2fd0acb3e692674c8fdbc381941b3d/transformed/jetified-lifecycle-viewmodel-compose-2.5.0-alpha04/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/3b2fd0acb3e692674c8fdbc381941b3d/transformed/jetified-lifecycle-viewmodel-compose-2.5.0-alpha04/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/3b2fd0acb3e692674c8fdbc381941b3d/transformed/jetified-lifecycle-viewmodel-compose-2.5.0-alpha04/res" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

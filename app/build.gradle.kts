@@ -244,5 +244,8 @@ dependencies {
     implementation(Libs.SLIDE_UP_PANEL_HANNESA)
     implementation(Libs.MPCHART)
 
+    implementation(Libs.BIOMETRIC)
+    implementation(Libs.BIOMETRIC_KTX)
+
 
 }

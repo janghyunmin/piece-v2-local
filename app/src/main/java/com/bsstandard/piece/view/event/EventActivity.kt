@@ -43,6 +43,8 @@ class EventActivity : BaseActivity<ActivityEventBinding>(R.layout.activity_event
         binding.eventVm = vm
         binding.lifecycleOwner = this@EventActivity
 
+        
+        // UI Setting 최종 - jhm 2022/09/14
         setStatusBarIconColor(true) // 상태바 아이콘 true : 검정색
         setStatusBarBgColor("#ffffff") // 상태바 배경색상 설정
         setNaviBarIconColor(true) // 네비게이션 true : 검정색

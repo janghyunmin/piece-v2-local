@@ -12,7 +12,6 @@
     <string name="default_notification_channel_name" translatable="true">Test</string>
 
 
-
     <!-- playstore url -->
     <string name="playstore_url">market://details?id=run.piece.dev</string>
 
@@ -31,6 +30,12 @@
     <!-- dialog Address -->
     <string name="add_title">주소 등록 완료</string>
     <string name="add_sub_title">주소가 성공적으로 등록되었어요.</string>
+
+    <!-- dialog Coupon -->
+    <string name="coupon_title">쿠폰을 바로 사용할까요?</string>
+    <string name="coupon_subTitle">등록 완료된 쿠폰은 취소할 수 없어요.</string>
+    <string name="coupon_dismiss">닫기</string>
+    <string name="coupon_confirm">사용하기</string>
 
     <!-- intro -->
     <string name="i_beta_text"><u>서비스 둘러보기</u></string>
@@ -77,7 +82,7 @@
     <string name="sms_hint">전송된 인증번호 입력</string>
     <string name="sms_retry">재전송</string>
     <string name="sms_confirm">확인</string>
-    
+
     <!-- 간편 비밀번호 -->
     <string name="passcode_title">간편 비밀번호</string>
     <string name="passcode_title_c">숫자 6자리를 입력해 주세요</string>
@@ -89,7 +94,6 @@
     <string name="p_today_close">오늘은 보지 않기</string>
 
 
-
     <!-- 포트폴리오 상세 하단 유의사항 -->
     <string name="portfolio_detail_notice_text">
         • 구매원금과 수익을 보장하지 않으며, 손실에 대한 책임은 모두 구매자에게 있습니다.\n
@@ -98,11 +102,22 @@
     </string>
 
 
-
     <!-- 내정보 상세 -->
     <string name="re_auth"><u>재인증</u></string>
     <string name="address_change"><u>주소 변경</u></string>
     <string name="email_change"><u>이메일 변경</u></string>
 
+
+    <!-- 쿠폰함 -->
+    <string name="notice_text"><u>사용시 유의사항</u></string>
+    <string name="notice">
+        • 쿠폰의 유효 기간이 지나면 사용할 수 없어요.\n
+        • 쿠폰은 한 번만 사용할 수 있어요. \n
+        • 한 번 사용된 쿠폰은 구매 취소나 환불 시에 재발행되지 않아요. \n
+        • 조각교환 쿠폰은 사용 후 취소할 수 없어요. \n
+        • 특정 쿠폰은 다른 쿠폰과 함께 중복 사용할 수 없어요. \n
+        • 쿠폰을 다른 사람에게 양도할 수 없어요. \n
+        • 쿠폰을 현금으로 바꿀 수 없어요. \n
+    </string>
 
 </resources>

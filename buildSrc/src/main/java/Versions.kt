@@ -218,6 +218,10 @@
 
         const val MPCHART = "v3.1.0"
 
+        // 생체인증 - jhm 2022/09/15
+        const val BIOMETRIC = "1.1.0"
+        const val BIOMETRIC_KTX = "1.2.0-alpha04"
+
 
     }
 
@@ -430,5 +434,7 @@
         const val DISCRETE_SCROLLVIEW = "com.yarolegovich:discrete-scrollview:${Versions.DISCRETE_SCROLLVIEW}"
         const val SLIDE_UP_PANEL_HANNESA = "com.github.hannesa2:AndroidSlidingUpPanel:${Versions.SLIDE_UP_PANEL_HANNESA}"
         const val MPCHART = "com.github.PhilJay:MPAndroidChart:${Versions.MPCHART}"
+        const val BIOMETRIC = "androidx.biometric:biometric:${Versions.BIOMETRIC}"
+        const val BIOMETRIC_KTX = "androidx.biometric:biometric-ktx:${Versions.BIOMETRIC_KTX}"
 
     }

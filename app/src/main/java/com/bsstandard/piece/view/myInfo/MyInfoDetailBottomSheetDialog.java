@@ -169,6 +169,11 @@ public class MyInfoDetailBottomSheetDialog extends BottomSheetDialogFragment imp
 
                         CustomDialogListener customDialogListener = new CustomDialogListener() {
                             @Override
+                            public void onCancelButtonClicked() {
+
+                            }
+
+                            @Override
                             public void onOkButtonClicked() {
                                 LogUtil.logE("주소 변경 완료");
                                 getUserViewModel.getUserData();

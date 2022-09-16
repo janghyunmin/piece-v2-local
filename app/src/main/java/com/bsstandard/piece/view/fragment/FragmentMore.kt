@@ -18,6 +18,8 @@ import com.bsstandard.piece.data.datasource.shared.PrefsHelper
 import com.bsstandard.piece.data.viewmodel.GetUserViewModel
 import com.bsstandard.piece.data.viewmodel.MoreViewModel
 import com.bsstandard.piece.databinding.FragmentMoreBinding
+import com.bsstandard.piece.view.certification.CertificationActivity
+import com.bsstandard.piece.view.coupon.CouponActivity
 import com.bsstandard.piece.view.event.EventActivity
 import com.bsstandard.piece.view.myInfo.MyInfoActivity
 import com.bsstandard.piece.view.notice.NoticeActivity
@@ -96,6 +98,8 @@ class FragmentMore : Fragment(){
         myInfo() // 내정보 상세 - jhm 2022/09/11
         goNotice() // 공지사항 - jhm 2022/09/11
         goEvent() // 이벤트 - jhm 2022/09/11
+        goCoupon() // 쿠폰함 - jhm 2022/09/13
+        goAccess() // 인증 및 보안 - jhm 2022/09/15
 
         return binding.root
     }
@@ -122,7 +126,7 @@ class FragmentMore : Fragment(){
 
 
     // 이름 클릭시 내정보 페이지로 이동 - jhm 2022/09/01
-    fun myInfo() {
+    private fun myInfo() {
         vm.startMyInfoDetail.observe(
             viewLifecycleOwner
         ) {
@@ -160,6 +164,36 @@ class FragmentMore : Fragment(){
         ) {
             LogUtil.logE("이벤트 OnClick..")
             val intent = Intent(context, EventActivity::class.java)
+            context?.startActivity(intent)
+            activity?.overridePendingTransition(
+                android.R.anim.fade_in,
+                android.R.anim.fade_out
+            );
+        }
+    }
+
+    // 쿠폰함 - jhm 2022/09/13
+    private fun goCoupon() {
+        vm.startCoupon.observe(
+            viewLifecycleOwner
+        ) {
+            LogUtil.logE("쿠폰함 OnClick..")
+            val intent = Intent(context, CouponActivity::class.java)
+            context?.startActivity(intent)
+            activity?.overridePendingTransition(
+                android.R.anim.fade_in,
+                android.R.anim.fade_out
+            );
+        }
+    }
+
+    // 인증 및 보안 - jhm 2022/09/15
+    private fun goAccess() {
+        vm.startAccess.observe(
+            viewLifecycleOwner
+        ) {
+            LogUtil.logE("인증 및 보안 OnClick..")
+            val intent = Intent(context, CertificationActivity::class.java)
             context?.startActivity(intent)
             activity?.overridePendingTransition(
                 android.R.anim.fade_in,

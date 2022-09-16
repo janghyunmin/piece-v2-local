@@ -27,6 +27,8 @@ class MoreViewModel() : ViewModel(){
     val startMyInfoDetail = SingleLiveEvent<Any>()
     val startNotice = SingleLiveEvent<Any>()
     val startEvent = SingleLiveEvent<Any>()
+    val startCoupon = SingleLiveEvent<Any>()
+    val startAccess = SingleLiveEvent<Any>()
 
     // 내정보 상세 - jhm 2022/09/10
     fun myInfo() {
@@ -41,5 +43,15 @@ class MoreViewModel() : ViewModel(){
     // 이벤트 - jhm 2022/09/11
     fun goEvent() {
         startEvent.call()
+    }
+
+    // 쿠폰함 - jhm 2022/09/13
+    fun goCoupon() {
+        startCoupon.call()
+    }
+
+    // 인증 및 보안 - jhm 2022/09/15
+    fun goAccess() {
+        startAccess.call()
     }
 }

@@ -8,6 +8,10 @@
         <entry key="app/src/main/res/drawable/arrow_down_right_resize.xml" value="0.239" />
         <entry key="app/src/main/res/drawable/bookmark_detail_selector.xml" value="0.155" />
         <entry key="app/src/main/res/drawable/bookmark_selector.xml" value="0.2455" />
+        <entry key="app/src/main/res/drawable/btn_register_back.xml" value="0.152" />
+        <entry key="app/src/main/res/drawable/btn_register_n.xml" value="0.152" />
+        <entry key="app/src/main/res/drawable/btn_register_y.xml" value="0.152" />
+        <entry key="app/src/main/res/drawable/btn_round_ff7878.xml" value="0.1145" />
         <entry key="app/src/main/res/drawable/c_dialog_back.xml" value="0.1495" />
         <entry key="app/src/main/res/drawable/chk_selector.xml" value="0.2725" />
         <entry key="app/src/main/res/drawable/circle_progressbar.xml" value="0.185" />
@@ -27,6 +31,9 @@
         <entry key="app/src/main/res/drawable/j_selector_underline.xml" value="0.1865" />
         <entry key="app/src/main/res/drawable/layout_round.xml" value="0.1175" />
         <entry key="app/src/main/res/drawable/layout_round_10cfc9.xml" value="0.141" />
+        <entry key="app/src/main/res/drawable/layout_round_b8b8cc8.xml" value="0.152" />
+        <entry key="app/src/main/res/drawable/layout_round_b8bcc8.xml" value="0.1645" />
+        <entry key="app/src/main/res/drawable/layout_round_eaecf0.xml" value="0.1645" />
         <entry key="app/src/main/res/drawable/layout_round_f3fcfd.xml" value="0.187" />
         <entry key="app/src/main/res/drawable/layout_round_f9f9f9.xml" value="0.187" />
         <entry key="app/src/main/res/drawable/layout_round_ffffff.xml" value="0.2235" />
@@ -37,12 +44,21 @@
         <entry key="app/src/main/res/drawable/portfolio_composition_selector.xml" value="0.186" />
         <entry key="app/src/main/res/drawable/shape_selected.xml" value="0.143" />
         <entry key="app/src/main/res/drawable/shape_unselected.xml" value="0.143" />
+        <entry key="app/src/main/res/drawable/switch_thumb.xml" value="0.2305" />
+        <entry key="app/src/main/res/drawable/switch_thumb_off.xml" value="0.2305" />
+        <entry key="app/src/main/res/drawable/switch_thumb_selector.xml" value="0.2305" />
+        <entry key="app/src/main/res/drawable/switch_track_off.xml" value="0.2305" />
+        <entry key="app/src/main/res/drawable/switch_track_on.xml" value="0.2305" />
+        <entry key="app/src/main/res/drawable/switch_track_selector.xml" value="0.2305" />
         <entry key="app/src/main/res/drawable/textview_underline.xml" value="0.112" />
         <entry key="app/src/main/res/font-v26/font.xml" value="0.3641025641025641" />
         <entry key="app/src/main/res/font/font.xml" value="0.23796296296296296" />
         <entry key="app/src/main/res/font/piece_font.xml" value="0.2947916666666667" />
+        <entry key="app/src/main/res/layout/activity_access.xml" value="0.399681615322609" />
         <entry key="app/src/main/res/layout/activity_bookmark.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_consent_webview.xml" value="0.2424112868747328" />
+        <entry key="app/src/main/res/layout/activity_coupon.xml" value="0.30047607421875" />
+        <entry key="app/src/main/res/layout/activity_coupone.xml" value="0.26464300983326206" />
         <entry key="app/src/main/res/layout/activity_event.xml" value="0.16329498291015626" />
         <entry key="app/src/main/res/layout/activity_event_webview.xml" value="0.16165008544921877" />
         <entry key="app/src/main/res/layout/activity_intro.xml" value="0.19631042480468752" />
@@ -53,7 +69,7 @@
         <entry key="app/src/main/res/layout/activity_noti_custom.xml" value="0.39712219238281254" />
         <entry key="app/src/main/res/layout/activity_notice.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_notice_webview.xml" value="0.20576019287109376" />
-        <entry key="app/src/main/res/layout/activity_passcode.xml" value="0.17615203857421877" />
+        <entry key="app/src/main/res/layout/activity_passcode.xml" value="0.2705322265625001" />
         <entry key="app/src/main/res/layout/activity_portfoliodetail.xml" value="0.2696258544921875" />
         <entry key="app/src/main/res/layout/activity_splash.xml" value="0.2884963768115942" />
         <entry key="app/src/main/res/layout/activity_success.xml" value="0.16544342041015625" />
@@ -65,13 +81,18 @@
         <entry key="app/src/main/res/layout/c_alert.xml" value="0.2875905797101449" />
         <entry key="app/src/main/res/layout/c_dialog.xml" value="0.24019454734912815" />
         <entry key="app/src/main/res/layout/c_dialog_password.xml" value="0.31197916666666664" />
+        <entry key="app/src/main/res/layout/certification_dialog.xml" value="0.26036767849508335" />
+        <entry key="app/src/main/res/layout/certification_off_dialog.xml" value="0.26036767849508335" />
         <entry key="app/src/main/res/layout/consent_item.xml" value="0.3220108695652174" />
+        <entry key="app/src/main/res/layout/coupon_dialog.xml" value="0.29082709186451206" />
+        <entry key="app/src/main/res/layout/coupon_notice_dialog.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/coupon_response_dialog.xml" value="0.3916405666786771" />
         <entry key="app/src/main/res/layout/documents_item_layout.xml" value="0.33366422402458856" />
         <entry key="app/src/main/res/layout/event_item.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragkejt.xml" value="0.32864583333333336" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.19691975911458334" />
         <entry key="app/src/main/res/layout/fragment_magazine.xml" value="0.2809102376302084" />
-        <entry key="app/src/main/res/layout/fragment_more.xml" value="0.15963592529296877" />
+        <entry key="app/src/main/res/layout/fragment_more.xml" value="0.38785705566406253" />
         <entry key="app/src/main/res/layout/fragment_wallet.xml" value="0.32864583333333336" />
         <entry key="app/src/main/res/layout/l_slide_popup.xml" value="0.2708333333333333" />
         <entry key="app/src/main/res/layout/loginchk_layout.xml" value="0.14367370605468752" />

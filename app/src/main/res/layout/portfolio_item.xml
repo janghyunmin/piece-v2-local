@@ -61,8 +61,8 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:recruitmentState="@{portfolioViewModel.portoflioItem.get(pos).recruitmentState}"
                 app:recruitmentBeginDate="@{portfolioViewModel.portoflioItem.get(pos).recruitmentBeginDate}"
-                app:remainingPieceVolume="@{portfolioViewModel.portoflioItem.get(pos).remainingPieceVolume}"
-                app:soldoutAt="@{portfolioViewModel.portoflioItem.get(pos).soldoutAt}"
+                app:remainingPieceVolume='@{portfolioViewModel.portoflioItem.get(pos).remainingPieceVolume ?? "0"}'
+                app:soldoutAt='@{portfolioViewModel.portoflioItem.get(pos).soldoutAt ?? "2100-99-99 10:00:00.0"}'
                 app:expectationProfitRate="@{portfolioViewModel.portoflioItem.get(pos).expectationProfitRate}"
                 />
 

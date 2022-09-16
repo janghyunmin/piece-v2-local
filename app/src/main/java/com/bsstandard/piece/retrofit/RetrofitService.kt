@@ -178,4 +178,12 @@ interface RetrofitService {
     @GET("board/event/{eventId}")
     suspend fun getEventDetail(@Path("eventId") eventId: String) : EventDetailDTO
 
+    // 쿠폰 및 프로모션 코드 사용 요청 - jhm 2022/09/13
+    @GET("member/coupon/{couponCode}")
+    fun getCouponCodeInput(
+        @Path("couponCode") couponCode: String,
+        @Header("accessToken") accessToken: String?,
+        @Header("deviceId") deviceId: String?,
+        @Header("memberId") memberId: String?) : Call<CouponDTO>
+
 }

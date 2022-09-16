@@ -47,7 +47,7 @@ class PortfolioViewModel(application: Application) : AndroidViewModel(applicatio
     @SuppressLint("StaticFieldLeak")
     private val context = getApplication<Application>().applicationContext
     var portfolioAdapter = PortfolioAdapter(this , context)
-    private val portfolioList: ArrayList<PortfolioDTO.Data.Datum> = arrayListOf()
+    private val portfolioList: ArrayList<PortfolioDTO.Data.Portfolio> = arrayListOf()
     var n = 1
 
 
@@ -55,11 +55,11 @@ class PortfolioViewModel(application: Application) : AndroidViewModel(applicatio
     fun getPortfolio() {
         repo.getPortfolios().subscribe(
             { PortfolioDTO ->
-                LogUtil.logE("포트폴리오 갯수 : " + PortfolioDTO.data.data.size)
+                LogUtil.logE("포트폴리오 갯수 : " + PortfolioDTO.data.totalCount)
 
                 portfolioList.clear()
-                for (i in ArrayList(PortfolioDTO.data.data).indices) {
-                    portfolioList.add(PortfolioDTO.data.data[i])
+                for (i in ArrayList(PortfolioDTO.data.portfolios).indices) {
+                    portfolioList.add(PortfolioDTO.data.portfolios[i])
                     portfolioAdapter.notifyDataSetChanged()
                 }
 
@@ -72,7 +72,7 @@ class PortfolioViewModel(application: Application) : AndroidViewModel(applicatio
         recyclerView.layoutManager = LinearLayoutManager(getApplication())
     }
 
-    fun getPortoflioItem(): List<PortfolioDTO.Data.Datum> {
+    fun getPortoflioItem(): List<PortfolioDTO.Data.Portfolio> {
         return portfolioList;
     }
 }
@@ -148,6 +148,10 @@ object BindingAdapter {
         val expectationProfitRate = percent
 
         val string = date;
+
+
+
+        LogUtil.logE("string $string")
         val year = string.substring(0, 4)
         val month = string.substring(5, 7)
         val day = string.substring(8, 10)

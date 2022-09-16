@@ -32,7 +32,6 @@ import com.bsstandard.piece.data.viewmodel.MemberJoinViewModel;
 import com.bsstandard.piece.data.viewmodel.PutTokenViewModel;
 import com.bsstandard.piece.databinding.ActivityPasscodeBinding;
 import com.bsstandard.piece.di.hilt.ApiModule;
-import com.bsstandard.piece.retrofit.RetrofitClient;
 import com.bsstandard.piece.retrofit.RetrofitService;
 import com.bsstandard.piece.view.join.JoinActivity;
 import com.bsstandard.piece.view.join.JoinSuccessActivity;
@@ -55,7 +54,6 @@ import java.util.Objects;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 
 /**
  * packageName    : com.bsstandard.piece.view.passcode
@@ -113,6 +111,10 @@ public class PassCodeActivity extends AppCompatActivity {
     public String pinNumChk;
 
 
+    // 더보기 - 인증 및 보안에서 간편 비밀번호 변경으로 들어왔는지 체크하기 위한 변수 - jhm 2022/09/16
+    private String isRepassword;
+
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -145,6 +147,21 @@ public class PassCodeActivity extends AppCompatActivity {
         AutoLogin(); // 회원가입 완료 후 자동로그인인지 판별하는 로직 - jhm 2022/07/03
 
 
+        // 내정보 - 인증 및 보안 - 간편비밀번호의 경로로 들어왔을 경우 판별 변수 - jhm 2022/09/16
+
+        if (savedInstanceState == null) {
+            Bundle extras = getIntent().getExtras();
+            if (extras == null) {
+                isRepassword = "";
+            } else {
+                isRepassword = extras.getString("isRepassword");
+                isRepasswordLogic();
+            }
+        } else {
+            isRepassword = (String) savedInstanceState.getSerializable("isRepassword");
+            isRepasswordLogic();
+        }
+
         binding.clear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -170,6 +187,18 @@ public class PassCodeActivity extends AppCompatActivity {
         }).addOnCanceledListener(() -> {
             //handle cancel
         }).addOnCompleteListener(task -> Log.v("TAG", "This is the token : " + task.getResult()));
+    }
+
+
+    private void isRepasswordLogic() {
+        LogUtil.logE("isRepssword : " + isRepassword);
+        if (isRepassword.equals("isRepassword")) {
+
+            binding.passcodeTitleC.setText("현재 비밀번호를 입력해주세요.");
+            MorePinUpdate();
+
+
+        }
     }
 
 
@@ -303,6 +332,7 @@ public class PassCodeActivity extends AppCompatActivity {
             PrefsHelper.write("inputPinNumber", inputPinNumber); // 최초 저장 및 새로 저장 - jhm 2022/07/06
             LogUtil.logE("inputPinNumber : " + inputPinNumber);
 
+
             // 로그인 기록이 없다면 - jhm 2022/07/05
             if (isJoin.equals("false")) {
                 // 비밀번호 최초 등록
@@ -323,8 +353,31 @@ public class PassCodeActivity extends AppCompatActivity {
                     PinNumOneStep();
                 }
             }
+
+
+
         }
     }
+
+    // 더보기 -> 내정보 -> 인증 및 보안 으로 들어온 케이스에만 실행 - jhm 2022/09/16
+    public void MorePinUpdate() {
+        // 입력한 비밀번호와 이전에 등록되어있던 비밀번호가 다르다면 - jhm 2022/09/16
+        if (!inputPinNumber.equals(pinNumber)) {
+            binding.passcodeTitleVerify.setVisibility(View.VISIBLE);
+        }
+        // 그렇지 않다면 - jhm 2022/09/16
+        else {
+            // 변경할 비밀번호 입력 - jhm 2022/09/16
+            PinNumberReUpdate();
+        }
+//        PinNumRandom(); // 간편 비밀번호 0~9 위치 랜덤 - jhm 2022/06/27
+//        PinNumberClear(); // 간편 비밀번호 입력값 모두 초기화 - jhm 2022/06/27
+//        KeyPadOnClick(); // 키패드 입력 로직 - jhm 2022/06/27
+
+
+
+    }
+
 
 
     // 화면 재진입시 핀번호 입력 1회 - jhm 2022/07/05
@@ -333,7 +386,6 @@ public class PassCodeActivity extends AppCompatActivity {
         setActiveChk();
         KeyPadOnClick();
         PinNumberClear();
-
 
         getAuthTokenViewModel.getAuthTokenData().observe(this, new Observer<BaseDTO>() {
             @Override
@@ -434,6 +486,11 @@ public class PassCodeActivity extends AppCompatActivity {
         // 실패시 비밀번호 재설정 - jhm 2022/07/05
         CustomDialogListener customDialogListener = new CustomDialogListener() {
             @Override
+            public void onCancelButtonClicked() {
+
+            }
+
+            @Override
             public void onOkButtonClicked() {
             }
         };
@@ -478,6 +535,14 @@ public class PassCodeActivity extends AppCompatActivity {
 
     // 로그인 기록이 있지만 비밀번호 변경으로 들어온 경우 - jhm 2022/07/05
     public void PinNumberUpdate() {
+        PinNumRandom(); // 키패드 초기화 및 숫자 재배열 - jhm 2022/06/28
+        setActiveReset(); // UI 변경 - jhm 2022/06/28
+        setActiveChk(); // UI 변경 - jhm 2022/07/05
+        PinNumberValidate(Division.PIN_VIEWTYPE_2); // PinNumber - jhm 2022/07/05
+    }
+
+    // 더보기 -> 비밀번호 재설정으로 들어온 경우 - jhm 2022/09/16
+    private void PinNumberReUpdate() {
         PinNumRandom(); // 키패드 초기화 및 숫자 재배열 - jhm 2022/06/28
         setActiveReset(); // UI 변경 - jhm 2022/06/28
         setActiveChk(); // UI 변경 - jhm 2022/07/05
