@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:sothree="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/c_ffffff">
+    android:fitsSystemWindows="true">
 
     <data>
 
@@ -34,7 +34,6 @@
             android:id="@+id/portfolio_img"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fitsSystemWindows="true"
             android:transitionName="@{portfolioViewModel.portoflioItem.get(pos).representThumbnailImagePath}"
             app:layout_collapseMode="parallax"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -45,7 +44,6 @@
             android:id="@+id/top_layout"
             android:layout_width="match_parent"
             android:layout_height="80dp"
-            android:layout_marginTop="44dp"
             android:background="@android:color/transparent"
             app:layout_constraintTop_toTopOf="parent">
 
@@ -147,58 +145,111 @@
                             app:layout_constraintTop_toTopOf="parent" />
 
 
-                        <!-- progressbar layout start -->
                         <androidx.constraintlayout.widget.ConstraintLayout
-                            android:id="@+id/status_bar_layout"
+                            android:id="@+id/pt_layout"
                             android:layout_width="match_parent"
-                            android:layout_height="120dp"
-                            android:layout_marginStart="16dp"
-                            android:layout_marginTop="70dp"
-                            android:layout_marginEnd="16dp"
-                            android:background="@drawable/layout_round_ffffff"
-                            android:elevation="5dp"
+                            android:layout_height="250dp"
                             app:layout_constraintTop_toBottomOf="@+id/title">
 
-                            <TextView
-                                android:id="@+id/title_1"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="15dp"
-                                android:fontFamily="@font/pretendard_extrabold"
-                                android:lineHeight="20dp"
-                                android:text="판매 누적 금액"
-                                android:textColor="@color/c_8c919f"
-                                android:textSize="14dp"
-                                app:layout_constraintBottom_toBottomOf="@id/status_bar_layout"
-                                app:layout_constraintLeft_toLeftOf="@id/status_bar_layout"
-                                app:layout_constraintTop_toTopOf="@id/status_bar_layout" />
+                            <FrameLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="230dp">
 
-                            <TextView
-                                android:id="@+id/sell_price"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="15dp"
-                                android:fontFamily="@font/pretendard_extrabold"
-                                android:lineHeight="20dp"
-                                android:textColor="@color/c_131313"
-                                android:textSize="20dp"
-                                app:layout_constraintLeft_toLeftOf="@id/status_bar_layout"
-                                app:layout_constraintTop_toBottomOf="@+id/title_1" />
+                                <androidx.constraintlayout.widget.ConstraintLayout
+                                    android:id="@+id/character_layout"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    android:layout_gravity="left|top"
+                                    android:elevation="10dp"
+                                    >
 
-                            <TextView
-                                android:id="@+id/percent"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginEnd="15dp"
-                                android:fontFamily="@font/pretendard_extrabold"
-                                android:lineHeight="34dp"
-                                android:text="83%"
-                                android:textColor="@color/c_10cfc9"
-                                android:textSize="26dp"
-                                app:layout_constraintBottom_toBottomOf="@+id/sell_price"
-                                app:layout_constraintRight_toRightOf="@id/status_bar_layout" />
+                                    <com.airbnb.lottie.LottieAnimationView
+                                        android:id="@+id/character"
+                                        android:layout_width="150dp"
+                                        android:layout_height="150dp"
+                                        app:layout_constraintTop_toTopOf="parent"
+                                        app:layout_constraintTop_toBottomOf="@+id/progress"
+                                        tools:ignore="NotSibling" />
+
+
+                                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                                <androidx.constraintlayout.widget.ConstraintLayout
+                                    android:id="@+id/status_bar_layout"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="16dp"
+                                    android:layout_marginTop="75dp"
+                                    android:layout_marginEnd="16dp"
+                                    android:paddingBottom="20dp"
+                                    android:background="@drawable/layout_round_ffffff"
+                                    android:elevation="5dp"
+
+                                    >
+
+
+                                    <ProgressBar
+                                        android:id="@+id/progress"
+                                        app:layout_constraintTop_toTopOf="parent"
+                                        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="12dp"
+                                        android:layout_marginStart="15dp"
+                                        android:layout_marginTop="30dp"
+                                        android:layout_marginEnd="15dp"
+                                        android:max="100"
+                                        android:progress="0"
+                                        android:progressDrawable="@drawable/progressbar_custom" />
+
+                                    <TextView
+                                        android:id="@+id/title_1"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginStart="15dp"
+                                        android:layout_marginTop="15dp"
+                                        android:fontFamily="@font/pretendard_extrabold"
+                                        android:lineHeight="20dp"
+                                        android:text="판매 누적 금액"
+                                        android:textColor="@color/c_8c919f"
+                                        android:textSize="14dp"
+                                        app:layout_constraintLeft_toLeftOf="parent"
+                                        app:layout_constraintTop_toBottomOf="@+id/progress" />
+
+                                    <TextView
+                                        android:id="@+id/sell_price"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginStart="15dp"
+                                        android:fontFamily="@font/pretendard_extrabold"
+                                        android:lineHeight="20dp"
+                                        android:text="0원"
+                                        android:textColor="@color/c_131313"
+                                        android:textSize="20dp"
+                                        app:layout_constraintLeft_toLeftOf="parent"
+                                        app:layout_constraintTop_toBottomOf="@+id/title_1" />
+
+                                    <TextView
+                                        android:id="@+id/percent"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginEnd="15dp"
+                                        android:fontFamily="@font/pretendard_extrabold"
+                                        android:lineHeight="34dp"
+                                        android:text="0%"
+                                        android:textColor="@color/c_10cfc9"
+                                        android:textSize="26dp"
+                                        app:layout_constraintBottom_toBottomOf="@+id/sell_price"
+                                        app:layout_constraintRight_toRightOf="parent" />
+
+                                    <!-- progressbar layout end -->
+                                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                            </FrameLayout>
+
                         </androidx.constraintlayout.widget.ConstraintLayout>
-                        <!-- progressbar layout end -->
+
 
                         <!-- 총 판매금액 , 판개기간 layout start -->
                         <androidx.constraintlayout.widget.ConstraintLayout
@@ -206,10 +257,9 @@
                             android:layout_width="match_parent"
                             android:layout_height="90dp"
                             android:layout_marginStart="16dp"
-                            android:layout_marginTop="20dp"
                             android:layout_marginEnd="16dp"
                             android:background="@drawable/layout_round_f3fcfd"
-                            app:layout_constraintTop_toBottomOf="@+id/status_bar_layout">
+                            app:layout_constraintTop_toBottomOf="@+id/pt_layout">
 
                             <TextView
                                 android:id="@+id/title_2"
@@ -886,8 +936,8 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="30dp"
                                 android:layout_marginEnd="15dp"
-                                app:layout_constraintRight_toRightOf="parent"
                                 app:layout_constraintLeft_toRightOf="@+id/text_2"
+                                app:layout_constraintRight_toRightOf="parent"
                                 app:layout_constraintTop_toTopOf="@+id/text_2" />
 
                             <androidx.appcompat.widget.AppCompatTextView
@@ -1028,84 +1078,79 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="16dp"
-                                android:layout_marginEnd="16dp"
                                 android:layout_marginTop="20dp"
-                                app:layout_constraintTop_toBottomOf="@+id/compositionRv"
-                                >
+                                android:layout_marginEnd="16dp"
+                                app:layout_constraintTop_toBottomOf="@+id/compositionRv">
 
                                 <androidx.appcompat.widget.AppCompatImageView
                                     android:id="@+id/image_path"
-                                    app:layout_constraintTop_toTopOf="parent"
-                                    app:layout_constraintLeft_toLeftOf="parent"
                                     android:layout_width="166dp"
                                     android:layout_height="166dp"
-                                    />
+                                    app:layout_constraintLeft_toLeftOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent" />
 
                                 <androidx.appcompat.widget.AppCompatTextView
                                     android:id="@+id/productionYear"
-                                    app:layout_constraintTop_toTopOf="parent"
-                                    app:layout_constraintLeft_toRightOf="@+id/image_path"
-                                    android:layout_marginLeft="11dp"
-                                    android:layout_marginTop="15dp"
-                                    app:fontFamily="@font/pretendard_regular"
-                                    android:textSize="12dp"
-                                    android:lineHeight="16dp"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
+                                    android:layout_marginLeft="11dp"
+                                    android:layout_marginTop="15dp"
+                                    android:lineHeight="16dp"
                                     android:textColor="@color/c_b8bcc8"
-                                    />
+                                    android:textSize="12dp"
+                                    app:fontFamily="@font/pretendard_regular"
+                                    app:layout_constraintLeft_toRightOf="@+id/image_path"
+                                    app:layout_constraintTop_toTopOf="parent" />
 
                                 <androidx.appcompat.widget.AppCompatTextView
                                     android:id="@+id/productTitle"
-                                    app:layout_constraintTop_toBottomOf="@+id/productionYear"
-                                    app:layout_constraintLeft_toRightOf="@+id/image_path"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
                                     android:layout_marginLeft="11dp"
-                                    app:fontFamily="@font/pretendard_extrabold"
-                                    android:textSize="16dp"
                                     android:lineHeight="25dp"
                                     android:textColor="@color/c_292a2e"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"/>
+                                    android:textSize="16dp"
+                                    app:fontFamily="@font/pretendard_extrabold"
+                                    app:layout_constraintLeft_toRightOf="@+id/image_path"
+                                    app:layout_constraintTop_toBottomOf="@+id/productionYear" />
 
                                 <androidx.appcompat.widget.AppCompatTextView
                                     android:id="@+id/author"
-                                    app:layout_constraintTop_toBottomOf="@+id/productTitle"
-                                    app:layout_constraintLeft_toRightOf="@+id/image_path"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
                                     android:layout_marginLeft="11dp"
-                                    app:fontFamily="@font/pretendard_regular"
-                                    android:textSize="14dp"
                                     android:lineHeight="20dp"
                                     android:textColor="@color/c_8c919f"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"/>
+                                    android:textSize="14dp"
+                                    app:fontFamily="@font/pretendard_regular"
+                                    app:layout_constraintLeft_toRightOf="@+id/image_path"
+                                    app:layout_constraintTop_toBottomOf="@+id/productTitle" />
 
                                 <androidx.appcompat.widget.AppCompatTextView
                                     android:id="@+id/productMaterial"
-                                    app:layout_constraintBottom_toTopOf="@+id/productSize"
-                                    app:layout_constraintLeft_toRightOf="@+id/image_path"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
                                     android:layout_marginLeft="11dp"
-                                    app:fontFamily="@font/pretendard_regular"
-                                    android:textSize="12dp"
                                     android:lineHeight="16dp"
                                     android:textColor="@color/c_8c919f"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"/>
+                                    android:textSize="12dp"
+                                    app:fontFamily="@font/pretendard_regular"
+                                    app:layout_constraintBottom_toTopOf="@+id/productSize"
+                                    app:layout_constraintLeft_toRightOf="@+id/image_path" />
 
 
                                 <androidx.appcompat.widget.AppCompatTextView
                                     android:id="@+id/productSize"
-                                    app:layout_constraintBottom_toBottomOf="parent"
-                                    app:layout_constraintLeft_toRightOf="@+id/image_path"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
                                     android:layout_marginLeft="11dp"
                                     android:layout_marginBottom="15dp"
-                                    app:fontFamily="@font/pretendard_regular"
-                                    android:textSize="12dp"
                                     android:lineHeight="16dp"
                                     android:textColor="@color/c_8c919f"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"/>
-
-
+                                    android:textSize="12dp"
+                                    app:fontFamily="@font/pretendard_regular"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintLeft_toRightOf="@+id/image_path" />
 
 
                             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -1116,14 +1161,11 @@
                             android:id="@+id/line4"
                             android:layout_width="match_parent"
                             android:layout_height="1dp"
-                            android:layout_marginTop="20dp"
-                            android:background="@color/c_eaecf0"
                             android:layout_marginStart="16dp"
+                            android:layout_marginTop="20dp"
                             android:layout_marginEnd="16dp"
+                            android:background="@color/c_eaecf0"
                             app:layout_constraintTop_toBottomOf="@+id/portfolio_composition_layout" />
-
-
-
 
 
                         <androidx.constraintlayout.widget.ConstraintLayout
@@ -1161,20 +1203,18 @@
                                 android:id="@+id/i_button"
                                 android:layout_width="match_parent"
                                 android:layout_height="48dp"
+                                android:layout_marginStart="16dp"
+                                android:layout_marginTop="20dp"
+                                android:layout_marginEnd="16dp"
                                 android:background="@drawable/layout_round_ffffff_1b"
-                                android:textColor="@color/c_10cfc9"
-                                android:textSize="14dp"
                                 android:gravity="center"
                                 android:text="포트폴리오 자세히 보기"
+                                android:textColor="@color/c_10cfc9"
+                                android:textSize="14dp"
                                 app:fontFamily="@font/pretendard_bold"
-                                android:layout_marginStart="16dp"
-                                android:layout_marginEnd="16dp"
-                                android:layout_marginTop="20dp"
-                                app:layout_constraintTop_toBottomOf="@+id/evidenceRv"
                                 app:layout_constraintLeft_toLeftOf="parent"
                                 app:layout_constraintRight_toRightOf="parent"
-                                 />
-
+                                app:layout_constraintTop_toBottomOf="@+id/evidenceRv" />
 
 
                         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -1193,68 +1233,146 @@
                             android:id="@+id/portfolio_notie_parent"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="20dp"
                             android:layout_marginStart="16dp"
+                            android:layout_marginTop="20dp"
                             android:layout_marginEnd="16dp"
+                            android:layout_marginBottom="50dp"
                             android:background="@drawable/layout_round_f3fcfd"
+                            app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/line5">
 
 
+                            <TextView
+                                android:id="@+id/portfolio_notice_title"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="16dp"
+                                android:layout_marginTop="20dp"
+                                android:fontFamily="@font/pretendard_bold"
+                                android:text="유의사항"
+                                android:textColor="@color/c_10cfc9"
+                                android:textSize="16dp"
+                                app:layout_constraintLeft_toLeftOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:id="@+id/content"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="15dp"
+                                android:layout_marginTop="5dp"
+                                android:layout_marginEnd="15dp"
+                                app:layout_constraintLeft_toLeftOf="parent"
+                                app:layout_constraintRight_toRightOf="parent"
+                                app:layout_constraintTop_toBottomOf="@+id/portfolio_notice_title">
+
                                 <TextView
-                                    android:id="@+id/portfolio_notice_title"
+                                    android:id="@+id/content_text"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginLeft="16dp"
-                                    android:layout_marginTop="20dp"
-                                    android:fontFamily="@font/pretendard_bold"
-                                    android:text="유의사항"
-                                    android:textColor="@color/c_10cfc9"
-                                    android:textSize="16dp"
-                                    app:layout_constraintLeft_toLeftOf="parent"
-                                    app:layout_constraintTop_toTopOf="parent" />
+                                    android:fontFamily="@font/pretendard_regular"
+                                    android:lineHeight="20dp"
+                                    android:textColor="@color/c_757983"
+                                    android:textSize="14dp" />
 
-
-                               <androidx.constraintlayout.widget.ConstraintLayout
-                                   android:id="@+id/content"
-                                   android:layout_width="match_parent"
-                                   android:layout_height="wrap_content"
-                                   app:layout_constraintLeft_toLeftOf="parent"
-                                   app:layout_constraintRight_toRightOf="parent"
-                                   android:layout_marginStart="15dp"
-                                   android:layout_marginEnd="15dp"
-                                   android:layout_marginTop="5dp"
-                                   app:layout_constraintTop_toBottomOf="@+id/portfolio_notice_title"
-                                   >
-
-                                   <TextView
-                                       android:id="@+id/content_text"
-                                       android:layout_width="wrap_content"
-                                       android:layout_height="wrap_content"
-                                       android:textSize="14dp"
-                                       android:fontFamily="@font/pretendard_regular"
-                                       android:lineHeight="20dp"
-                                       android:textColor="@color/c_757983"
-                                       />
-
-                               </androidx.constraintlayout.widget.ConstraintLayout>
+                            </androidx.constraintlayout.widget.ConstraintLayout>
 
                         </androidx.constraintlayout.widget.ConstraintLayout>
+
                         <!-- 유의사항 layout end -->
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
-<!--                    <View-->
-<!--                        android:id="@+id/line4"-->
-<!--                        android:layout_width="match_parent"-->
-<!--                        android:layout_height="10dp"-->
-<!--                        android:layout_marginTop="20dp"-->
-<!--                        android:background="@color/c_f9f9f9"-->
-<!--                        app:layout_constraintTop_toBottomOf="@+id/portfolio_composition_layout" />-->
+                    <!--                    <View-->
+                    <!--                        android:id="@+id/line4"-->
+                    <!--                        android:layout_width="match_parent"-->
+                    <!--                        android:layout_height="10dp"-->
+                    <!--                        android:layout_marginTop="20dp"-->
+                    <!--                        android:background="@color/c_f9f9f9"-->
+                    <!--                        app:layout_constraintTop_toBottomOf="@+id/portfolio_composition_layout" />-->
 
 
                 </androidx.core.widget.NestedScrollView>
+
+
             </androidx.cardview.widget.CardView>
 
 
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
+        <!-- Bottom Button Layout Start -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/btn_layout"
+            android:layout_width="match_parent"
+            android:layout_height="130dp"
+            android:background="@drawable/linear_gradient"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/notiView"
+                android:layout_width="50dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="16dp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/portfolio_btn"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/layout_round_283a4a"
+                android:gravity="center"
+                android:lineHeight="25sp"
+                android:text="00시간 00분 52초후에 오픈"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:visibility="gone"
+                app:fontFamily="@font/pretendard_bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toRightOf="@+id/notiView"
+                app:layout_constraintRight_toRightOf="parent" />
+
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/buy_portfolio_btn"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/j_btn_text_back"
+                android:gravity="center"
+                android:lineHeight="25dp"
+                android:text="구매하기"
+                android:textColor="@color/white"
+                android:textSize="16dp"
+                android:visibility="gone"
+                app:fontFamily="@font/pretendard_bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintRight_toRightOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/all_sell_btn"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/layout_round_dadce3"
+                android:gravity="center"
+                android:lineHeight="25dp"
+                android:text="모두 판매되었어요"
+                android:textColor="@color/white"
+                android:textSize="16dp"
+                android:visibility="gone"
+                app:fontFamily="@font/pretendard_bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintRight_toRightOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

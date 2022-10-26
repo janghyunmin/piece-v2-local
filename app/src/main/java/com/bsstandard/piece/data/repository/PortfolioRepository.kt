@@ -24,8 +24,8 @@ import io.reactivex.schedulers.Schedulers
 class PortfolioRepository(application: Application){
    val response = ApiModule.provideRetrofit().create(RetrofitService::class.java)
 
-   fun getPortfolios(): Observable<PortfolioDTO> = response
-      .getPortfolio()
+   fun getPortfolios(length: Int): Observable<PortfolioDTO> = response
+      .getPortfolio(length)
       .subscribeOn(Schedulers.io())
       .observeOn(AndroidSchedulers.mainThread())
 

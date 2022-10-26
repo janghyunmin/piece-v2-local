@@ -1,17 +1,11 @@
 package com.bsstandard.piece.view.passcode;
 
-import android.view.View;
-
 import androidx.lifecycle.ViewModel;
 
-import com.bsstandard.piece.R;
 import com.bsstandard.piece.data.datamodel.dmodel.PassCodeModel;
 import com.bsstandard.piece.widget.utils.SingleLiveEvent;
 
-import org.bson.types.Code;
-
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * packageName    : com.bsstandard.piece.view.passcode

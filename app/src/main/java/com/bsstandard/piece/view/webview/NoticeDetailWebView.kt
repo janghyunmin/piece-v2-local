@@ -76,7 +76,7 @@ class NoticeDetailWebView : BaseActivity<ActivityNoticeWebviewBinding>(R.layout.
                     settings.setSupportMultipleWindows(false) // 새창 띄우기 허용 여부 - jhm 2022/08/30
                     settings.javaScriptCanOpenWindowsAutomatically = false // 자바스크립트 새창 띄우기 (멀티뷰) 허용 여부 - jhm 2022/08/30
                     settings.loadWithOverviewMode = true // 메타태그 허용 - jhm 2022/08/30
-                    settings.useWideViewPort = true // 화면 사이즈 맞추기 허용 - jhm 2022/08/30
+                    //settings.useWideViewPort = true // 화면 사이즈 맞추기 허용 - jhm 2022/08/30
                     settings.setSupportZoom(false) // 화면 줌 허용 여부 - j부m 2022/08/30
                     settings.builtInZoomControls = false // 화면 확대 축소 허용 여부 - jhm 2022/08/30
 

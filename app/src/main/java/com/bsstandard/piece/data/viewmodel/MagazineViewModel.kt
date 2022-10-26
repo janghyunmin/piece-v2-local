@@ -66,12 +66,9 @@ class MagazineViewModel(application: Application) : AndroidViewModel(application
     fun getMagazine(magazineType: String) {
         repo.getMagazine(magazineType).subscribe(
             { MagazineDTO ->
-//                LogUtil.logE("매거진 갯수 : " + MagazineDTO.data.totalCount)
-
                 magazineList.clear()
                 for (i in ArrayList(MagazineDTO.data.magazines).indices) {
                     magazineList.add(MagazineDTO.data.magazines[i])
-//                    LogUtil.logE("isFavorite : ${MagazineDTO.data.magazines[i].isFavorite}")
                     magazineAdapter.notifyDataSetChanged()
                 }
 

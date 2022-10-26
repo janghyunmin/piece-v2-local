@@ -1,14 +1,11 @@
 package com.bsstandard.piece.data.datasource.local.room
 
 import android.content.Context
-import android.util.Log
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import androidx.room.TypeConverters
-import com.bsstandard.piece.data.datasource.local.room.dao.PortfolioDAO
-import com.bsstandard.piece.model.PortfolioResponse
-import com.bsstandard.piece.model.TypeConverterData
+import com.bsstandard.piece.data.datasource.local.room.dao.UserDao
+import com.bsstandard.piece.data.datasource.local.room.entity.User
 
 /**
  *packageName    : com.bsstandard.piece.data.datasource.local.room
@@ -32,27 +29,25 @@ abstract fun otherDao(): OtherData <- 추가합니다.
 앱이 깔린 상태에서 엔터티(model)를 수정한 경우 : 앱을 다시 깔거나 버전을 올려줍니다.
  **/
 
-@Database(entities = [PortfolioResponse::class], version = 1, exportSchema = false)
-@TypeConverters(TypeConverterData::class)
-abstract class AppDatabase : RoomDatabase() {
-
-    abstract fun getPortfolioDao(): PortfolioDAO
+@Database(entities = [User::class], version = 1)
+abstract class AppDatabase: RoomDatabase() {
+    abstract fun userDao(): UserDao
 
     companion object {
-        private var DB_INSTANCE: AppDatabase? = null
+        private var instance: AppDatabase? = null
 
-        fun getAppDBInstance(context: Context): AppDatabase {
-            if (DB_INSTANCE == null) {
-                DB_INSTANCE = Room.databaseBuilder(
-                    context.applicationContext,
-                    AppDatabase::class.java,
-                    "PIECE_DB"
-                )
-                    .allowMainThreadQueries()
-                    .build()
+        @Synchronized
+        fun getInstance(context: Context): AppDatabase? {
+            if (instance == null) {
+                synchronized(AppDatabase::class){
+                    instance = Room.databaseBuilder(
+                        context.applicationContext,
+                        AppDatabase::class.java,
+                        "piece-local-database"
+                    ).build()
+                }
             }
-            Log.d("logging", "DB created")
-            return DB_INSTANCE!!
+            return instance
         }
     }
 }

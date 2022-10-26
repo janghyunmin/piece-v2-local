@@ -4,6 +4,8 @@ import android.content.Context;
 import android.os.Build;
 import android.provider.Settings;
 
+import java.util.UUID;
+
 /**
  * packageName    : com.bsstandard.piece.widget.utils
  * fileName       : DeviceInfoUtil
@@ -18,6 +20,15 @@ import android.provider.Settings;
 
 
 public class DeviceInfoUtil {
+    /**
+     * uuid 가져오기
+     * @param context
+     * @return
+     */
+    public static String getUUID(Context context) {
+        return UUID.randomUUID().toString();
+    }
+
 
     /**
      * device id 가져오기

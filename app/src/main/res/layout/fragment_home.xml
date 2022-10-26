@@ -8,11 +8,17 @@
         <variable
             name="home"
             type="com.bsstandard.piece.data.viewmodel.PortfolioViewModel" />
+
+<!--        <variable-->
+<!--            name="socketVm"-->
+<!--            type="com.bsstandard.piece.data.viewmodel.WebSocketViewModel" />-->
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginTop="10dp"
+        >
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layout"

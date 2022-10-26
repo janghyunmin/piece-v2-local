@@ -9,6 +9,7 @@
     <color name="white">#FFFFFF</color>
 
     <color name="trans">#00000000</color>
+    <color name="gradient">#00FFFFFF</color>
 
 
 
@@ -35,6 +36,8 @@
     <color name="c_252d70">#252D70</color>
     <color name="c_283a4a">#283A4A</color>
     <color name="c_182a32">#182A32</color>
+    <color name="c_e5e5e5">#E5E5E5</color>
+    <color name="c_f6f6f5">#CDFFFFFF</color>
     
     
     
@@ -81,7 +84,28 @@
     <color name="c_lalala">#1a1a1a</color>
 
 
-
+    
+    <!-- 은행 계좌 등록시 backgroud color -->
+    <color name="c_084088">#084088</color>
+    <color name="c_145BA9">#145BA9</color>
+    <color name="c_776C61">#776C61</color>
+    <color name="c_008375">#008375</color>
+    <color name="c_016EBD">#016EBD</color>
+    <color name="c_1FB25A">#1FB25A</color>
+    <color name="c_1898D6">#1898D6</color>
+    <color name="c_0473EA">#0473EA</color>
+    <color name="c_0079C1">#0079C1</color>
+    <color name="c_003B70">#003B70</color>
+    <color name="c_007DC5">#007DC5</color>
+    <color name="c_D81920">#D81920</color>
+    <color name="c_1A3282">#1A3282</color>
+    <color name="c_31B6E8">#31B6E8</color>
+    <color name="c_295CB3">#295CB3</color>
+    <color name="c_42B191">#42B191</color>
+    <color name="c_EE2722">#EE2722</color>
+    <color name="c_DD5471">#DD5471</color>
+    <color name="c_FFE300">#FFE300</color>
+    <color name="c_0064FF">#0064FF</color>
 
 
 

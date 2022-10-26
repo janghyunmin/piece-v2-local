@@ -46,7 +46,7 @@ public class AuthPinPutRepository {
         String memberId = PrefsHelper.read("memberId","");
 
         HashMap<String,String> map = new HashMap<>();
-        map.put("accessToken",accessToken);
+        map.put("accessToken","Bearer " + accessToken);
         map.put("deviceId",deviceId);
         map.put("memberId",memberId);
 

@@ -7,6 +7,10 @@
         <variable
             name="main"
             type="com.bsstandard.piece.view.main.MainViewModel" />
+
+<!--        <variable-->
+<!--            name="memberVm"-->
+<!--            type="com.bsstandard.piece.data.viewmodel.GetUserViewModel" />-->
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

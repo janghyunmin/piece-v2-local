@@ -207,7 +207,7 @@ class FragmentMagazine : Fragment() {
         // 최상단 북마크 클릭시 로그인 여부 판별 - jhm 2022/08/31
         binding.allBookmark.setOnClickListener { view ->
             // 로그인이 안되어 있다면 로그인 이동하라는 페이지로 이동 - jhm 2022/08/31
-            if (isJoin != "true") {
+            if (PrefsHelper.read("memberId","").equals("")) {
                 val intent = Intent(context, LoginChkActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 context?.startActivity(intent)
@@ -228,7 +228,7 @@ class FragmentMagazine : Fragment() {
                 smallTitle: String,
                 pos: Int
             ) {
-                LogUtil.logE("view : $v")
+                LogUtil.logE("view : ${v.isSelected}")
                 LogUtil.logE("tag : $tag")
                 LogUtil.logE("magazineId $magazineId")
                 LogUtil.logE("magazineThumnail ImagePath $magazineImagePath")
@@ -256,17 +256,18 @@ class FragmentMagazine : Fragment() {
                         val memberBookmarkRemoveModel =
                             MemberBookmarkRemoveModel(memberId, magazineId)
 
-                        LogUtil.logE("memberBookmarkRegModel : ${memberBookmarkRegModel.memberId}")
-                        LogUtil.logE("memberBookmarkRegModel : ${memberBookmarkRegModel.magazineId}")
-                        LogUtil.logE("v.isSelected : ${v.isSelected}")
-                        LogUtil.logE("isFavorite : $isFavorite")
+//                        LogUtil.logE("memberBookmarkRegModel : ${memberBookmarkRegModel.memberId}")
+//                        LogUtil.logE("memberBookmarkRegModel : ${memberBookmarkRegModel.magazineId}")
+//                        LogUtil.logE("v.isSelected : ${v.isSelected}")
+//                        LogUtil.logE("isFavorite : $isFavorite")
 
                         // 북마크 클릭 후 y , n 조회 후 y 일때
-                        // y = 이미 선택(북마크) 처리된 놈이고
-                        // n = 아직 선택(북마크) 처리 안된 놈
+                        // y = 이미 선택(북마크) 처리된 애이고
+                        // n = 아직 선택(북마크) 처리 안된 애
                         // v.isSelected == false
 
-                        v.isSelected = !v.isSelected
+
+//                        v.isSelected = !v.isSelected
 
 
                         // - jhm 2022/08/29
@@ -291,8 +292,11 @@ class FragmentMagazine : Fragment() {
                                                 LogUtil.logE("bookmark status : " + response.body()?.status)
                                                 LogUtil.logE("post smallTitle : $smallTitle")
 
-                                                vm.getMagazine("")
-                                                vm.magazineAdapter.notifyDataSetChanged()
+//                                                vm.getMagazine("")
+
+
+//                                                v.isSelected = true
+//                                                vm.magazineAdapter.notifyDataSetChanged()
                                             }
                                         } catch (ex: Exception) {
                                             ex.printStackTrace()
@@ -306,6 +310,7 @@ class FragmentMagazine : Fragment() {
                                 })
                         } else {
                             LogUtil.logE("isFavorite delete: $isFavorite")
+
                             response?.deleteBookMark(
                                 "Bearer $accessToken",
                                 deviceId,
@@ -323,9 +328,9 @@ class FragmentMagazine : Fragment() {
                                             if (!response.body().toString().isEmpty()) {
                                                 LogUtil.logE("bookmark status : " + response.body()?.status)
                                                 LogUtil.logE("delete smallTitle : $smallTitle")
+//                                                vm.getMagazine("")
 
-                                                vm.getMagazine("")
-                                                vm.magazineAdapter.notifyDataSetChanged()
+ //                                               vm.magazineAdapter.notifyDataSetChanged()
                                             }
                                         } catch (ex: Exception) {
                                             ex.printStackTrace()
@@ -370,14 +375,7 @@ class FragmentMagazine : Fragment() {
     @SuppressLint("NotifyDataSetChanged")
     override fun onResume() {
         super.onResume()
-
         vm.magazineAdapter.notifyDataSetChanged()
-
-//        vm.getMagazinePortfolio()
-//        vm.getMagazineFintech()
-//        vm.getMagazinePlace()
-//        vm.getMagazinePeople()
-//        vm.getMagazineJal()
     }
 
     fun Activity.setStatusBarTransparent() {

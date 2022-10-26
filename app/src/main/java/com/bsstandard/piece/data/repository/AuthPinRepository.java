@@ -43,7 +43,9 @@ public class AuthPinRepository {
     public SingleLiveEvent<AuthPinDTO> getAuthData(){
         String memberId = PrefsHelper.read("memberId","");
         String pinNumber = PrefsHelper.read("inputPinNumber","");
-        LogUtil.logE("저장되어있는 핀번호 : " + pinNumber);
+
+        LogUtil.logE("memberId : " + memberId);
+        LogUtil.logE("pinNumber : " + pinNumber);
 
         HashMap<String,String> map = new HashMap<>();
         map.put("memberId",memberId);
@@ -61,6 +63,7 @@ public class AuthPinRepository {
                 }
                 else {
                     LogUtil.logE("핀번호 검증 실패.." + response.code());
+                    LogUtil.logE("핀번호 검증 실패 메시지 : " + response.message());
                     authData.postValue(response.body());
                 }
             }

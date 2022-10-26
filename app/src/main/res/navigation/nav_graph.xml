@@ -2,7 +2,7 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/nav_main"
+    android:id="@+id/nav_main_fragment"
     app:startDestination="@id/FragmentHome">
 
     <keep_state_fragment
@@ -27,13 +27,58 @@
         android:name="com.bsstandard.piece.view.fragment.FragmentWallet"
         tools:layout="@layout/fragment_wallet"
         android:label="FragmentWallet"
-        />
+        >
+        <action
+            android:id="@+id/navToPurchaseDetailActivity"
+            app:destination="@id/PurchaseDetailActivity"
+            />
+
+    </keep_state_fragment>
+
+
     <keep_state_fragment
         android:id="@+id/FragmentMore"
         android:name="com.bsstandard.piece.view.fragment.FragmentMore"
         tools:layout="@layout/fragment_more"
         android:label="FragmentMore"
         />
+
+
+    <activity
+        android:id="@+id/PurchaseDetailActivity"
+        android:name="com.bsstandard.piece.view.purchaseDetail.PurchaseDetailActivity"
+        tools:layout="@layout/activity_purchase_detail">
+        <argument
+            android:name="purchaseAt"
+            app:argType="string"/>
+        <argument
+            android:name="purchasePieceVolume"
+            app:argType="string"/>
+        <argument
+            android:name="purchaseTotalAmount"
+            app:argType="string"/>
+
+        <argument
+            android:name="purchaseId"
+            app:argType="string"
+            />
+        <argument
+            android:name="portfolioId"
+            app:argType="string"
+            />
+        <argument
+            android:name="portfolioImagePath"
+            app:argType="string"
+            />
+        <argument
+            android:name="isCoupon"
+            app:argType="string"
+            />
+        <argument
+            android:name="isConfirm"
+            app:argType="string"
+            />
+    </activity>
     <activity
         android:id="@+id/PortfolioDetailActivity"
         android:name="com.bsstandard.piece.view.portfolioDetail.PortfolioDetailActivity"

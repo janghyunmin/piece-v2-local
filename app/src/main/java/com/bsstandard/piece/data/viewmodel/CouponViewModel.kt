@@ -42,7 +42,6 @@ class CouponViewModel(application: Application) :
     // 사용자 입력 값 쿠폰코드 - jhm 2022/09/13
     open fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
         LogUtil.logE("tagonTextChanged $s")
-
     }
 
 

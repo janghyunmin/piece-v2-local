@@ -52,14 +52,16 @@ class PortfolioViewModel(application: Application) : AndroidViewModel(applicatio
 
 
     @SuppressLint("CheckResult", "NotifyDataSetChanged")
-    fun getPortfolio() {
-        repo.getPortfolios().subscribe(
+    fun getPortfolio(length: Int) {
+        repo.getPortfolios(length = length).subscribe(
             { PortfolioDTO ->
                 LogUtil.logE("포트폴리오 갯수 : " + PortfolioDTO.data.totalCount)
 
                 portfolioList.clear()
                 for (i in ArrayList(PortfolioDTO.data.portfolios).indices) {
                     portfolioList.add(PortfolioDTO.data.portfolios[i])
+
+                    LogUtil.logE("포트폴리오 아이디 및 상태값 : " + portfolioList.get(i).portfolioId + portfolioList.get(i).recruitmentState )
                     portfolioAdapter.notifyDataSetChanged()
                 }
 
@@ -96,15 +98,33 @@ object BindingAdapter {
         val status = status
         var statusImgPath: String = ""
 
+//        LogUtil.logE("포트폴리오 상태값 : $status")
+
+//        if(status == "PRS0102") {
+//           statusImgPath = getURLForResource(R.drawable.prs0102) // 판매중 - jhm 2022/07/17
+//        }
         when (status) {
-            "PRS0101" -> statusImgPath =
-                getURLForResource(R.drawable.prs0101) // 오픈예정 - jhm 2022/07/17
-            "PRS0102" -> statusImgPath =
-                getURLForResource(R.drawable.prs0102) // 판매중 - jhm 2022/07/17
-            "PRS0103" -> statusImgPath =
-                getURLForResource(R.drawable.prs0103) // 조각 완판 - jhm 2022/07/17
-            "PRS0104" -> LogUtil.logE("매각 대기")
-            "PRS0105" -> LogUtil.logE("매각 진행")
+            "PRS0101" -> {
+                statusImgPath =
+                    getURLForResource(R.drawable.prs0101)
+            }
+            // 오픈예정 - jhm 2022/07/17
+            "PRS0102" -> {
+                statusImgPath =
+                    getURLForResource(R.drawable.prs0102)
+            }
+            // 판매중 - jhm 2022/07/17
+            "PRS0103" -> {
+                statusImgPath =
+                    getURLForResource(R.drawable.prs0103)
+            }
+            // 조각 완판 - jhm 2022/07/17
+            "PRS0104" -> {
+                LogUtil.logE("매각 대기")
+            }
+            "PRS0105" -> {
+                LogUtil.logE("매각 진행")
+            }
             "PRS0106" -> statusImgPath =
                 getURLForResource(R.drawable.prs0106) // 매각 완료 - jhm 2022/07/17
             "PRS0107" -> LogUtil.logE("정산중")
@@ -150,8 +170,6 @@ object BindingAdapter {
         val string = date;
 
 
-
-        LogUtil.logE("string $string")
         val year = string.substring(0, 4)
         val month = string.substring(5, 7)
         val day = string.substring(8, 10)

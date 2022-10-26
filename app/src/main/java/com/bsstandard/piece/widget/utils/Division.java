@@ -18,8 +18,12 @@ import android.Manifest;
 public class Division {
 
     /** API URL **/
-    public static final String PIECE_API_V2_DEV = "https://lui1qyiqx4.apigw.ntruss.com/piece-dev/v2/";
+    //public static final String PIECE_API_V2_DEV = "https://lui1qyiqx4.apigw.ntruss.com/piece-dev/v2/";
     public static final String PIECE_API_V2_PROD = "https://z8danh2uj7.apigw.ntruss.com/pieve-prod/v2/";
+
+    /** PIECE V2 금융존 이관 후 URL **/
+    public static final String PIECE_API_V2_DEV = "https://fdev-gateway.piece.la";
+
 
     /** Permission Code **/
     public static final int PERMISSIONS_REQUEST_CODE = 100;
@@ -46,9 +50,14 @@ public class Division {
     public static final String DIALOG_J_PHONE = "phone_select"; // 통신사 선택 Dialog
     public static final String DIALOG_J_TERMS = "terms_select"; // 약관 동의 Dialog
     public static final String DIALOG_J_SMS = "sms"; // SMS 문자발송 Dialog
+    public static final String DIALOG_V_SMS = "v_sms"; // 휴대폰 점유인증 문자 발송 Dialog - jhm 2022/10/06
     public static final String PIN_VIEWTYPE_1 = "최초";
     public static final String PIN_VIEWTYPE_2 = "재인증";
     public static final String DIALOG_ADDRESS_CONFIRM = "address"; // 주소변경 완료 후 Dialog - jhm 2022/09/07
+    public static final String DIALOG_EMAIL_CONFIRM = "change_email"; // 이메일 변경 후 Dialog - jhm 2022/10/17
+    public static final int CONSENT = 0; // 이용약관 및 마케팅 수신 동의 - jhm 2022/09/22
+    public static final int MORE_CONSENT = 1; // 더보기 - 이용 약관 및 마케팅 수신 동의 - jhm 2022/09/22
+    public static final int SETTLE_CONSET = 2; // 세틀뱅크 - 이용약관 - jhm 2022/10/06
 
 
 

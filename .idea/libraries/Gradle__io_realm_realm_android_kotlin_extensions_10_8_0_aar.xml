@@ -2,9 +2,13 @@
   <library name="Gradle: io.realm:realm-android-kotlin-extensions:10.8.0@aar">
     <CLASSES>
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/410b3438bd99573becfb25c351d3744d/transformed/jetified-realm-android-kotlin-extensions-10.8.0/res" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/ccc933d40d63cbc55f0a6e991286592e/transformed/jetified-realm-android-kotlin-extensions-10.8.0/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/ccc933d40d63cbc55f0a6e991286592e/transformed/jetified-realm-android-kotlin-extensions-10.8.0/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/ccc933d40d63cbc55f0a6e991286592e/transformed/jetified-realm-android-kotlin-extensions-10.8.0/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/dd47c3c0c7ad659c552c4ae6d8dfdb97/transformed/jetified-realm-android-kotlin-extensions-10.8.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/ae5ddbfffab1c655c39e99cf478bbae3/transformed/jetified-realm-android-kotlin-extensions-10.8.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/fc145aedcd72281f5aa101e069f7e3f0/transformed/jetified-realm-android-kotlin-extensions-10.8.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/8afb4bb043388390f4504897c3ced922/transformed/jetified-realm-android-kotlin-extensions-10.8.0/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/8afb4bb043388390f4504897c3ced922/transformed/jetified-realm-android-kotlin-extensions-10.8.0/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/8afb4bb043388390f4504897c3ced922/transformed/jetified-realm-android-kotlin-extensions-10.8.0/res" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.realm/realm-android-kotlin-extensions/10.8.0/300d82f75521d7cd89e6813fc1f88246b71c7942/realm-android-kotlin-extensions-10.8.0-javadoc.jar!/" />

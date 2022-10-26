@@ -41,7 +41,7 @@ class EventDetailViewModel(application: Application) : AndroidViewModel(applicat
                     LogUtil.logE("이벤트 상세 try Error !")
                 }
             } catch (ex : Exception) {
-                LogUtil.logE("이벤트 상세 try Error !")
+                LogUtil.logE("이벤트 상세 try catch Error !")
                 ex.printStackTrace()
             }
         }

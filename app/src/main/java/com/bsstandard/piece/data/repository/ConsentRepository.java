@@ -44,8 +44,8 @@ public class ConsentRepository {
         mInstance = ApiModule.INSTANCE.provideRetrofit().create(RetrofitService.class);
     }
 
-    public MutableLiveData<ConsentDTO> getConsentData() {
-        Call<ConsentDTO> consentDAOCall = mInstance.getConsent("SIGN");
+    public MutableLiveData<ConsentDTO> getConsentData(String consentDvn) {
+        Call<ConsentDTO> consentDAOCall = mInstance.getConsent(consentDvn);
         consentDAOCall.enqueue(new Callback<ConsentDTO>() {
             @Override
             public void onResponse(Call<ConsentDTO> call, Response<ConsentDTO> response) {

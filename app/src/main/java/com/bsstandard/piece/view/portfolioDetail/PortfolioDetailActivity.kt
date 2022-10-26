@@ -1,15 +1,16 @@
 package com.bsstandard.piece.view.portfolioDetail
 
+import android.animation.Animator
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
 import android.text.SpannableStringBuilder
 import android.view.View
-import android.view.Window
 import android.view.WindowInsetsController
-import android.view.WindowManager
+import android.view.animation.AnimationUtils
 import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.Observer
@@ -19,9 +20,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bsstandard.piece.R
 import com.bsstandard.piece.base.BaseActivity
+import com.bsstandard.piece.data.datasource.shared.PrefsHelper
 import com.bsstandard.piece.databinding.ActivityPortfoliodetailBinding
 import com.bsstandard.piece.view.adapter.portfolio.PortfolioDetailCompositionAdapter
 import com.bsstandard.piece.view.adapter.portfolio.PortfolioDetailEvidenceAdapter
+import com.bsstandard.piece.view.common.LoginChkActivity
+import com.bsstandard.piece.view.purchase.PurchaseActivity
+import com.bsstandard.piece.view.webview.MagazineDetailWebView
 import com.bsstandard.piece.widget.utils.ConvertMoney
 import com.bsstandard.piece.widget.utils.IndentLeadingMarginSpan
 import com.bsstandard.piece.widget.utils.LogUtil
@@ -35,13 +40,16 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetBehavior.*
+import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_COLLAPSED
+import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.disposables.Disposable
-import kotlinx.android.synthetic.main.products_item_composition_layout.view.*
+import io.reactivex.rxjava3.core.Observable
 import java.text.DateFormat
+import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 
 /**
@@ -68,9 +76,26 @@ class PortfolioDetailActivity :
     private var selectedLayout: ConstraintLayout? = null
     private lateinit var portfolioDetailCompositionAdapter: PortfolioDetailCompositionAdapter
 
+    // 포트폴리오 자세히보기 클릭시 넘겨줄 값 - jhm 2022/10/18
+    private var magazineId: String = ""
+
+    // 구매할때 필요한 변수 값 - jhm 2022/10/20
+    private var expectationProfitRate: String = ""
+    private var totalPieceVolume: String = ""
+    private var minPurchaseAmount: String = ""
+    private var maxPurchaseAmount: String = ""
+    private var portfolioTitle: String = ""
+
     @SuppressLint("UseCompatLoadingForDrawables", "SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+
+        // UI Setting 최종 - jhm 2022/09/14
+        setStatusBarIconColor(true) // 상태바 아이콘 true : 검정색
+        setStatusBarBgColor("#ffffff") // 상태바 배경색상 설정
+        setNaviBarIconColor(true) // 네비게이션 true : 검정색
+        setNaviBarBgColor("#ffffff") // 네비게이션 배경색
 
 
         binding.apply {
@@ -78,13 +103,8 @@ class PortfolioDetailActivity :
             binding.activity = this@PortfolioDetailActivity
             binding.portfolioDetailViewModel = portfolioDetailViewModel
 
-            vm = ViewModelProvider(this@PortfolioDetailActivity)[PortfolioDetailViewModel::class.java]
-
-            // statusBar 공통 - jhm 2022/06/13
-            setStatusBar()
-            setStatusBarIconColor(false) // 상태바 아이콘 true : 검정색
-            setStatusBarBgColor("#00000000") // 상태바 배경색상 설정
-            postponeEnterTransition()
+            vm =
+                ViewModelProvider(this@PortfolioDetailActivity)[PortfolioDetailViewModel::class.java]
 
             portfolioId = args.portfolioId
             LogUtil.logE("넘겨받은 portfolioId : $portfolioId")
@@ -131,13 +151,16 @@ class PortfolioDetailActivity :
             bottomSheetBehavior.addBottomSheetCallback(object :
                 BottomSheetBehavior.BottomSheetCallback() {
                 override fun onStateChanged(bottomSheet: View, newState: Int) {
-                    setStatusBar()
-                    setStatusBarIconColor(false) // 상태바 아이콘 true : 검정색
-                    setStatusBarBgColor("#ffffff") // 상태바 배경색상 설정
-                    postponeEnterTransition()
 
                     if (newState == STATE_EXPANDED) {
                         LogUtil.logE("완전히 펼쳐진 상태")
+
+                        // UI Setting 최종 - jhm 2022/09/14
+                        setStatusBarIconColor(true) // 상태바 아이콘 true : 검정색
+                        setStatusBarBgColor("#ffffff") // 상태바 배경색상 설정
+                        setNaviBarIconColor(true) // 네비게이션 true : 검정색
+                        setNaviBarBgColor("#ffffff") // 네비게이션 배경색
+
                         binding.topLayout.setBackgroundColor(resources.getColor(R.color.c_ffffff))
                         Glide.with(applicationContext).load(R.drawable.arrow_left)
                             .into(binding.backImg)
@@ -171,15 +194,182 @@ class PortfolioDetailActivity :
 
                 LogUtil.logE("portfolio Detail response : ${it.data.createdAt}")
 
+                if (it.data.magazineId != null) {
+                    magazineId = it.data.magazineId.toString()
+                }
+
 
                 // 판매 현황 상태값 - jhm 2022/08/19
                 when (it.data.recruitmentState) {
-                    "PRS0101" -> binding.status.text = "오픈예정"
-                    "PRS0102" -> binding.status.text = "판매 중"
-                    "PRS0103" -> binding.status.text = "조각완판"
+                    "PRS0101" -> {
+                        binding.notiView.visibility = View.VISIBLE
+                        binding.portfolioBtn.visibility = View.VISIBLE
+                        binding.buyPortfolioBtn.visibility = View.GONE
+                        binding.allSellBtn.visibility = View.GONE
+
+                        binding.status.text = "오픈예정"
+                        // 바텀 하단 오픈 예정일때 - jhm 2022/10/19
+                        binding.portfolioBtn.text =
+                            getStartFormatDate(it.data.recruitmentBeginDate.toString()) + "오픈 예정"
+
+
+
+                        binding.character.setAnimation("run_start.json")
+                        binding.character.loop(false);
+                        binding.character.playAnimation()
+                        binding.character.addAnimatorListener(object : Animator.AnimatorListener {
+                            override fun onAnimationStart(animation: Animator) {
+                                LogUtil.logE("start")
+                            }
+
+                            override fun onAnimationEnd(animation: Animator) {
+                                LogUtil.logE("end")
+                            }
+
+                            override fun onAnimationCancel(animation: Animator) {
+                                LogUtil.logE("cancel")
+                            }
+
+                            override fun onAnimationRepeat(animation: Animator) {
+                                LogUtil.logE("repeat")
+                            }
+                        })
+
+                    }
+                    "PRS0102" -> {
+                        binding.notiView.visibility = View.GONE
+                        binding.portfolioBtn.visibility = View.GONE
+                        binding.buyPortfolioBtn.visibility = View.VISIBLE
+                        binding.allSellBtn.visibility = View.GONE
+
+
+                        binding.buyPortfolioBtn.setOnClickListener {
+                            // 로그인 전이라면 - jhm 2022/10/19
+                            if (PrefsHelper.read("memberId", "").equals("")) {
+                                val intent = Intent(
+                                    this@PortfolioDetailActivity,
+                                    LoginChkActivity::class.java
+                                )
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                startActivity(intent)
+                                finish()
+                            } else {
+                                // 로그인 되어있다면 - jhm 2022/10/19
+                                val intent = Intent(
+                                    this@PortfolioDetailActivity,
+                                    PurchaseActivity::class.java
+                                )
+                                intent.putExtra(
+                                    "expectationProfitRate",
+                                    expectationProfitRate
+                                ) // 포트폴리오 수익률 - jhm 2022/10/20
+                                intent.putExtra(
+                                    "totalPieceVolume",
+                                    totalPieceVolume
+                                ) // 현재 수량 - jhm 2022/10/20
+                                intent.putExtra(
+                                    "minPurchaseAmount",
+                                    minPurchaseAmount
+                                ) // 최소 주문 금액 - jhm 2022/10/20
+                                intent.putExtra(
+                                    "maxPurchaseAmount",
+                                    maxPurchaseAmount
+                                ) // 최대 주문 금액 - jhm 2022/10/20
+                                intent.putExtra(
+                                    "portfolioTitle",
+                                    portfolioTitle
+                                ) // 포트폴리오 이름 - jhm 2022/10/20
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                startActivity(intent)
+                                finish()
+                            }
+                        }
+
+
+                        startAnimation()
+
+                        binding.status.text = "판매 중"
+                        binding.character.setAnimation("run_looping.json")
+                        binding.character.loop(true);
+                        binding.character.playAnimation()
+                        binding.character.addAnimatorListener(object : Animator.AnimatorListener {
+                            override fun onAnimationStart(animation: Animator) {
+                                LogUtil.logE("start")
+                            }
+
+                            override fun onAnimationEnd(animation: Animator) {
+                                LogUtil.logE("end")
+                            }
+
+                            override fun onAnimationCancel(animation: Animator) {
+                                LogUtil.logE("cancel")
+                            }
+
+                            override fun onAnimationRepeat(animation: Animator) {
+                                LogUtil.logE("repeat")
+                            }
+                        })
+                    }
+                    "PRS0103" -> {
+                        binding.notiView.visibility = View.GONE
+                        binding.portfolioBtn.visibility = View.GONE
+                        binding.buyPortfolioBtn.visibility = View.GONE
+                        binding.allSellBtn.visibility = View.VISIBLE
+
+                        binding.status.text = "조각완판"
+                        val decimal = DecimalFormat("#,###")
+                        var depositText : String = ""
+                        depositText = decimal.format(it.data.recruitmentAmount.toInt())
+                        binding.sellPrice.text = "$depositText 원"
+
+                        binding.percent.text = it.data.recruitmentAmount.toInt().div(it.data.totalPieceVolume.toInt().times(100)).toString() + "%"
+
+                        startAnimation()
+//                        //오른쪽 이동 애니메이션
+//                        val aniRight = TranslateAnimation(
+//                            TranslateAnimation.RELATIVE_TO_PARENT, 0f,
+//                            TranslateAnimation.RELATIVE_TO_PARENT, 0.5f,
+//                            TranslateAnimation.RELATIVE_TO_PARENT, 0f,
+//                            TranslateAnimation.RELATIVE_TO_PARENT, 0f
+//                        )
+//                        aniRight.duration = 1000
+
+
+
+                        binding.character.setAnimation("run_end.json")
+                        binding.character.loop(false);
+                        binding.character.playAnimation()
+                        binding.character.addAnimatorListener(object : Animator.AnimatorListener {
+                            override fun onAnimationStart(animation: Animator) {
+                                LogUtil.logE("start")
+                                binding.characterLayout.animation = AnimationUtils.loadAnimation(this@PortfolioDetailActivity,R.anim.character_move)
+                                // 애니메이션이 끝나도 위치 유지 : true - 유지 / false - 유지 안함 - jhm 2022/10/24
+                                binding.characterLayout.animation.fillAfter = true
+                            }
+
+                            override fun onAnimationEnd(animation: Animator) {
+                                LogUtil.logE("end")
+                                binding.characterLayout.animation = AnimationUtils.loadAnimation(this@PortfolioDetailActivity,R.anim.character_move)
+                                binding.characterLayout.animation.fillAfter = true
+                            }
+
+                            override fun onAnimationCancel(animation: Animator) {
+                                LogUtil.logE("cancel")
+                            }
+
+                            override fun onAnimationRepeat(animation: Animator) {
+                                LogUtil.logE("repeat")
+                            }
+                        })
+
+                        // 퍼센트 - jhm 2022/10/18
+//                        binding.percentProgress.progress =
+                    }
                     "PRS0104" -> binding.status.text = "매각대기"
                     "PRS0105" -> binding.status.text = "매각진행"
-                    "PRS0106" -> binding.status.text = "매각완료"
+                    "PRS0106" -> {
+                        binding.status.text = "매각완료"
+                    }
                     "PRS0107" -> binding.status.text = "정산중"
                     "PRS0108" -> binding.status.text = "분배완료"
                     "PRS0109" -> binding.status.text = "일시중지"
@@ -187,10 +377,7 @@ class PortfolioDetailActivity :
                     "PRS0111" -> binding.status.text = "수익분배"
                 }
 
-                // 판매 누적 금액 - jhm 2022/08/19
-                binding.sellPrice.text = "" // 판매 누적 금액 액수 - jhm 2022/08/19
-
-                // 판매 누적 퍼센트 - jhm 2022/08/19
+                binding.characterLayout.bringToFront()
 
                 // 총 판매 금액 - jhm 2022/08/19
                 val amount = it.data.recruitmentAmount
@@ -203,6 +390,9 @@ class PortfolioDetailActivity :
                 val startDate = it.data.recruitmentBeginDate
                 val startFormatDate = getStartFormatDate(startDate)
                 val endFormatDate = getEndDateFormatDate(startDate)
+
+
+
 
                 binding.date.text = "$startFormatDate ~ $endFormatDate"
 
@@ -230,6 +420,13 @@ class PortfolioDetailActivity :
 
                 // 판매 정보 - 예상 수익률 - jhm 2022/08/19
                 binding.rateText.text = it.data.expectationProfitRate + "%"
+
+
+                // 구매화면으로 넘겨줄 데이터 - jhm 2022/10/21
+                expectationProfitRate = it.data.expectationProfitRate // 수익률 - jhm 2022/10/21
+                totalPieceVolume = it.data.totalPieceVolume // 현재 구매가능 갯수 - jhm 2022/10/21
+                minPurchaseAmount = it.data.minPurchaseAmount // 최소 구매 가능 금액 - jhm 2022/10/21
+                maxPurchaseAmount = it.data.maxPurchaseAmount // 최대 구매 가능 금액 - jhm 2022/10/21
 
 
                 // 판매 정보 - 판매 수량 - jhm 2022/08/19
@@ -269,6 +466,7 @@ class PortfolioDetailActivity :
 
                 // 포트폴리오 구성 - jhm 2022/08/21
                 binding.infoTitle.text = it.data.title // 포트폴리오 제목 - jhm 2022/08/21
+                portfolioTitle = it.data.title
                 vm.viewInitVertical(binding.productsRv) // 포트폴리오 구성 - jhm 2022/08/22
 
 
@@ -316,15 +514,18 @@ class PortfolioDetailActivity :
                 // 포트폴리오 구성 - jhm 2022/08/25
                 val adapter = PortfolioDetailCompositionAdapter(vm, context = applicationContext)
                 binding.compositionRv.adapter = adapter
-                binding.compositionRv.layoutManager =  LinearLayoutManager(application, RecyclerView.HORIZONTAL, false)
+                binding.compositionRv.layoutManager =
+                    LinearLayoutManager(application, RecyclerView.HORIZONTAL, false)
 
-                adapter.setItemClickListener(object : PortfolioDetailCompositionAdapter.OnItemClickListener {
+                adapter.setItemClickListener(object :
+                    PortfolioDetailCompositionAdapter.OnItemClickListener {
                     @SuppressLint("NotifyDataSetChanged")
                     override fun onClick(v: View, position: Int) {
                         LogUtil.logE("position $position")
 
                         Glide.with(applicationContext)
-                            .load(it.data.products[position].representThumbnailImagePath).apply(requestOptions)
+                            .load(it.data.products[position].representThumbnailImagePath)
+                            .apply(requestOptions)
                             .into(binding.imagePath)
                         binding.productionYear.text = it.data.products[position].productionYear
                         binding.productTitle.text = it.data.products[position].title
@@ -336,20 +537,76 @@ class PortfolioDetailActivity :
                     }
                 })
 
-                val documentAdapter = PortfolioDetailEvidenceAdapter(vm, context = applicationContext)
+                val documentAdapter =
+                    PortfolioDetailEvidenceAdapter(vm, context = applicationContext)
                 binding.evidenceRv.adapter = documentAdapter
-                binding.evidenceRv.layoutManager = LinearLayoutManager(application, RecyclerView.HORIZONTAL,false)
+                binding.evidenceRv.layoutManager =
+                    LinearLayoutManager(application, RecyclerView.HORIZONTAL, false)
 
             })
 
             // 유의사항 text 정렬 - jhm 2022/08/25
-            binding.contentText.text = SpannableStringBuilder(applicationContext.getText(R.string.portfolio_detail_notice_text)).apply {
-                setSpan(IndentLeadingMarginSpan(), 0, length, 0)
+            binding.contentText.text =
+                SpannableStringBuilder(applicationContext.getText(R.string.portfolio_detail_notice_text)).apply {
+                    setSpan(IndentLeadingMarginSpan(), 0, length, 0)
+                }
+
+
+            // 포트폴리오 자세히 보기 - jhm 2022/10/18
+            binding.iButton.setOnClickListener {
+                LogUtil.logE("포트폴리오 자세히 보기 OnClick..")
+
+                val intent = Intent(this@PortfolioDetailActivity, MagazineDetailWebView::class.java)
+                intent.putExtra("magazineId", magazineId)
+                overridePendingTransition(
+                    android.R.anim.fade_in,
+                    android.R.anim.fade_out
+                );
+                startActivity(intent)
+            }
+        }
+
+
+        // 하단 종모양 알림 lottieView - jhm 2022/10/18
+        binding.notiView.setAnimation("alarm_set.json")
+        binding.notiView.loop(true);
+        binding.notiView.playAnimation()
+        binding.notiView.addAnimatorListener(object : Animator.AnimatorListener {
+            override fun onAnimationStart(animation: Animator) {
+                LogUtil.logE("start")
+            }
+
+            override fun onAnimationEnd(animation: Animator) {
+                LogUtil.logE("end")
+            }
+
+            override fun onAnimationCancel(animation: Animator) {
+                LogUtil.logE("cancel")
+            }
+
+            override fun onAnimationRepeat(animation: Animator) {
+                LogUtil.logE("repeat")
+            }
+        })
+    }
+
+
+    // progressbar animation - jhm 2022/10/19
+    private fun startAnimation() {
+        binding.run {
+            val currentProgress = progress.progress
+            getInterval().subscribe {
+                progress.progress = currentProgress + it.toInt()
             }
 
         }
     }
 
+    private fun getInterval(): Observable<Long> =
+        Observable.interval(8L, TimeUnit.MILLISECONDS).map { interval ->
+            LogUtil.logE("interval : $interval")
+            interval + 1
+        }.take(100)
 
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -368,8 +625,6 @@ class PortfolioDetailActivity :
     fun onShareButton() {
         LogUtil.logE("공유하기 onClick..")
     }
-
-
 
 
     // 포트폴리오 판매 시작 날짜 format - jhm 2022/08/21
@@ -412,17 +667,8 @@ class PortfolioDetailActivity :
 
             val startDate = dateFormat.parse(start).time
             val endDate = dateFormat.parse(end).time
-
-            // 시작일로부터 일수 구하기 로직 - jhm 2022/08/21
-//        val today = Calendar.getInstance().apply {
-//            set(Calendar.HOUR_OF_DAY, 0)
-//            set(Calendar.MINUTE, 0)
-//            set(Calendar.SECOND, 0)
-//            set(Calendar.MILLISECOND, 0)
-//        }.time.time
-
-
             val operDate = (endDate - startDate) / (24 * 60 * 60 * 1000)
+
             return operDate.toString()
         } catch (ex: Exception) {
             return ""
@@ -450,15 +696,6 @@ class PortfolioDetailActivity :
      * 상태바 아이콘 색상 지정
      * @param isBlack true : 검정색 / false : 흰색
      */
-
-    private fun setStatusBar() {
-        val w: Window = window
-        w.setFlags(
-            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
-            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
-        )
-    }
-
     private fun setStatusBarIconColor(isBlack: Boolean) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             // android os 12에서 사용 가능
@@ -495,7 +732,6 @@ class PortfolioDetailActivity :
             window.statusBarColor = Color.parseColor(colorHexValue)
 
         } // end if
-
     }
 
     /**
@@ -541,7 +777,5 @@ class PortfolioDetailActivity :
         } // end if
 
     }
-    /** Util end **/
-
 
 }

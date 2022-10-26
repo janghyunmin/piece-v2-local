@@ -29,11 +29,11 @@ public class AddressViewModel extends AndroidViewModel {
         super(application);
         addressRepository = new AddressRepository(application);
     }
-    public MutableLiveData<LocationDTO> getAddressData(String keyword) {
-        addressData = loadAddressData(keyword);
+    public MutableLiveData<LocationDTO> getAddressData(String keyword, int countPerPage) {
+        addressData = loadAddressData(keyword , countPerPage);
         return addressData;
     }
-    public MutableLiveData<LocationDTO> loadAddressData(String keyword) {
-        return addressRepository.getAddressData(keyword);
+    public MutableLiveData<LocationDTO> loadAddressData(String keyword , int countPerPage) {
+        return addressRepository.getAddressData(keyword , countPerPage);
     }
 }

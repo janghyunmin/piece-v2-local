@@ -5,7 +5,7 @@ package com.bsstandard.piece.data.datamodel.dmodel.magazine;
  * fileName       : MagazineModel
  * author         : piecejhm
  * date           : 2022/08/29
- * description    :
+ * description    : 회원 북마크 전용 모델
  * ===========================================================
  * DATE              AUTHOR             NOTE
  * -----------------------------------------------------------

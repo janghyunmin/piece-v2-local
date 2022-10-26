@@ -40,7 +40,15 @@ class MagazineAdapter(viewModel: MagazineViewModel, val context: Context) :
     }
 
     interface OnItemClickListener {
-        fun onItemClick(v: View, tag:String, magazineId: String, magazineImagePath: String , isFavorite: String , smallTitle: String , position: Int)
+        fun onItemClick(
+            v: View,
+            tag: String,
+            magazineId: String,
+            magazineImagePath: String,
+            isFavorite: String,
+            smallTitle: String,
+            position: Int
+        )
     }
 
     private var listener: OnItemClickListener? = null
@@ -59,9 +67,9 @@ class MagazineAdapter(viewModel: MagazineViewModel, val context: Context) :
             binding.executePendingBindings()
 
             // 로그인이 되어있을때에만 isFavorite isSelected 설정 - jhm 2022/08/30
-            if (PrefsHelper.read("isJoin", "").equals("true")) {
-                binding.bookmark.isSelected = magazineViewModel.getMagazineItem()[pos].isFavorite.equals("Y")
-            }
+//            if (PrefsHelper.read("isJoin", "").equals("true")) {
+//                binding.bookmark.isSelected = magazineViewModel.getMagazineItem()[pos].isFavorite.equals("Y")
+//            }
 
             // item 개별 클릭시 webView Go - jhm 2022/08/29
             itemView.setOnClickListener {
@@ -71,10 +79,10 @@ class MagazineAdapter(viewModel: MagazineViewModel, val context: Context) :
                             // 아이템 클릭시 webview 호출해야함 - jhm 2022/08/26
                             itemView,
                             "webView",
-                            magazineViewModel.getMagazineItem().get(pos).magazineId,
-                            magazineViewModel.getMagazineItem().get(pos).representThumbnailPath,
+                            magazineViewModel.getMagazineItem()[pos].magazineId,
+                            magazineViewModel.getMagazineItem()[pos].representThumbnailPath,
                             "",
-                            magazineViewModel.getMagazineItem().get(pos).smallTitle,
+                            magazineViewModel.getMagazineItem()[pos].smallTitle,
                             pos
                         )
                     }
@@ -88,21 +96,26 @@ class MagazineAdapter(viewModel: MagazineViewModel, val context: Context) :
 
                 // 북마크 클릭시 로그인 판별 - jhm 2022/08/30
                 if (!PrefsHelper.read("isJoin", "").equals("true")) {
-                    val intent = Intent(context,LoginChkActivity::class.java)
+                    val intent = Intent(context, LoginChkActivity::class.java)
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                     context.startActivity(intent)
                 } else {
+//                    binding.bookmark.isSelected = !binding.bookmark.isSelected
                     if (SystemClock.elapsedRealtime() - mLastClickTime > 300) {
+
                         binding.bookmark.isSelected = !binding.bookmark.isSelected
-                        listener?.onItemClick(
-                            binding.bookmark,
-                            "bookMark",
-                            magazineViewModel.getMagazineItem().get(pos).magazineId,
-                            magazineViewModel.getMagazineItem().get(pos).representThumbnailPath,
-                            magazineViewModel.getMagazineItem().get(pos).isFavorite,
-                            magazineViewModel.getMagazineItem().get(pos).smallTitle,
-                            pos
-                        )
+
+                        if (pos != RecyclerView.NO_POSITION) {
+                            listener?.onItemClick(
+                                itemView,
+                                "bookMark",
+                                magazineViewModel.getMagazineItem()[pos].magazineId,
+                                magazineViewModel.getMagazineItem()[pos].representThumbnailPath,
+                                magazineViewModel.getMagazineItem()[pos].isFavorite,
+                                magazineViewModel.getMagazineItem()[pos].smallTitle,
+                                pos
+                            )
+                        }
                     }
                     mLastClickTime = SystemClock.elapsedRealtime()
                 }

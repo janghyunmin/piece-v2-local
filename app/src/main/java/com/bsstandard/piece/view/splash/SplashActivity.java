@@ -64,7 +64,6 @@ public class SplashActivity extends AppCompatActivity {
         context = this;
         //commonDialog = new CommonDialog(context,this, Division.DIALOG_C_VERSION);
 
-        PrefsHelper.init(context);
 
         // 현재 로컬 앱의 버전을 가져옴 - jhm 2022/06/13
         try {
@@ -92,6 +91,7 @@ public class SplashActivity extends AppCompatActivity {
         versionViewModel.getVersionData("MDO0101").observe(this, response -> {
             LogUtil.logE("version : " + response.getData().getVersion());
             StoreVersion = response.getData().getVersion();
+            PrefsHelper.write("appVersion",response.getData().getVersion());
         });
 
         lottieAnimationView.setAnimation("splash1.json");
@@ -161,13 +161,16 @@ public class SplashActivity extends AppCompatActivity {
                 public void run() {
                     memberId = PrefsHelper.read("memberId","");
                     LogUtil.logE("memberId : " + memberId);
-                    if(memberId.equals("")){
+                    if(memberId.equals("") || PrefsHelper.read("isJoin","false").equals("")){
                         Intent intent = new Intent(context, IntroActivity.class);
+                        intent.putExtra("Step","1"); // 최초일때 - jhm 2022/10/17
                         startActivity(intent);
                     }
                     else {
                         Intent intent = new Intent(context, PassCodeActivity.class);
+                        intent.putExtra("Step","2"); // 최초 로그인이 아닐때 - jhm 2022/10/17
                         startActivity(intent);
+
                     }
                     overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
                     finish();

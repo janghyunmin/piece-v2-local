@@ -36,7 +36,6 @@ public class VerifyRepository {
         return verifyRepository;
     }
     public VerifyRepository(Application application) {
-//        mInstance = RetrofitClient.getService();
         mInstance = ApiModule.INSTANCE.provideRetrofit().create(RetrofitService.class);
     }
 
@@ -62,6 +61,4 @@ public class VerifyRepository {
         });
         return verifyData;
     }
-
-
 }

@@ -2,9 +2,13 @@
   <library name="Gradle: com.google.android.gms:play-services-measurement-sdk:20.1.0@aar">
     <CLASSES>
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/6db99fcea2f30caa43dc90ad4b49e302/transformed/jetified-play-services-measurement-sdk-20.1.0/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/1cedf5fc0a73c5584a4ce2a0bef3136d/transformed/jetified-play-services-measurement-sdk-20.1.0/AndroidManifest.xml" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/1cedf5fc0a73c5584a4ce2a0bef3136d/transformed/jetified-play-services-measurement-sdk-20.1.0/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/1cedf5fc0a73c5584a4ce2a0bef3136d/transformed/jetified-play-services-measurement-sdk-20.1.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/de012a86088a4718df866ea16027d6b5/transformed/jetified-play-services-measurement-sdk-20.1.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/01703a0137bab8a6e4aba5e5d58967d7/transformed/jetified-play-services-measurement-sdk-20.1.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/6aa65bb9864eeb1828655c97dd0a50ec/transformed/jetified-play-services-measurement-sdk-20.1.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/bd34fcd344df32109bfdbd5750ddcc69/transformed/jetified-play-services-measurement-sdk-20.1.0/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/bd34fcd344df32109bfdbd5750ddcc69/transformed/jetified-play-services-measurement-sdk-20.1.0/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/bd34fcd344df32109bfdbd5750ddcc69/transformed/jetified-play-services-measurement-sdk-20.1.0/res" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.android.gms/play-services-measurement-sdk/20.1.0/ace98f39b262c59be4be4d52b871d1ba5dfff723/play-services-measurement-sdk-20.1.0-javadoc.jar!/" />

@@ -1,9 +1,9 @@
 <component name="libraryTable">
   <library name="Gradle: com.google.accompanist:accompanist-appcompat-theme:0.16.0@aar">
     <CLASSES>
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/6617ea9a71b63febc10150c9530ca28b/transformed/jetified-accompanist-appcompat-theme-0.16.0/res" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/6617ea9a71b63febc10150c9530ca28b/transformed/jetified-accompanist-appcompat-theme-0.16.0/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/6617ea9a71b63febc10150c9530ca28b/transformed/jetified-accompanist-appcompat-theme-0.16.0/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/dd79e3fcc9e1e98871a776ed56990324/transformed/jetified-accompanist-appcompat-theme-0.16.0/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/dd79e3fcc9e1e98871a776ed56990324/transformed/jetified-accompanist-appcompat-theme-0.16.0/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/dd79e3fcc9e1e98871a776ed56990324/transformed/jetified-accompanist-appcompat-theme-0.16.0/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.accompanist/accompanist-appcompat-theme/0.16.0/6e75539ae90d08516a05ceebfbd7da8c893250c7/accompanist-appcompat-theme-0.16.0-javadoc.jar!/" />

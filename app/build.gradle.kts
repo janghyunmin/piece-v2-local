@@ -10,7 +10,8 @@ plugins {
     id("com.android.application")
     id("com.google.gms.google-services")
     id("realm-android")
-    id("androidx.navigation.safeargs")
+    id ("androidx.navigation.safeargs.kotlin")
+
 }
 
 android {
@@ -83,7 +84,6 @@ android {
     }
 
 
-
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
@@ -106,7 +106,6 @@ android {
 dependencies {
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
 
-
     /** { presentation => data / domain 빌드 gradle 종속성 추가 } - jhm 2022/04/22 **/
     /** 해당 clean build src 는 추후 적용 - jhm 2022/06/10 **/
 //    implementation(project(":data"))
@@ -115,11 +114,22 @@ dependencies {
     api ("io.jsonwebtoken:jjwt-api:0.10.5")
     runtimeOnly ("io.jsonwebtoken:jjwt-impl:0.10.5")
 
+
+    implementation("com.github.NaikSoftware:StompProtocolAndroid:1.6.6")
+    implementation ("com.beust:klaxon:5.5")
+
     /** { Test } - jhm 2022/04/22 **/
     testImplementation(Test.JUNIT)
     androidTestImplementation(Test.TEST_RUNNER)
     androidTestImplementation(Test.EXT_JUNIT)
     androidTestImplementation(Test.ESPRESSO_CORE)
+
+    /** { Worker } - jhm 2022/10/24 **/
+    implementation(Worker.WORK_JAVA)
+    implementation(Worker.WORK_KOTLIN)
+    implementation(Worker.WORK_RXJAVA2)
+    implementation(Worker.WORK_GCM)
+    androidTestImplementation(Worker.WORK_HELPER)
 
 
     /** { KTX } - jhm 2022/04/22 **/
@@ -138,6 +148,7 @@ dependencies {
     implementation(RxJava2.RETROFIT)
     implementation(RxJava2.BINDING)
     implementation(RxJava2.RXRELAY2)
+    implementation(RxJava2.RXKOTLIN2)
 
 
     /** {RxJava3} - jhm 2022/04/22 **/
@@ -247,5 +258,6 @@ dependencies {
     implementation(Libs.BIOMETRIC)
     implementation(Libs.BIOMETRIC_KTX)
 
+    debugImplementation(Libs.ROOM_DEBUG)
 
 }

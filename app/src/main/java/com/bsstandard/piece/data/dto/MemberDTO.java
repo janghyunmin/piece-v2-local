@@ -107,6 +107,11 @@ public class MemberDTO {
         @SerializedName("joinDay")
         @Expose
         private String joinDay;
+
+        @SerializedName("totalProfitAmount")
+        @Expose
+        private String totalProfitAmount;
+
         @SerializedName("notification")
         @Expose
         private Notification notification;
@@ -265,6 +270,14 @@ public class MemberDTO {
 
         public void setJoinDay(String joinDay) {
             this.joinDay = joinDay;
+        }
+
+        public String getTotalProfitAmount() {
+            return totalProfitAmount;
+        }
+
+        public void setTotalProfitAmount(String totalProfitAmount) {
+            this.totalProfitAmount = totalProfitAmount;
         }
 
         public Notification getNotification() {

@@ -42,6 +42,7 @@ public class JoinSuccessActivity extends AppCompatActivity {
         binding.setLifecycleOwner(this);
         context = this;
 
+
         Glide.with(this).load(R.drawable.join_complete_looping).into(binding.lottieLayout);
 
         Intent intent = getIntent();

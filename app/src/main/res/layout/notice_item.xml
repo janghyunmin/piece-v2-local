@@ -5,7 +5,7 @@
     <data>
         <variable
             name="noticeVm"
-            type="com.bsstandard.piece.data.viewmodel.NoticeViewModel" />
+            type="com.bsstandard.piece.data.viewmodel.BoardViewModel" />
 
         <variable
             name="pos"

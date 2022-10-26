@@ -1,7 +1,6 @@
 package com.bsstandard.piece.data.datamodel.dmodel.member;
 
 import com.bsstandard.piece.data.datamodel.dmodel.consent.UpdateConsentList;
-import com.bsstandard.piece.data.datamodel.dmodel.join.NotificationInfoModel;
 
 import java.util.ArrayList;
 
@@ -10,7 +9,7 @@ import java.util.ArrayList;
  * fileName       : MemberModifyModel
  * author         : piecejhm
  * date           : 2022/09/05
- * description    :
+ * description    : 회원 정보 수정
  * ===========================================================
  * DATE              AUTHOR             NOTE
  * -----------------------------------------------------------
@@ -31,12 +30,13 @@ public class MemberModifyModel {
     private String gender;
     private String email;
     private String isFido;
-    private NotificationInfoModel notificationInfo;
+    private NotificationModel notification;
     private ArrayList<UpdateConsentList> consents;
 
     public class Notification {
         private String memberId;
         private String assetNotification;
+        private String portfolioNotification;
         private String marketingSms;
         private String marketingApp;
 
@@ -54,6 +54,14 @@ public class MemberModifyModel {
 
         public void setAssetNotification(String assetNotification) {
             this.assetNotification = assetNotification;
+        }
+
+        public String getPortfolioNotification() {
+            return portfolioNotification;
+        }
+
+        public void setPortfolioNotification(String portfolioNotification) {
+            this.portfolioNotification = portfolioNotification;
         }
 
         public String getMarketingSms() {
@@ -105,7 +113,7 @@ public class MemberModifyModel {
 
     public MemberModifyModel(String memberId, String name, String pinNumber, String cellPhoneNo, String cellPhoneIdNo,
                              String birthDay, String zipCode, String baseAddress, String detailAddress, String ci,
-                             String di, String gender, String email, String isFido, NotificationInfoModel notificationInfo, ArrayList<UpdateConsentList> consents) {
+                             String di, String gender, String email, String isFido, NotificationModel notification, ArrayList<UpdateConsentList> consents) {
         this.memberId = memberId;
         this.name = name;
         this.pinNumber = pinNumber;
@@ -120,10 +128,9 @@ public class MemberModifyModel {
         this.gender = gender;
         this.email = email;
         this.isFido = isFido;
-        this.notificationInfo = notificationInfo;
+        this.notification = notification;
         this.consents = consents;
     }
-
 
     public String getMemberId() {
         return memberId;
@@ -236,13 +243,15 @@ public class MemberModifyModel {
     public void setIsFido(String isFido) {
         this.isFido = isFido;
     }
-    public NotificationInfoModel getNotificationInfo() {
-        return notificationInfo;
+
+    public NotificationModel getNotification() {
+        return notification;
     }
 
-    public void setNotificationInfo(NotificationInfoModel notificationInfo) {
-        this.notificationInfo = notificationInfo;
+    public void setNotification(NotificationModel notification) {
+        this.notification = notification;
     }
+
     public ArrayList<UpdateConsentList> getConsents() {
         return consents;
     }
@@ -250,8 +259,6 @@ public class MemberModifyModel {
     public void setConsents(ArrayList<UpdateConsentList> consents) {
         this.consents = consents;
     }
-
-
 }
 
 

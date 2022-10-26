@@ -36,11 +36,13 @@ public class PrefsHelper {
         return instance;
     }
 
+
     private PrefsHelper(Context context){
         mContext = context;
         prefs = mContext.getSharedPreferences(PREFERENCE_NAME,Context.MODE_PRIVATE);
         prefsEditor = prefs.edit();
     }
+
 
     // String Shared - jhm 2022/07/04
     public static String read(String key, String defValue){
@@ -48,16 +50,16 @@ public class PrefsHelper {
     }
     public static void write(String key,String value){
         prefsEditor.putString(key,value);
-        prefsEditor.commit();
+        prefsEditor.apply();
     }
     public static void removeKey(Context context,String key){
         prefsEditor.remove(key);
-        prefsEditor.commit();
+        prefsEditor.apply();
     }
 
     public static void removeToken(String key){
         prefsEditor.remove(key);
-        prefsEditor.commit();
+        prefsEditor.apply();
     }
 
     // Integer Shared - jhm 2022/07/04
@@ -65,7 +67,7 @@ public class PrefsHelper {
         return prefs.getInt(key,defValue);
     }
     public static void write(String key, Integer value){
-        prefsEditor.putInt(key,value).commit();
+        prefsEditor.putInt(key,value).apply();
     }
 
 
@@ -76,7 +78,7 @@ public class PrefsHelper {
     }
     public static void write(String key,boolean value){
         prefsEditor.putBoolean(key,value);
-        prefsEditor.commit();
+        prefsEditor.apply();
     }
 
     // arrayList put - jhm 2022/09/05
@@ -90,8 +92,22 @@ public class PrefsHelper {
         } else {
             prefsEditor.putString(key, null);
         }
-        prefsEditor.commit();
+        prefsEditor.apply();
     }
+
+    public static void writeNotificationList(String key , List<MemberDTO.Data.Notification> values) {
+        JSONArray jsonArray = new JSONArray();
+        for( int index = 0; index < values.size(); index++ ) {
+            jsonArray.put(values.get(index));
+        }
+        if(!values.isEmpty()) {
+            prefsEditor.putString(key,jsonArray.toString());
+        } else {
+            prefsEditor.putString(key, null);
+        }
+        prefsEditor.apply();
+    }
+
 
     // arrayList get - jhm 2022/09/05
     public static ArrayList<String> getStringArrayPref(Context context, String key) {

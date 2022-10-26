@@ -83,6 +83,7 @@
         const val RX2_RETROFIT = "1.0.0"
         const val RX2_BINDING = "2.0.0"
         const val RXRELAY2 = "2.0.0"
+        const val RXKOTLIN2 = "2.4.0"
         const val RX3_RETROFIT_ADAPTER = "3.0.0"
 
         // RxJava3 _jhm_2022/04/22
@@ -222,14 +223,25 @@
         const val BIOMETRIC = "1.1.0"
         const val BIOMETRIC_KTX = "1.2.0-alpha04"
 
+        // Room Debug - jhm 2022/09/18
+        const val ROOM_DEBUG = "1.0.6"
 
+
+        const val WORKER = "2.2.0"
     }
 
 
 
 
 
+    object Worker {
+        const val WORK_JAVA = "androidx.work:work-runtime:${Versions.WORKER}"
+        const val WORK_KOTLIN = "androidx.work:work-runtime-ktx:${Versions.WORKER}"
+        const val WORK_RXJAVA2 = "androidx.work:work-rxjava2:${Versions.WORKER}"
+        const val WORK_GCM = "androidx.work:work-gcm:${Versions.WORKER}"
+        const val WORK_HELPER = "androidx.work:work-testing:${Versions.WORKER}"
 
+    }
 
 
 
@@ -251,6 +263,7 @@
         const val RETROFIT = "com.jakewharton.retrofit:retrofit2-rxjava2-adapter:${Versions.RX2_RETROFIT}"
         const val BINDING = "com.jakewharton.rxbinding2:rxbinding:${Versions.RX2_BINDING}"
         const val RXRELAY2 = "com.jakewharton.rxrelay2:rxrelay:${Versions.RXRELAY2}"
+        const val RXKOTLIN2 = "io.reactivex.rxjava2:rxkotlin:${Versions.RXKOTLIN2}"
     }
 
     object RxJava3 {
@@ -436,5 +449,7 @@
         const val MPCHART = "com.github.PhilJay:MPAndroidChart:${Versions.MPCHART}"
         const val BIOMETRIC = "androidx.biometric:biometric:${Versions.BIOMETRIC}"
         const val BIOMETRIC_KTX = "androidx.biometric:biometric-ktx:${Versions.BIOMETRIC_KTX}"
+        // Room DB 디버깅 - jhm 2022/09/18
+        const val ROOM_DEBUG = "com.amitshekhar.android:debug-db:${Versions.ROOM_DEBUG}"
 
     }

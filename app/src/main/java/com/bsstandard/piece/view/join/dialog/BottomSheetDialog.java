@@ -1,5 +1,6 @@
 package com.bsstandard.piece.view.join.dialog;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -15,7 +16,6 @@ import android.view.Window;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -37,7 +37,6 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 import javax.annotation.Nullable;
 
@@ -159,7 +158,7 @@ public class BottomSheetDialog extends BottomSheetDialogFragment implements View
                 consentDetailViewModel = new ViewModelProvider(this).get(ConsentDetailViewModel.class); // 약관 상세 조회 - jhm 2022/06/21
                 callSmsAuthViewModel = new ViewModelProvider(this).get(CallSmsAuthViewModel.class); // req sms - jhm 2022/06/22
 
-                consentViewModel.getConsentData().observe(this, response -> {
+                consentViewModel.getConsentData("SIGN").observe(this, response -> {
                     progressDialog.show();
                     consentList.clear();
                     for (int index = 0; index < response.getData().size(); index++) {
@@ -172,14 +171,14 @@ public class BottomSheetDialog extends BottomSheetDialogFragment implements View
                                 response.getData().get(index).getIsMandatory(),
                                 response.getData().get(index).getDisplayOrder(),
                                 response.getData().get(index).getCreatedAt(),
-                                "Y"
+                                "Y",
+                                Division.CONSENT
                         ));
                     }
                     // 마케팅 활용 Text - jhm 2022/06/20
-                    marketingTitle = consentList.get(0).getConsentTitle();
-                    marketingContent = consentList.get(0).getConsentContents();
-                    slideupConsentBinding.cAgree8Tv.setText(consentList.get(0).getConsentTitle());
-                    Collections.reverse(consentList);
+                    marketingTitle = consentList.get(7).getConsentTitle();
+                    marketingContent = consentList.get(7).getConsentContents();
+                    slideupConsentBinding.cAgree8Tv.setText(consentList.get(7).getConsentTitle());
                     consentList.remove(consentList.size() - 1);
                     ConsentUI();
                 });
@@ -189,6 +188,7 @@ public class BottomSheetDialog extends BottomSheetDialogFragment implements View
     }
 
     // 약관 목록 데이터를 받아온 후 화면을 그려준다 - jhm 2022/06/21
+    @SuppressLint("NotifyDataSetChanged")
     private void ConsentUI() {
         LogUtil.logE("ConsentUi call..");
         consentAdapter = new ConsentAdapter(getContext(), consentList);
@@ -258,6 +258,10 @@ public class BottomSheetDialog extends BottomSheetDialogFragment implements View
                 Intent intent = new Intent(context, ConsentDetailWebView.class);
                 intent.putExtra("consentTitle", consentList.get(position).getConsentTitle());
                 intent.putExtra("consentContents", consentList.get(position).getConsentContents());
+                getActivity().overridePendingTransition(
+                        android.R.anim.fade_in,
+                        android.R.anim.fade_out
+                );
                 startActivity(intent);
             }
         });
@@ -269,6 +273,10 @@ public class BottomSheetDialog extends BottomSheetDialogFragment implements View
                 Intent intent = new Intent(context, ConsentDetailWebView.class);
                 intent.putExtra("consentTitle", marketingTitle);
                 intent.putExtra("consentContents", marketingContent);
+                getActivity().overridePendingTransition(
+                        android.R.anim.fade_in,
+                        android.R.anim.fade_out
+                );
                 startActivity(intent);
             }
         });
@@ -307,13 +315,24 @@ public class BottomSheetDialog extends BottomSheetDialogFragment implements View
                     callSmsAuthViewModel.callSmsAuthData.observe(getViewLifecycleOwner(), new Observer<CallSmsAuthDTO>() {
                         @Override
                         public void onChanged(CallSmsAuthDTO callSmsAuthDTO) {
-                            LogUtil.logE("dto : " + callSmsAuthDTO.getData().getRsltMsg());
-                            LogUtil.logE("txSeqNo : " + callSmsAuthDTO.getData().getTxSeqNo());
-                            txSeqNo = callSmsAuthDTO.getData().getTxSeqNo();
+                            try {
+                                if(callSmsAuthDTO.getData() != null) {
+                                    LogUtil.logE("dto : " + callSmsAuthDTO.getData().getRsltMsg());
+                                    LogUtil.logE("txSeqNo : " + callSmsAuthDTO.getData().getTxSeqNo());
+                                    txSeqNo = callSmsAuthDTO.getData().getTxSeqNo();
 
-                            String Contents = callSmsAuthDTO.getData().getRsltMsg();
-                            GetResponseSMS(Contents); // 인증번호 dialog 호출
-                            dismiss(); // 인증번호 dialog 호출 후 약관동의 dialog 는 닫는다.
+                                    String Contents = callSmsAuthDTO.getData().getRsltMsg();
+                                    GetResponseSMS(Contents); // 인증번호 dialog 호출
+                                    dismiss(); // 인증번호 dialog 호출 후 약관동의 dialog 는 닫는다.
+                                } else {
+                                    LogUtil.logE("인증번호 검증 실패 재시도 처리");
+
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                LogUtil.logE("인증번호 검증 실패 재시도 처리");
+                            }
+
 
                         }
                     });

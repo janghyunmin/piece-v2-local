@@ -9,7 +9,7 @@
             type="com.bsstandard.piece.view.notice.NoticeActivity" />
         <variable
             name="noticeVm"
-            type="com.bsstandard.piece.data.viewmodel.NoticeViewModel" />
+            type="com.bsstandard.piece.data.viewmodel.BoardViewModel" />
 
     </data>
 

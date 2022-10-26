@@ -6,22 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.bsstandard.piece.R
-import com.bsstandard.piece.data.datasource.shared.PrefsHelper
-import com.bsstandard.piece.data.dto.PortfolioDetailDTO
 import com.bsstandard.piece.databinding.ProductsItemCompositionLayoutBinding
 import com.bsstandard.piece.view.portfolioDetail.PortfolioDetailViewModel
-import com.bsstandard.piece.widget.utils.LogUtil
-import com.bsstandard.piece.widget.utils.SingleLiveEvent
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.CenterCrop
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.products_item_composition_layout.view.*
-import kotlinx.android.synthetic.main.slide_up_dialog_base.view.*
 
 
 /**
@@ -84,6 +73,7 @@ class PortfolioDetailCompositionAdapter(viewModel: PortfolioDetailViewModel, val
     inner class ViewHolder(binding: ProductsItemCompositionLayoutBinding) :
         RecyclerView.ViewHolder(binding.root) {
         val binding = binding;
+
         fun bind(viewModel: PortfolioDetailViewModel, pos: Int) {
             binding.pos = pos
             binding.portfolioDetailViewModel = viewModel

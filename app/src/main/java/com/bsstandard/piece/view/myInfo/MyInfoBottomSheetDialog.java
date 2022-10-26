@@ -158,7 +158,7 @@ public class MyInfoBottomSheetDialog extends BottomSheetDialogFragment implement
     @SuppressLint("NotifyDataSetChanged")
     private void addressModel() {
         consentList.clear();
-        consentViewModel.getConsentData().observe(this, response -> {
+        consentViewModel.getConsentData("SIGN").observe(this, response -> {
             for(int index = 0; index < response.getData().size(); index++) {
                 consentList.add(new UpdateConsentList(
                         PrefsHelper.read("memberId",""),
@@ -167,7 +167,7 @@ public class MyInfoBottomSheetDialog extends BottomSheetDialogFragment implement
             }
         });
 
-        addressViewModel.getAddressData(slideupAddressBinding.addressSearchText.getText().toString()).observe(
+        addressViewModel.getAddressData(slideupAddressBinding.addressSearchText.getText().toString() , 100).observe(
                 getViewLifecycleOwner(),
                 reponse -> {
                     addressList.clear();

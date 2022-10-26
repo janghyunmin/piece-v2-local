@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.bsstandard.piece.data.viewmodel.NoticeViewModel
+import com.bsstandard.piece.data.viewmodel.BoardViewModel
 import com.bsstandard.piece.databinding.NoticeItemBinding
 
 /**
@@ -21,8 +21,8 @@ import com.bsstandard.piece.databinding.NoticeItemBinding
  * 2022/09/10        piecejhm       최초 생성
  */
 
-class NoticeAdapter(viewModel: NoticeViewModel, val context: Context) :
-    RecyclerView.Adapter<NoticeAdapter.ViewHolder>(){
+class NoticeAdapter(viewModel: BoardViewModel, val context: Context) :
+    RecyclerView.Adapter<NoticeAdapter.ViewHolder>() {
     private val noticeViewModel = viewModel
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoticeAdapter.ViewHolder {
@@ -36,8 +36,9 @@ class NoticeAdapter(viewModel: NoticeViewModel, val context: Context) :
     override fun onBindViewHolder(holder: NoticeAdapter.ViewHolder, position: Int) {
         holder.bind(noticeViewModel, position, listener)
     }
+
     interface OnItemClickListener {
-        fun onItemClick(v: View, boardId: String , boradTitle: String, date:String)
+        fun onItemClick(v: View, boardId: String, boradTitle: String, date: String)
     }
 
     private var listener: OnItemClickListener? = null
@@ -50,7 +51,7 @@ class NoticeAdapter(viewModel: NoticeViewModel, val context: Context) :
         val binding = binding;
         private var mLastClickTime: Long = 0
 
-        fun bind(viewModel: NoticeViewModel, pos: Int, listener: OnItemClickListener?) {
+        fun bind(viewModel: BoardViewModel, pos: Int, listener: OnItemClickListener?) {
             binding.pos = pos
             binding.noticeVm = viewModel
             binding.executePendingBindings()
@@ -68,8 +69,6 @@ class NoticeAdapter(viewModel: NoticeViewModel, val context: Context) :
                 }
                 mLastClickTime = SystemClock.elapsedRealtime()
             }
-
         }
     }
-
 }

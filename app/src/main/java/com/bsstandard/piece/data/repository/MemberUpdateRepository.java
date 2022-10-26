@@ -60,6 +60,7 @@ public class MemberUpdateRepository {
                     if(response.body().getStatus().equals("OK")) {
                         LogUtil.logE("회원 정보 변경 성공");
                         memberUpdateData.postValue(response.body());
+                        LogUtil.logE("response : " + response.body().getData().getNotification().getAssetNotification());
                     } else {
                         LogUtil.logE("회원 정보 변경 실패..");
                         memberUpdateData.postValue(response.body());

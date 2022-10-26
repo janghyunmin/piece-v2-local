@@ -1,8 +1,6 @@
 package com.bsstandard.piece.view.adapter.portfolio
 
-import android.app.ActivityOptions
 import android.content.Context
-import android.content.Intent
 import android.os.SystemClock
 import android.view.LayoutInflater
 import android.view.View
@@ -10,8 +8,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bsstandard.piece.data.viewmodel.PortfolioViewModel
 import com.bsstandard.piece.databinding.PortfolioItemBinding
-import com.bsstandard.piece.view.portfolioDetail.PortfolioDetailActivity
-import com.bsstandard.piece.widget.utils.LogUtil
 
 
 /**
@@ -66,9 +62,9 @@ class PortfolioAdapter(viewModel: PortfolioViewModel, val context: Context) :
                 if (SystemClock.elapsedRealtime() - mLastClickTime > 1000) {
                     if (pos != RecyclerView.NO_POSITION) {
                         listener?.onItemClick(
-                            itemView, portfolioViewModel.getPortoflioItem().get(pos).portfolioId,
-                            portfolioViewModel.getPortoflioItem()
-                                .get(pos).representThumbnailImagePath
+                            itemView,
+                            portfolioViewModel.getPortoflioItem()[pos].portfolioId,
+                            portfolioViewModel.getPortoflioItem()[pos].representThumbnailImagePath
                         )
                     }
                 }

@@ -11,8 +11,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="700dp"
-        android:minHeight="700dp"
+        android:layout_height="600dp"
+        android:minHeight="600dp"
         android:background="@drawable/j_dialog_back_round"
         app:behavior_hideable="true"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">

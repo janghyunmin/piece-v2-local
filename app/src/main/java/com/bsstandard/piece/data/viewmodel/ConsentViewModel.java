@@ -30,12 +30,12 @@ public class ConsentViewModel extends AndroidViewModel {
         super(application);
         consentRepository = new ConsentRepository(application);
     }
-    public MutableLiveData<ConsentDTO> getConsentData(){
-        consentData = loadConsetData();
+    public MutableLiveData<ConsentDTO> getConsentData(String ConsetDvn){
+        consentData = loadConsetData(ConsetDvn);
         return consentData;
     }
-    public MutableLiveData<ConsentDTO> loadConsetData(){
-        return consentRepository.getConsentData();
+    public MutableLiveData<ConsentDTO> loadConsetData(String ConsetDvn){
+        return consentRepository.getConsentData(ConsetDvn);
     }
 
 }

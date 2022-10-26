@@ -19,11 +19,13 @@ import androidx.navigation.ui.setupWithNavController
 import com.bsstandard.piece.R
 import com.bsstandard.piece.base.BaseActivity
 import com.bsstandard.piece.data.datasource.shared.PrefsHelper
+import com.bsstandard.piece.data.viewmodel.GetUserViewModel
 import com.bsstandard.piece.databinding.ActivityMainBinding
 import com.bsstandard.piece.view.common.LoginChkActivity
 import com.bsstandard.piece.view.fragment.navigation.KeepStateNavigator
 import com.bsstandard.piece.view.main.dialog.EventSheet
 import com.bsstandard.piece.widget.utils.LogUtil
+import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
@@ -46,10 +48,10 @@ import java.util.*
 @AndroidEntryPoint
 class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
     private val mainViewModel by viewModels<MainViewModel>()
+    private val mv by viewModels<GetUserViewModel>()
     private lateinit var navController: NavController
     val manager = supportFragmentManager
     var mContext: Context = this@MainActivity
-
 
     @SuppressLint("NewApi")
     @RequiresApi(Build.VERSION_CODES.O)
@@ -61,12 +63,17 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
             lifecycleOwner = this@MainActivity
             main = mainViewModel
 
+            // 내정보 API - jhm 2022/09/03
+//            memberVm = mv
+//            mv.getUserData()
+
+
+            // UI Setting 최종 - jhm 2022/09/14
             setStatusBarIconColor(true) // 상태바 아이콘 true : 검정색
             setStatusBarBgColor("#ffffff") // 상태바 배경색상 설정
             setNaviBarIconColor(true) // 네비게이션 true : 검정색
             setNaviBarBgColor("#ffffff") // 네비게이션 배경색
 
-            PrefsHelper.init(this@MainActivity)
             LogUtil.logE("accessToken Main : " + PrefsHelper.read("accessToken", ""));
             LogUtil.logE("deviceId Main : " + PrefsHelper.read("deviceId", ""));
             LogUtil.logE("expiredAt Main : " + PrefsHelper.read("expiredAt", ""));
@@ -74,10 +81,52 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
             LogUtil.logE("refreshToken Main : " + PrefsHelper.read("refreshToken", ""));
 
             initNavController()
+
+
+//            client = OkHttpClient()
+//
+//            val request: Request = Request.Builder()
+//                .url("ws://192.168.0.39:10000/portfolio")
+//                .build()
+//            val listener: WebSocketListener = WebSocketListener()
+//
+//            client.newWebSocket(request, listener)
+//            client.dispatcher().executorService().shutdown()
+
+
             
             //toDayShow() // 메인 이벤트 바텀 시트 - jhm 2022/08/31
         }
+
+        initFirebase()
+        updateResult()
     }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        updateResult(true)
+    }
+
+
+    private fun initFirebase() {
+        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                LogUtil.logE("token : ${task.result}")
+            }
+        }
+    }
+
+    private fun updateResult(isNewIntent: Boolean = false) {
+        //true -> notification 으로 갱신된 것
+        //false -> 아이콘 클릭으로 앱이 실행된 것
+        (intent.getStringExtra("notificationType") ?: "앱 런처") + if (isNewIntent) {
+            "(으)로 갱신했습니다."
+        } else {
+            "(으)로 실행했습니다."
+        }
+    }
+
 
     // 오늘은 보지 않기 눌렀는지 chk - jhm 2022/07/08
     @RequiresApi(Build.VERSION_CODES.O)
@@ -209,7 +258,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
             }
         }
         transaction.setReorderingAllowed(true) // 화면전환간 애니메이션 정상 동작 처리 - jhm 2022/08/16
-        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
         transaction.commit()
     }
 
@@ -219,6 +268,15 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
      * 상태바 아이콘 색상 지정
      * @param isBlack true : 검정색 / false : 흰색
      */
+
+    private fun setStatusBar() {
+        val w: Window = window
+        w.setFlags(
+            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
+        )
+    }
+
     private fun setStatusBarIconColor(isBlack: Boolean) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             // android os 12에서 사용 가능
@@ -255,6 +313,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
             window.statusBarColor = Color.parseColor(colorHexValue)
 
         } // end if
+
     }
 
     /**
@@ -300,16 +359,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
         } // end if
 
     }
-
-
     /** Util end **/
 
-    private fun setStatusBar(){
-        val w: Window = window
-        w.setFlags(
-            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
-            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
-        )
-    }
 
 }

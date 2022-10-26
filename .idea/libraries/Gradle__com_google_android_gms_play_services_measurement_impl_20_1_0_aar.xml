@@ -2,9 +2,13 @@
   <library name="Gradle: com.google.android.gms:play-services-measurement-impl:20.1.0@aar">
     <CLASSES>
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/1d981a153de6878e1003a4a1a0178d96/transformed/jetified-play-services-measurement-impl-20.1.0/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/2e58003328c154e9a7b1acacdf34f54c/transformed/jetified-play-services-measurement-impl-20.1.0/AndroidManifest.xml" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/2e58003328c154e9a7b1acacdf34f54c/transformed/jetified-play-services-measurement-impl-20.1.0/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/2e58003328c154e9a7b1acacdf34f54c/transformed/jetified-play-services-measurement-impl-20.1.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/a986d91b2e8cea83857c8f0dda8efa8b/transformed/jetified-play-services-measurement-impl-20.1.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/a32769e28c0ffce5729a809a8b57bd0b/transformed/jetified-play-services-measurement-impl-20.1.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/b19ec465400df38ae4afada5ce138946/transformed/jetified-play-services-measurement-impl-20.1.0/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/f294dc1a8d1fefa24a569c4fc8456f7a/transformed/jetified-play-services-measurement-impl-20.1.0/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/f294dc1a8d1fefa24a569c4fc8456f7a/transformed/jetified-play-services-measurement-impl-20.1.0/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/f294dc1a8d1fefa24a569c4fc8456f7a/transformed/jetified-play-services-measurement-impl-20.1.0/res" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.android.gms/play-services-measurement-impl/20.1.0/bf14b647698b0e980cb9dad2e9f4fb0e4c264a44/play-services-measurement-impl-20.1.0-javadoc.jar!/" />

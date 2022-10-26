@@ -1,6 +1,9 @@
 package com.bsstandard.piece
 
 import android.app.Application
+import com.bsstandard.piece.data.datasource.shared.PrefsHelper
+import com.bsstandard.piece.widget.utils.LogUtil
+import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.HiltAndroidApp
 
 /**
@@ -24,6 +27,18 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        PrefsHelper.init(applicationContext)
         application = this
+
+        initFirebase()
+    }
+
+    private fun initFirebase() {
+        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                LogUtil.logE("token : ${task.result}")
+                PrefsHelper.write("fcmToken",task.result)
+            }
+        }
     }
 }

@@ -8,6 +8,9 @@
         <variable
             name="activity"
             type="com.bsstandard.piece.view.certification.CertificationActivity" />
+        <variable
+            name="memberVm"
+            type="com.bsstandard.piece.data.viewmodel.GetUserViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -110,22 +113,20 @@
                     android:textColor="@color/c_4a4d55"
                     android:textSize="16dp" />
 
-                <androidx.appcompat.widget.SwitchCompat
+
+                <Switch
                     android:id="@+id/switchBtn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintTop_toTopOf="@+id/title2"
-                    app:layout_constraintBottom_toBottomOf="@+id/title2"
                     app:layout_constraintRight_toRightOf="parent"
-                    android:checked="false"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     android:gravity="center"
-                    android:thumb="@drawable/switch_thumb_selector"
-                    app:track="@drawable/switch_track_selector"
                     app:switchMinWidth="45dp"
                     android:textOff=""
                     android:textOn=""
                     android:thumbTextPadding="15dp"
-                    />
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:ignore="UseSwitchCompatOrMaterialXml" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
             <View
@@ -268,7 +269,7 @@
 
             <!-- 회원 탈퇴 layout Start -->
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/member_delete_layout"
+                android:id="@+id/withdraw_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"

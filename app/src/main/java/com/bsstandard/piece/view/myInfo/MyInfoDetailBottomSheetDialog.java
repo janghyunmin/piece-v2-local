@@ -17,8 +17,8 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.bsstandard.piece.R;
 import com.bsstandard.piece.data.datamodel.dmodel.consent.UpdateConsentList;
-import com.bsstandard.piece.data.datamodel.dmodel.join.NotificationInfoModel;
 import com.bsstandard.piece.data.datamodel.dmodel.member.MemberModifyModel;
+import com.bsstandard.piece.data.datamodel.dmodel.member.NotificationModel;
 import com.bsstandard.piece.data.datasource.shared.PrefsHelper;
 import com.bsstandard.piece.data.dto.MemberPutDTO;
 import com.bsstandard.piece.data.viewmodel.ConsentViewModel;
@@ -120,7 +120,7 @@ public class MyInfoDetailBottomSheetDialog extends BottomSheetDialogFragment imp
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.confirm_btn :
+            case R.id.confirm_btn:
                 LogUtil.logE("확인 onClick..");
                 String memberId = PrefsHelper.read("memberId", "");
                 String name = PrefsHelper.read("name", "");
@@ -137,7 +137,8 @@ public class MyInfoDetailBottomSheetDialog extends BottomSheetDialogFragment imp
                 String email = PrefsHelper.read("email", "");
                 String isFido = PrefsHelper.read("isFido", "");
 
-                NotificationInfoModel notificationInfo = new NotificationInfoModel(
+                NotificationModel notification = new NotificationModel(
+                        PrefsHelper.read("memberId", ""),
                         "Y",
                         "Y",
                         "Y",
@@ -145,18 +146,18 @@ public class MyInfoDetailBottomSheetDialog extends BottomSheetDialogFragment imp
                 );
 
                 consentList.clear();
-                consentViewModel.getConsentData().observe(this, response -> {
-                    for(int index = 0; index < response.getData().size(); index++) {
+                consentViewModel.getConsentData("SIGN").observe(this, response -> {
+                    for (int index = 0; index < response.getData().size(); index++) {
                         consentList.add(new UpdateConsentList(
-                                PrefsHelper.read("memberId",""),
+                                PrefsHelper.read("memberId", ""),
                                 response.getData().get(index).getConsentCode(),
                                 "Y"));
                     }
                 });
 
 
-                memberModifyModel = new MemberModifyModel(memberId, name, pinNumber, cellPhoneNo, cellPhoneIdNo,
-                        birthDay, zipCode, baseAddress, detailAddress, ci, di, gender, email, isFido, notificationInfo, consentList);
+                memberModifyModel = new MemberModifyModel(memberId, name, "", cellPhoneNo, cellPhoneIdNo,
+                        birthDay, zipCode, baseAddress, detailAddress, ci, di, gender, email, isFido, notification, consentList);
                 memberPutViewModel.putCallMemberData(memberModifyModel);
                 memberPutViewModel.memberPutData.observe(Objects.requireNonNull(slideDetailAddressBinding.getLifecycleOwner()), new Observer<MemberPutDTO>() {
                     @Override
@@ -164,7 +165,7 @@ public class MyInfoDetailBottomSheetDialog extends BottomSheetDialogFragment imp
                         LogUtil.logE("회원 정보 변경 완료 " + memberPutDTO.getStatus());
 
                         PrefsHelper.write("roadAddr", roadAddr);
-                        PrefsHelper.write("jibunAddr", jibunAddr);
+                        PrefsHelper.write("jibunAddr", slideDetailAddressBinding.detailAdress.getText().toString());
                         dismiss();
 
                         CustomDialogListener customDialogListener = new CustomDialogListener() {
@@ -182,16 +183,18 @@ public class MyInfoDetailBottomSheetDialog extends BottomSheetDialogFragment imp
                         };
                         CustomDialogPassCodeListener customDialogPassCodeListener = new CustomDialogPassCodeListener() {
                             @Override
-                            public void onCancleButtonClicked() { }
+                            public void onCancleButtonClicked() {
+                            }
 
                             @Override
-                            public void onRetryPassCodeButtonClicked() { }
+                            public void onRetryPassCodeButtonClicked() {
+                            }
                         };
-                        customDialog = new CustomDialog(context, Division.DIALOG_ADDRESS_CONFIRM,customDialogListener,customDialogPassCodeListener);
+                        customDialog = new CustomDialog(context, Division.DIALOG_ADDRESS_CONFIRM, customDialogListener, customDialogPassCodeListener);
                         customDialog.show();
                     }
                 });
-            break;
+                break;
 
         }
     }

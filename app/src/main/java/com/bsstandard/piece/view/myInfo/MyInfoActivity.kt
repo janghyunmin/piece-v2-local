@@ -37,14 +37,22 @@ class MyInfoActivity : BaseActivity<ActivityMyinfoBinding>(R.layout.activity_myi
     private val myinfoBinding by lazy { ActivityMyinfoBinding.inflate(layoutInflater) }
     private val mv by viewModels<GetUserViewModel>()
     var myinfoBottomSheetDialog: MyInfoBottomSheetDialog? = null
+    var myInfoEmailDialog: MyInfoEmailDialog? = null
     var mContext: Context = this@MyInfoActivity
 
     private var liveAddress: MutableLiveData<String> = MutableLiveData()
+
+    override fun onStart() {
+        super.onStart()
+        LogUtil.logE("onStart ")
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         myinfoBottomSheetDialog = MyInfoBottomSheetDialog(mContext)
+        myInfoEmailDialog = MyInfoEmailDialog(mContext)
+
 
         binding.apply {
             LogUtil.logE("여기 시작")
@@ -66,29 +74,33 @@ class MyInfoActivity : BaseActivity<ActivityMyinfoBinding>(R.layout.activity_myi
                 LogUtil.logE("유저 재인증 OnClick..")
             }
 
-            // 기본 선택 주소 - jhm 2022/09/08
-            // mv.loadData()
-            LogUtil.logE("Pref : " + PrefsHelper.read("baseAddress", ""))
-
-
+            mv.loadData()
             mv.liveAddress.observe(this@MyInfoActivity, Observer {
-                LogUtil.logE("baseAddress : $it")
+                LogUtil.logE("옵저버 1 : $it")
                 binding.baseAddress.text = it.toString()
+
             })
             // 사용자가 입력한 상세 주소 - jhm 2022/09/08
             mv.liveDetailAddress.observe(this@MyInfoActivity, Observer {
-                LogUtil.logE("detailAddress : $it")
+                LogUtil.logE("옵저버 2 : $it")
                 binding.detailAddress.text = it.toString()
             })
+
+
+
             binding.userName.text = PrefsHelper.read("name", "")
             binding.userBirth.text = PrefsHelper.read("birthDay", "")
             binding.userPhone.text = PrefsHelper.read("cellPhoneNo", "")
 
 
-            // 통신사 선택 dialog
             binding.address.setOnClickListener { view ->
                 LogUtil.logE("주소 변경 OnClick..")
                 myinfoBottomSheetDialog!!.show(supportFragmentManager, "주소변경")
+            }
+
+            binding.emailChange.setOnClickListener { view ->
+                LogUtil.logE("이메일 변경 OnClick.")
+                myInfoEmailDialog!!.show(supportFragmentManager,"이메일 변경")
             }
 
             // 등록되어있는 주소가 없거나 , 있을때 View Change - jhm 2022/09/08
@@ -102,9 +114,19 @@ class MyInfoActivity : BaseActivity<ActivityMyinfoBinding>(R.layout.activity_myi
                 binding.noAddress.visibility = View.GONE
                 binding.baseAddress.visibility = View.VISIBLE
                 binding.detailAddress.visibility = View.VISIBLE
-
-
             }
+
+            // 등록되어있는 이메일 주소 없거나 , 있을때 View Change - jhm 2022/10/17
+            if (PrefsHelper.read("email", "").isEmpty()) {
+                binding.noEmail.visibility = View.VISIBLE
+                binding.email.visibility = View.GONE
+            } else {
+                binding.email.text = PrefsHelper.read("email","").toString()
+                binding.noEmail.visibility = View.GONE
+                binding.email.visibility = View.VISIBLE
+            }
+
+            binding.email.text = PrefsHelper.read("email","").toString()
         }
     }
 
@@ -120,6 +142,8 @@ class MyInfoActivity : BaseActivity<ActivityMyinfoBinding>(R.layout.activity_myi
         super.onResume()
         LogUtil.logE("onResume...")
         mv.getUserData()
+        mv.loadData()
+
         mv.liveAddress.observe(this@MyInfoActivity, Observer {
             LogUtil.logE("baseAddress : $it")
             binding.baseAddress.text = it.toString()
@@ -130,6 +154,12 @@ class MyInfoActivity : BaseActivity<ActivityMyinfoBinding>(R.layout.activity_myi
             binding.detailAddress.text = it.toString()
         })
     }
+
+    override fun onPause() {
+        super.onPause()
+        LogUtil.logE("onPause")
+    }
+
 
     /** Util start **/
     /**

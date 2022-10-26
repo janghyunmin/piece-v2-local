@@ -41,7 +41,9 @@ public class ConsentDetailWebView extends AppCompatActivity {
         binding.setLifecycleOwner(this);
 
         // 오른쪽에서 왼쪽으로 슬라이딩 하면서 켜짐 - jhm 2022/06/22
-        overridePendingTransition(R.anim.activity_horizon_enter,R.anim.activity_none);
+        // overridePendingTransition(R.anim.activity_horizon_enter,R.anim.activity_none);
+
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
 
         // statusBar Custom
          setStatusBar();
@@ -72,7 +74,7 @@ public class ConsentDetailWebView extends AppCompatActivity {
                 // 뒤로가기시 페이지 종료 - jhm 2022/06/21
                 finish();
 
-                overridePendingTransition(R.anim.activity_none,R.anim.activity_horizon_exit);
+                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             }
         });
     }
@@ -89,6 +91,6 @@ public class ConsentDetailWebView extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         finish();
-        overridePendingTransition(R.anim.activity_none,R.anim.activity_horizon_exit);
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
     }
 }

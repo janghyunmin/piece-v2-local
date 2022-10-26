@@ -245,7 +245,7 @@
                     android:gravity="right"
                     android:fontFamily="@font/pretendard_bold"
                     android:textColor="@color/c_4a4d55"
-                    android:text=""
+                    android:text="@{memberVm.liveAddress}"
                     />
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/detailAddress"
@@ -259,7 +259,7 @@
                     android:gravity="right"
                     android:fontFamily="@font/pretendard_regular"
                     android:textColor="@color/c_4a4d55"
-                    android:text=""
+                    android:text="@{memberVm.liveDetailAddress}"
                     />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -337,7 +337,7 @@
                     android:gravity="right"
                     android:fontFamily="@font/pretendard_bold"
                     android:textColor="@color/c_4a4d55"
-                    android:text="test@test.com"
+                    android:text=""
                     />
             </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -11,7 +11,6 @@ import android.view.Window;
 
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 
 import com.bsstandard.piece.R;
 import com.bsstandard.piece.data.datamodel.dmodel.SmsAuthModel;
@@ -38,12 +37,13 @@ import io.reactivex.rxjava3.annotations.NonNull;
  * fileName       : BottomSheetSmsDialog
  * author         : piecejhm
  * date           : 2022/06/23
- * description    :
+ * description    : 본인인증시 인증번호 입력 BottomDialog
  * ===========================================================
  * DATE              AUTHOR             NOTE
  * -----------------------------------------------------------
  * 2022/06/23        piecejhm       최초 생성
  */
+
 public class BottomSheetSmsDialog extends BottomSheetDialogFragment {
     // 공통변수 - jhm 2022/06/15
     public Context context;
@@ -239,12 +239,12 @@ public class BottomSheetSmsDialog extends BottomSheetDialogFragment {
                                 passCodeData.putString("ci",smsVerificationDTO.getData().getCi());
                                 passCodeData.putString("di",smsVerificationDTO.getData().getDi());
 
-
                                 // 인증 완료 - jhm 2022/06/24
                                 if(rsMsg.equals("본인인증 완료")){
                                     smsDialogBinding.smsError.setVisibility(View.GONE);
                                     dismiss();
                                     Intent intent = new Intent(context, PassCodeActivity.class);
+                                    intent.putExtra("Step","1"); // 최초일때 - jhm 2022/10/17
                                     intent.putExtras(passCodeData);
                                     startActivity(intent);
                                 }

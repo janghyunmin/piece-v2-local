@@ -3,8 +3,6 @@ package com.bsstandard.piece.view.passcode;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.Nullable;
@@ -36,18 +34,16 @@ import com.bsstandard.piece.retrofit.RetrofitService;
 import com.bsstandard.piece.view.join.JoinActivity;
 import com.bsstandard.piece.view.join.JoinSuccessActivity;
 import com.bsstandard.piece.view.main.MainActivity;
+import com.bsstandard.piece.view.purchase.PurchaseLoadingActivity;
 import com.bsstandard.piece.widget.utils.CustomDialog;
 import com.bsstandard.piece.widget.utils.CustomDialogListener;
-import com.bsstandard.piece.widget.utils.CustomDialogPassCodeListener;
 import com.bsstandard.piece.widget.utils.DeviceInfoUtil;
-import com.bsstandard.piece.widget.utils.Division;
+import com.bsstandard.piece.widget.utils.DialogManager;
 import com.bsstandard.piece.widget.utils.LogUtil;
-import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -108,11 +104,10 @@ public class PassCodeActivity extends AppCompatActivity {
 
     // 회원가입 유무 , 간편비밀번호 체크 변수 - jhm 2022/08/08
     public String isJoin;
-    public String pinNumChk;
 
 
-    // 더보기 - 인증 및 보안에서 간편 비밀번호 변경으로 들어왔는지 체크하기 위한 변수 - jhm 2022/09/16
-    private String isRepassword;
+    // 화면 진입시 필요한 분기 변수 - jhm 2022/10/17
+    private String Step = "";
 
 
     @Override
@@ -128,6 +123,11 @@ public class PassCodeActivity extends AppCompatActivity {
         getAuthTokenViewModel = new ViewModelProvider(this).get(GetAuthTokenViewModel.class);
         // 간편 비밀번호 검증 - jhm 2022/08/11
         authPinViewModel = new ViewModelProvider(this).get(AuthPinViewModel.class);
+
+        // 간편비밀번호 변경 - jhm 2022/10/18
+        authPinPutViewModel = new ViewModelProvider(this).get(AuthPinPutViewModel.class);
+
+
         // refreshToken 발급 - jhm 2022/08/11
         //putTokenViewModel = new ViewModelProvider(this).get(PutTokenViewModel.class);
 
@@ -138,28 +138,45 @@ public class PassCodeActivity extends AppCompatActivity {
 
         passCodeModelList.clear();
         passCodeVerifyList.clear();
-        binding.passcodeTitleVerify.setVisibility(View.INVISIBLE); // 비밀번호가 일치하지 않아요 text
-
-        InitFirebaseToken(); // Firebase Token - jhm 2022/07/01
-        PinNumRandom(); // 간편 비밀번호 0~9 위치 랜덤 - jhm 2022/06/27
-        PinNumberClear(); // 간편 비밀번호 입력값 모두 초기화 - jhm 2022/06/27
-        KeyPadOnClick(); // 키패드 입력 로직 - jhm 2022/06/27
-        AutoLogin(); // 회원가입 완료 후 자동로그인인지 판별하는 로직 - jhm 2022/07/03
 
 
-        // 내정보 - 인증 및 보안 - 간편비밀번호의 경로로 들어왔을 경우 판별 변수 - jhm 2022/09/16
+        //InitFirebaseToken(); // Firebase Token - jhm 2022/07/01
 
-        if (savedInstanceState == null) {
-            Bundle extras = getIntent().getExtras();
-            if (extras == null) {
-                isRepassword = "";
-            } else {
-                isRepassword = extras.getString("isRepassword");
-                isRepasswordLogic();
+        // 최초 로그인인지 , 최초 로그인이 아니고 재접속 인지 , 비밀번호 변경인지 분기 - jhm 2022/10/17
+        Intent intent = getIntent();
+        if (intent != null) {
+            Step = intent.getExtras().getString("Step");
+            LogUtil.logE("Step 진입 단계 :  " + Step);
+            switch (Step) {
+                // 최초 로그인일때 - jhm 2022/10/17
+                case "1":
+                    PinNumRandom(); // 간편 비밀번호 0~9 위치 랜덤 - jhm 2022/06/27
+                    PinNumberClear(); // 간편 비밀번호 입력값 모두 초기화 - jhm 2022/06/27
+                    KeyPad("1"); // 키패드 입력 로직 - jhm 2022/06/27
+                    break;
+
+                // 최초 로그인이 아닐때 - jhm 2022/10/18
+                case "2":
+                    PinNumRandom(); // 간편 비밀번호 0~9 위치 랜덤 - jhm 2022/06/27
+                    PinNumberClear(); // 간편 비밀번호 입력값 모두 초기화 - jhm 2022/06/27
+                    KeyPad("2"); // 키패드 입력 로직 - jhm 2022/06/27
+                    break;
+
+                // 내정보 - 인증 및 보안 - 비밀번호 재설정 케이스 일때 - jhm 2022/10/17
+                case "3":
+                    PinNumRandom(); // 간편 비밀번호 0~9 위치 랜덤 - jhm 2022/06/27
+                    PinNumberClear(); // 간편 비밀번호 입력값 모두 초기화 - jhm 2022/06/27
+                    binding.passcodeTitleC.setText("현재 비밀번호를 입력해 주세요.");
+                    KeyPad("3"); // 키패드 입력 로직 - jhm 2022/06/27
+                    break;
+                // 포트폴리오 구매로 진입하였을 경우 - jhm 2022/10/21
+                case "5":
+                    PinNumRandom(); // 간편 비밀번호 0~9 위치 랜덤 - jhm 2022/06/27
+                    PinNumberClear(); // 간편 비밀번호 입력값 모두 초기화 - jhm 2022/06/27
+                    KeyPad("5"); // 키패드 입력 로직 - jhm 2022/06/27
+                    break;
             }
-        } else {
-            isRepassword = (String) savedInstanceState.getSerializable("isRepassword");
-            isRepasswordLogic();
+
         }
 
         binding.clear.setOnClickListener(new View.OnClickListener() {
@@ -169,66 +186,25 @@ public class PassCodeActivity extends AppCompatActivity {
             }
         });
 
-    }
 
-    // 푸시토큰 발행 - jhm 2022/07/01
-    private void InitFirebaseToken() {
-        FirebaseMessaging.getInstance().getToken().addOnSuccessListener(token -> {
-            if (!TextUtils.isEmpty(token)) {
-                Log.d("TAG", "retrieve token successful : " + token);
-                PushToken = token;
-                PrefsHelper.removeKey(context, "firebaseToken");
-                PrefsHelper.write("firebaseToken", PushToken);
-            } else {
-                Log.w("TAG", "token should not be null...");
-            }
-        }).addOnFailureListener(e -> {
-            //handle e
-        }).addOnCanceledListener(() -> {
-            //handle cancel
-        }).addOnCompleteListener(task -> Log.v("TAG", "This is the token : " + task.getResult()));
     }
 
 
-    private void isRepasswordLogic() {
-        LogUtil.logE("isRepssword : " + isRepassword);
-        if (isRepassword.equals("isRepassword")) {
-
-            binding.passcodeTitleC.setText("현재 비밀번호를 입력해주세요.");
-            MorePinUpdate();
-
-
-        }
-    }
-
-
-    // 키패드에 랜덤으로 숫자를 뽑아 넣어준다. - jhm 2022/06/28
-    public void PinNumRandom() {
-        List<String> padList = new ArrayList<>();
-        for (int index = 0; index < 10; index++) {
-            padList.add(String.valueOf(index));
-        }
-        Collections.shuffle(padList);
-        passCodeViewModel.Code0.setValue(padList.get(0));
-        passCodeViewModel.Code1.setValue(padList.get(1));
-        passCodeViewModel.Code2.setValue(padList.get(2));
-        passCodeViewModel.Code3.setValue(padList.get(3));
-        passCodeViewModel.Code4.setValue(padList.get(4));
-        passCodeViewModel.Code5.setValue(padList.get(5));
-        passCodeViewModel.Code6.setValue(padList.get(6));
-        passCodeViewModel.Code7.setValue(padList.get(7));
-        passCodeViewModel.Code8.setValue(padList.get(8));
-        passCodeViewModel.Code9.setValue(padList.get(9));
-    }
-
-    public void KeyPadOnClick() {
+    /***
+     *
+     * Step 1: 회원가입
+     * Step 2: 재 로그인
+     * Step 3: 간편 비밀번호 변경
+     *
+     ***/
+    private void KeyPad(String Step) {
         binding.code0.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (passCodeModelList.size() <= 6) {
                     passCodeModelList.add(binding.code0.getText().toString());
                 }
-                PinNumInput();
+                PasswordChk(Step);
             }
         });
         binding.code1.setOnClickListener(new View.OnClickListener() {
@@ -237,7 +213,7 @@ public class PassCodeActivity extends AppCompatActivity {
                 if (passCodeModelList.size() <= 6) {
                     passCodeModelList.add(binding.code1.getText().toString());
                 }
-                PinNumInput();
+                PasswordChk(Step);
             }
         });
         binding.code2.setOnClickListener(new View.OnClickListener() {
@@ -246,7 +222,7 @@ public class PassCodeActivity extends AppCompatActivity {
                 if (passCodeModelList.size() <= 6) {
                     passCodeModelList.add(binding.code2.getText().toString());
                 }
-                PinNumInput();
+                PasswordChk(Step);
             }
         });
         binding.code3.setOnClickListener(new View.OnClickListener() {
@@ -255,7 +231,7 @@ public class PassCodeActivity extends AppCompatActivity {
                 if (passCodeModelList.size() <= 6) {
                     passCodeModelList.add(binding.code3.getText().toString());
                 }
-                PinNumInput();
+                PasswordChk(Step);
             }
         });
         binding.code4.setOnClickListener(new View.OnClickListener() {
@@ -264,7 +240,7 @@ public class PassCodeActivity extends AppCompatActivity {
                 if (passCodeModelList.size() <= 6) {
                     passCodeModelList.add(binding.code4.getText().toString());
                 }
-                PinNumInput();
+                PasswordChk(Step);
             }
         });
         binding.code5.setOnClickListener(new View.OnClickListener() {
@@ -273,7 +249,7 @@ public class PassCodeActivity extends AppCompatActivity {
                 if (passCodeModelList.size() <= 6) {
                     passCodeModelList.add(binding.code5.getText().toString());
                 }
-                PinNumInput();
+                PasswordChk(Step);
             }
         });
         binding.code6.setOnClickListener(new View.OnClickListener() {
@@ -282,7 +258,7 @@ public class PassCodeActivity extends AppCompatActivity {
                 if (passCodeModelList.size() <= 6) {
                     passCodeModelList.add(binding.code6.getText().toString());
                 }
-                PinNumInput();
+                PasswordChk(Step);
             }
         });
         binding.code7.setOnClickListener(new View.OnClickListener() {
@@ -291,7 +267,7 @@ public class PassCodeActivity extends AppCompatActivity {
                 if (passCodeModelList.size() <= 6) {
                     passCodeModelList.add(binding.code7.getText().toString());
                 }
-                PinNumInput();
+                PasswordChk(Step);
             }
         });
         binding.code8.setOnClickListener(new View.OnClickListener() {
@@ -300,7 +276,7 @@ public class PassCodeActivity extends AppCompatActivity {
                 if (passCodeModelList.size() <= 6) {
                     passCodeModelList.add(binding.code8.getText().toString());
                 }
-                PinNumInput();
+                PasswordChk(Step);
             }
         });
         binding.code9.setOnClickListener(new View.OnClickListener() {
@@ -309,399 +285,427 @@ public class PassCodeActivity extends AppCompatActivity {
                 if (passCodeModelList.size() <= 6) {
                     passCodeModelList.add(binding.code9.getText().toString());
                 }
-                PinNumInput();
+                PasswordChk(Step);
             }
         });
     }
 
 
-    // 회원가입 진행시 키패드 입력 로직
-    public void PinNumInput() {
+    /**
+     * 6자리 입력 후 한번 더 시도하는지 아닌지에 따라 분기 처리
+     **/
+    private void PasswordChk(String Step) {
         binding.passcodeTitleVerify.setVisibility(View.INVISIBLE);
-        setActiveChk(); // UI Update - jhm 2022/06/28
+        switch (Step) {
+            case "1":
+                setActiveChk(); // UI 변경 - jhm 2022/07/05
 
-        // 입력한 값이 6자리일때
-        if (passCodeModelList.size() == 6) {
-            isJoin = PrefsHelper.read("isJoin", "false");
-            pinNumChk = PrefsHelper.read("pinNumChk", "false");
+                // 입력한 값이 6자리일때
+                if (passCodeModelList.size() == 6) {
+                    // 입력받은 핀번호를 저장한다. - jhm 2022/07/06
+                    inputPinNumber = passCodeModelList.get(0) + passCodeModelList.get(1) + passCodeModelList.get(2)
+                            + passCodeModelList.get(3) + passCodeModelList.get(4) + passCodeModelList.get(5);
 
-            // 입력받은 핀번호를 저장한다. - jhm 2022/07/06
-            inputPinNumber = passCodeModelList.get(0) + passCodeModelList.get(1) + passCodeModelList.get(2)
-                    + passCodeModelList.get(3) + passCodeModelList.get(4) + passCodeModelList.get(5);
-            PrefsHelper.removeKey(context, "inputPinNumber");
-            PrefsHelper.write("inputPinNumber", inputPinNumber); // 최초 저장 및 새로 저장 - jhm 2022/07/06
-            LogUtil.logE("inputPinNumber : " + inputPinNumber);
-
-
-            // 로그인 기록이 없다면 - jhm 2022/07/05
-            if (isJoin.equals("false")) {
-                // 비밀번호 최초 등록
-                // 최초 회원가입 프로세스 실행 - jhm 2022/07/06
-                PinNumTwoStep();
-
-            } else {
-                // 이전에 회원가입시 등록한 핀번호를 불러온다.
-                LogUtil.logE("자동로그인 ");
-                String sharedNum = PrefsHelper.read("inputPinNumber", "");
-                LogUtil.logE("inputPinNumber : " + inputPinNumber); // 새로 입력한 핀번호 - jhm 2022/07/06
-                LogUtil.logE("sharedNum : " + sharedNum);
-
-                // 비밀번호 재설정 - jhm 2022/07/06
-                if (pinNumChk.equals("true")) {
-                    PinNumberUpdate();
-                } else {
-                    PinNumOneStep();
-                }
-            }
+                    PrefsHelper.removeKey(context, "inputPinNumber");
+                    PrefsHelper.write("inputPinNumber", inputPinNumber);
 
 
+                    //  6자리가 되면 키패드 랜덤 배열 및 UI 초기화 진행 - jhm 2022/10/17
+                    PinNumRandom(); // 키패드 초기화 및 숫자 재배열 - jhm 2022/06/28
+                    setActiveReset(); // UI 변경 - jhm 2022/06/28
 
-        }
-    }
+                    // 비밀번호 재입력 진행 - jhm 2022/10/17
+                    if (passCodeVerifyList.size() == 0) {
+                        passCodeVerifyList.addAll(passCodeModelList);
+                        passCodeModelList.clear(); // 첫번째 입력 비밀번호 Array 초기화 - jhm 2022/10/18
+                        KeyPad("1");
+                        binding.passcodeTitleC.setText(context.getString(R.string.passcode_title_re));
+                    } else {
+                        // 첫번째 비밀번호 입력값 사이즈와 두번째 입력값 사이즈 비교 - jhm 2022/10/18
+                        if (passCodeModelList.size() == passCodeVerifyList.size()) {
+                            // 사이즈 동일하며, 서로 값이 일치하면 - jhm 2022/10/18
+                            if (passCodeModelList.containsAll(passCodeVerifyList)) {
+                                LogUtil.logE("첫번째 ArrayList : " + passCodeModelList.toArray());
+                                LogUtil.logE("두번째 ArrayList : " + passCodeVerifyList.toArray());
+                                LogUtil.logE("입력한 두 Array 가 모두 동일");
 
-    // 더보기 -> 내정보 -> 인증 및 보안 으로 들어온 케이스에만 실행 - jhm 2022/09/16
-    public void MorePinUpdate() {
-        // 입력한 비밀번호와 이전에 등록되어있던 비밀번호가 다르다면 - jhm 2022/09/16
-        if (!inputPinNumber.equals(pinNumber)) {
-            binding.passcodeTitleVerify.setVisibility(View.VISIBLE);
-        }
-        // 그렇지 않다면 - jhm 2022/09/16
-        else {
-            // 변경할 비밀번호 입력 - jhm 2022/09/16
-            PinNumberReUpdate();
-        }
-//        PinNumRandom(); // 간편 비밀번호 0~9 위치 랜덤 - jhm 2022/06/27
-//        PinNumberClear(); // 간편 비밀번호 입력값 모두 초기화 - jhm 2022/06/27
-//        KeyPadOnClick(); // 키패드 입력 로직 - jhm 2022/06/27
-
-
-
-    }
-
+                                Intent intent = getIntent();
+                                Bundle bundle = intent.getExtras();
 
 
-    // 화면 재진입시 핀번호 입력 1회 - jhm 2022/07/05
-    public void PinNumOneStep() {
-        setActiveReset();
-        setActiveChk();
-        KeyPadOnClick();
-        PinNumberClear();
+                                pinNumber = PrefsHelper.read("inputPinNumber", "");
 
-        getAuthTokenViewModel.getAuthTokenData().observe(this, new Observer<BaseDTO>() {
-            @Override
-            public void onChanged(BaseDTO baseDTO) {
-                if (baseDTO != null) {
-                    LogUtil.logE("dto not null..");
-                    if (baseDTO.getStatus().equals("OK")) {
-                        // accessToken 검증 성공 후 pin 인증 - jhm 2022/08/11
-                        // 회원 PIN 번호 검증
-                        authPinViewModel.getAuthData().observe(Objects.requireNonNull(binding.getLifecycleOwner()), new Observer<AuthPinDTO>() {
-                            @Override
-                            public void onChanged(AuthPinDTO authPinDTO) {
-                                if (authPinDTO != null) {
-                                    if (authPinDTO.getStatus().equals("OK")) {
-                                        Intent go_success = new Intent(context, MainActivity.class);
-                                        startActivity(go_success);
-                                        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                                        finish();
-                                    } else {
-                                        PinNumberReset();
+                                user_name = PrefsHelper.read("name", "");
+//                                String deviceId = DeviceInfoUtil.getDeviceId(context);
+                                String deviceId = DeviceInfoUtil.getUUID(context);
+                                PrefsHelper.write("deviceId", deviceId);
+
+                                LogUtil.logE("최초 로그인 시도");
+                                DeviceInfoModel deviceInfo = new DeviceInfoModel(
+                                        deviceId,
+                                        "MDO0101",
+                                        "",
+                                        "",
+                                        PrefsHelper.read("fcmToken",""));
+
+                                NotificationInfoModel notificationInfo = new NotificationInfoModel(
+                                        "Y",
+                                        "Y",
+                                        "Y",
+                                        "Y"
+                                );
+
+                                ArrayList<ConsentList> consentList = bundle.getParcelableArrayList("consentList");
+                                for (int index = 0; index < consentList.size(); index++) {
+                                    consent.add(new ConsentModel(
+                                            consentList.get(index).getConsentCode(),
+                                            "Y"
+                                    ));
+                                }
+
+                                // 다음 회원가입 Join 진행 - jhm 2022/06/30
+                                memberJoinViewModel = new ViewModelProvider(this).get(MemberJoinViewModel.class);
+
+                                // db에 생년월일 insert 시 "-" 추가 - jhm 2022/07/06
+                                String userBirth = bundle.getString("birthDay");
+                                userBirth = userBirth.substring(0, 4) + "-" + userBirth.substring(4, 6) + "-" + userBirth.substring(6, 8);
+
+                                joinModel = new JoinModel(
+                                        user_name,
+                                        pinNumber,
+                                        bundle.getString("cellPhoneNo"),
+                                        userBirth,
+                                        bundle.getString("ci"),
+                                        bundle.getString("di"),
+                                        bundle.getString("gender"),
+                                        bundle.getString("isFido"),
+                                        deviceInfo,
+                                        notificationInfo,
+                                        consent
+                                );
+
+                                Gson gson = new Gson();
+
+                                // 회원가입 진행 - jhm 2022/10/18
+                                memberJoinViewModel.postCallJoinData(joinModel);
+                                memberJoinViewModel.joinData.observe(binding.getLifecycleOwner(), new Observer<JoinDTO>() {
+                                    @Override
+                                    public void onChanged(JoinDTO joinDTO) {
+                                        LogUtil.logE("joinVO : " + gson.toJson(joinDTO));
+
+
+                                        // 성공 후 Shared를 통하여 저장한다. - jhm 2022/07/03
+                                        PrefsHelper.write("name", user_name);
+                                        PrefsHelper.write("inputPinNumber", pinNumber);
+
+                                        PrefsHelper.write("isJoin", "true"); // 자동로그인 여부 - jhm 2022/07/06
+                                        PrefsHelper.write("pinNumChk", "false"); // 비밀번호 재설정 여부 - jhm 2022/07/06
+
+                                        PrefsHelper.write("accessToken", joinDTO.getData().getAccessToken());
+                                        PrefsHelper.write("deviceId", joinDTO.getData().getDeviceId());
+                                        PrefsHelper.write("expiredAt", joinDTO.getData().getExpiredAt());
+                                        PrefsHelper.write("memberId", joinDTO.getData().getMemberId()); // 화면 재진입시 해당값이 없으면 최초 로그인 시도 - jhm 2022/10/18
+                                        PrefsHelper.write("refreshToken", joinDTO.getData().getRefreshToken());
+
+
                                     }
-                                } else {
-                                    PinNumberReset();
+                                });
+
+                                // 회원가입 성공 후 토큰 발급 진행완료 - jhm 2022/07/01
+                                Intent go_success = new Intent(context, JoinSuccessActivity.class);
+                                go_success.putExtra("name", user_name);
+                                startActivity(go_success);
+                                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                                finish();
+                            }
+                            // 사이즈는 같지만 서로 입력한 비밀번호 Array 값이 다름 - jhm 2022/10/18
+                            else {
+                                // 처음부터 새로 입력받는다. - jhm 2022/06/30
+                                LogUtil.logE("사이즈는 같지만 값이 서로 다름");
+                                binding.passcodeTitleVerify.setVisibility(View.VISIBLE);
+                                passCodeModelList.clear();
+                                passCodeVerifyList.clear();
+                                setActiveReset();
+                                KeyPad("1");
+                            }
+                        }
+                    }
+                }
+                break;
+
+            // 최초 로그인이 아니고 간편비밀번호 1번만 입력하는 로직 - jhm 2022/10/18
+            case "2":
+                setActiveChk(); // UI 변경 - jhm 2022/07/05
+
+                LogUtil.logE("2");
+
+                // 입력한 값이 6자리일때
+                if (passCodeModelList.size() == 6) {
+                    // 입력받은 핀번호를 저장한다. - jhm 2022/07/06
+                    inputPinNumber = passCodeModelList.get(0) + passCodeModelList.get(1) + passCodeModelList.get(2)
+                            + passCodeModelList.get(3) + passCodeModelList.get(4) + passCodeModelList.get(5);
+
+                    // 저장되어있는 비밀번호와 입력한 비밀번호 일치 여부 판별 - jhm 2022/10/18
+                    if (!PrefsHelper.read("inputPinNumber", "").equals(inputPinNumber)) {
+                        // 검증 실패시 간편비밀번호 재설정 Dialog 출력 - jhm 2022/10/18
+                        binding.passcodeTitleVerify.setVisibility(View.VISIBLE); // 비밀번호가 일치하지 않아요 text
+                        PinNumberReset();
+                    } else {
+                        // 토큰 검증 - jhm 2022/10/18
+                        getAuthTokenViewModel.getAuthTokenData().observe(this, new Observer<BaseDTO>() {
+                            @Override
+                            public void onChanged(BaseDTO baseDTO) {
+                                try {
+                                    if (baseDTO != null) {
+                                        if (baseDTO.getStatus().equals("OK")) {
+                                            // accessToken 검증 후 회원 PIN 번호 검증 - jhm 2022/10/18
+                                            authPinViewModel.getAuthData().observe(Objects.requireNonNull(binding.getLifecycleOwner()), new Observer<AuthPinDTO>() {
+                                                @Override
+                                                public void onChanged(AuthPinDTO authPinDTO) {
+                                                    try {
+                                                        if (authPinDTO != null) {
+                                                            if (authPinDTO.getStatus().equals("OK")) {
+                                                                // 검증 완료 후 MainActivity 이동 - jhm 2022/10/18
+                                                                Intent go_success = new Intent(context, MainActivity.class);
+                                                                startActivity(go_success);
+                                                                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                                                                finish();
+                                                            } else {
+                                                                // 검증 실패시 간편비밀번호 재설정 Dialog 출력 - jhm 2022/10/18
+                                                                binding.passcodeTitleVerify.setVisibility(View.VISIBLE); // 비밀번호가 일치하지 않아요 text
+                                                                PinNumberReset();
+                                                            }
+                                                        } else {
+                                                            // 검증 실패시 간편비밀번호 재설정 Dialog 출력 - jhm 2022/10/18
+                                                            binding.passcodeTitleVerify.setVisibility(View.VISIBLE); // 비밀번호가 일치하지 않아요 text
+                                                            PinNumberReset();
+                                                        }
+                                                    } catch (Exception e) {
+                                                        e.printStackTrace();
+                                                        LogUtil.logE("Pin 검증 Error !");
+                                                    }
+                                                }
+                                            });
+                                        }
+                                    } else {
+                                        // accessToken 검증 실패시 토큰 재발행 후 재검증 - jhm 2022/10/18
+                                        String deviceId = PrefsHelper.read("deviceId", "");
+                                        String grantType = "authorization_code";
+                                        String memberId = PrefsHelper.read("memberId", "");
+
+                                        Call<PostTokenDTO> postToken = ApiModule.INSTANCE.provideRetrofit().create(RetrofitService.class).postAccessToken(
+                                                deviceId,
+                                                grantType,
+                                                memberId
+                                        );
+
+                                        postToken.enqueue(new Callback<PostTokenDTO>() {
+                                            @Override
+                                            public void onResponse(Call<PostTokenDTO> call, Response<PostTokenDTO> response) {
+                                                try {
+                                                    if (response.body().getData() != null) {
+                                                        PrefsHelper.removeToken("expiredAt");
+                                                        PrefsHelper.removeToken("accessToken");
+                                                        PrefsHelper.removeToken("refreshToken");
+
+                                                        PrefsHelper.write("expiredAt", response.body().getData().getExpiredAt());
+                                                        PrefsHelper.write("accessToken", response.body().getData().getAccessToken());
+                                                        PrefsHelper.write("refreshToken", response.body().getData().getRefreshToken());
+
+
+                                                        Intent go_success = new Intent(context, MainActivity.class);
+                                                        startActivity(go_success);
+                                                        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                                                        finish();
+                                                    }
+                                                } catch (Exception ex) {
+                                                    ex.printStackTrace();
+                                                    LogUtil.logE("Token 재 생성 실패..");
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onFailure(Call<PostTokenDTO> call, Throwable t) {
+                                                t.printStackTrace();
+                                                LogUtil.logE("POST member/auth Fail..");
+                                            }
+                                        });
+                                    }
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                    LogUtil.logE("토큰 검증 catch Error !");
                                 }
                             }
                         });
                     }
-                } else {
-                    // accessToken 검증 실패시 accessToken refresh - jhm 2022/08/11
-                    LogUtil.logE("accessToken 검증 실패.. token refresh 진행");
+                }
 
-                    String accessToken = PrefsHelper.read("accessToken", "");
-                    String deviceId = PrefsHelper.read("deviceId", "");
-                    String memberId = PrefsHelper.read("memberId", "");
-                    String refreshToken = PrefsHelper.read("refreshToken", "");
+                break;
 
-                    LogUtil.logE("accessToken : " + accessToken);
-                    LogUtil.logE("deviceId : " + deviceId);
-                    LogUtil.logE("memberId : " + memberId);
-                    LogUtil.logE("refreshToken : " + refreshToken);
+            case "3":
+                setActiveChk(); // UI 변경 - jhm 2022/07/05
+                // 입력한 값이 6자리일때
+                if (passCodeModelList.size() == 6) {
+                    // 입력받은 핀번호를 저장한다. - jhm 2022/07/06
+                    inputPinNumber = passCodeModelList.get(0) + passCodeModelList.get(1) + passCodeModelList.get(2)
+                            + passCodeModelList.get(3) + passCodeModelList.get(4) + passCodeModelList.get(5);
 
-                    HashMap<String, String> map = new HashMap<>();
-                    map.put("accessToken", "Bearer " + accessToken);
-                    map.put("deviceId", deviceId);
-                    map.put("grantType", "refresh_token");
-                    map.put("memberId", memberId);
-                    map.put("refreshToken", refreshToken);
+                    // 입력한 비밀번호와 등록되어있던 비밀번호 일치 여부 판별 - jhm 2022/10/18
+                    if (!PrefsHelper.read("inputPinNumber", "").equals(inputPinNumber)) {
+                        LogUtil.logE("비밀번호 불일치");
+                        binding.passcodeTitleVerify.setVisibility(View.VISIBLE);
+                        //  6자리가 되면 키패드 랜덤 배열 및 UI 초기화 진행 - jhm 2022/10/17
+                        PinNumRandom(); // 키패드 초기화 및 숫자 재배열 - jhm 2022/06/28
+                        setActiveReset(); // UI 변경 - jhm 2022/06/28
+                        passCodeModelList.clear();
+                        passCodeVerifyList.clear();
+                    } else {
+                        LogUtil.logE("현재 등록되어있는 비밀번호와 일치");
+                        //  6자리가 되면 키패드 랜덤 배열 및 UI 초기화 진행 - jhm 2022/10/17
+                        PinNumRandom(); // 키패드 초기화 및 숫자 재배열 - jhm 2022/06/28
+                        setActiveReset(); // UI 변경 - jhm 2022/06/28
+                        passCodeModelList.clear();
+                        passCodeVerifyList.clear();
+
+                        PinNumberUpdate();
+                    }
+                }
+                break;
 
 
-                    Call<PostTokenDTO> postToken = ApiModule.INSTANCE.provideRetrofit().create(RetrofitService.class).putRefreshToken(map);
-                    postToken.enqueue(new Callback<PostTokenDTO>() {
-                        @Override
-                        public void onResponse(Call<PostTokenDTO> call, Response<PostTokenDTO> response) {
-                            try {
-                                if (response.isSuccessful()) {
-                                    LogUtil.logE("isSuccess Refresh..");
-                                    PrefsHelper.removeToken("expiredAt");
-                                    PrefsHelper.removeToken("accessToken");
-                                    PrefsHelper.removeToken("refreshToken");
+            // 비밀번호 변경처리 - jhm 2022/10/18
+            case "4":
+                LogUtil.logE("비밀번호 변경 처리");
+                setActiveChk(); // UI 변경 - jhm 2022/07/05
 
-                                    PrefsHelper.write("expiredAt", response.body().getData().getExpiredAt());
-                                    PrefsHelper.write("accessToken", response.body().getData().getAccessToken());
-                                    PrefsHelper.write("refreshToken", response.body().getData().getRefreshToken());
+                // 입력한 값이 6자리일때
+                if (passCodeModelList.size() == 6) {
+                    LogUtil.logE("변경할 비밀번호 6자리 입력 완료");
 
-                                    LogUtil.logE("expiredAt : " + response.body().getData().getExpiredAt());
-                                    LogUtil.logE("accessToken : " + response.body().getData().getAccessToken());
-                                    LogUtil.logE("refreshToken : " + response.body().getData().getRefreshToken());
+                    // 입력받은 핀번호를 저장한다. - jhm 2022/07/06
+                    inputPinNumber = passCodeModelList.get(0) + passCodeModelList.get(1) + passCodeModelList.get(2)
+                            + passCodeModelList.get(3) + passCodeModelList.get(4) + passCodeModelList.get(5);
 
-                                    Intent go_success = new Intent(context, MainActivity.class);
-                                    startActivity(go_success);
-                                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                                    finish();
-                                }
-                            } catch (Exception ex) {
-                                // 에러발생시 초기 화면으로 return 시키기 - jhm 2022/08/22
-                                LogUtil.logE("response fail.. " + response.body().getStatus());
-                                LogUtil.logE("response fail.. " + response.body().getMessage());
-                                PinNumberReset();
-                                ex.printStackTrace();
+                    //  6자리가 되면 키패드 랜덤 배열 및 UI 초기화 진행 - jhm 2022/10/17
+                    PinNumRandom(); // 키패드 초기화 및 숫자 재배열 - jhm 2022/06/28
+                    setActiveReset(); // UI 변경 - jhm 2022/06/28
+
+                    // 비밀번호 재입력 진행 - jhm 2022/10/17
+                    if (passCodeVerifyList.size() == 0) {
+                        passCodeVerifyList.addAll(passCodeModelList);
+                        passCodeModelList.clear(); // 첫번째 입력 비밀번호 Array 초기화 - jhm 2022/10/18
+                        KeyPad("4");
+                        binding.passcodeTitleC.setText(context.getString(R.string.passcode_title_re));
+                    } else {
+                        // 첫번째 비밀번호 입력값 사이즈와 두번째 입력값 사이즈 비교 - jhm 2022/10/18
+                        if (passCodeModelList.size() == passCodeVerifyList.size()) {
+                            // 사이즈 동일하며, 서로 값이 일치하면 - jhm 2022/10/18
+                            if (passCodeModelList.containsAll(passCodeVerifyList)) {
+                                LogUtil.logE("입력한 두 Array 가 모두 동일");
+
+                                PrefsHelper.removeKey(context, "inputPinNumber");
+                                PrefsHelper.write("inputPinNumber", inputPinNumber);
+
+                                memberId = PrefsHelper.read("memberId","");
+                                memberPinModel = new MemberPinModel(memberId, inputPinNumber);
+                                authPinPutViewModel.putCallAuthPinData(memberPinModel);
+
+                                DialogManager.INSTANCE.openDalog(context, "비밀번호 변경 완료", "확인을 누르면 설정으로 이동해요.", this);
+
+                            }
+                            // 사이즈는 같지만 서로 입력한 비밀번호 Array 값이 다름 - jhm 2022/10/18
+                            else {
+                                // 처음부터 새로 입력받는다. - jhm 2022/06/30
+                                LogUtil.logE("사이즈는 같지만 값이 서로 다름");
+                                binding.passcodeTitleC.setText(context.getString(R.string.passcode_title_c));
+                                binding.passcodeTitleVerify.setVisibility(View.VISIBLE);
+                                passCodeModelList.clear();
+                                passCodeVerifyList.clear();
+                                setActiveReset();
+                                KeyPad("4");
                             }
 
                         }
-
-                        @Override
-                        public void onFailure(Call<PostTokenDTO> call, Throwable t) {
-                            LogUtil.logE("isFail Refresh..");
-                            PinNumberReset();
-                        }
-                    });
+                    }
                 }
-            }
-        });
+                break;
+
+            //  - jhm 2022/10/21
+            case "5":
+                setActiveChk(); // UI 변경 - jhm 2022/07/05
+                // 입력한 값이 6자리일때
+                if (passCodeModelList.size() == 6) {
+                    // 입력받은 핀번호를 저장한다. - jhm 2022/07/06
+                    inputPinNumber = passCodeModelList.get(0) + passCodeModelList.get(1) + passCodeModelList.get(2)
+                            + passCodeModelList.get(3) + passCodeModelList.get(4) + passCodeModelList.get(5);
+
+                    // 입력한 비밀번호와 등록되어있던 비밀번호 일치 여부 판별 - jhm 2022/10/18
+                    if (!PrefsHelper.read("inputPinNumber", "").equals(inputPinNumber)) {
+                        LogUtil.logE("비밀번호 불일치");
+                        binding.passcodeTitleVerify.setVisibility(View.VISIBLE);
+                        //  6자리가 되면 키패드 랜덤 배열 및 UI 초기화 진행 - jhm 2022/10/17
+                        PinNumRandom(); // 키패드 초기화 및 숫자 재배열 - jhm 2022/06/28
+                        setActiveReset(); // UI 변경 - jhm 2022/06/28
+                        passCodeModelList.clear();
+                        passCodeVerifyList.clear();
+                    } else {
+                        LogUtil.logE("피스 구매 완료 처리 진행..");
+
+                        Intent intent = new Intent(this , PurchaseLoadingActivity.class);
+                        overridePendingTransition(
+                                android.R.anim.fade_in,
+                                android.R.anim.fade_out
+                        );
+                        startActivity(intent);
+                        finish();
+
+                    }
+                }
+                break;
+        }
     }
 
+    // 회원 PIN 번호 변경 - jhm 2022/10/18
+    public void PinNumberUpdate() {
+        LogUtil.logE("회원 PIN 번호 변경");
+        binding.passcodeTitleC.setText("새로운 비밀번호를 입력해 주세요.");
+        setActiveChk(); // UI 변경 - jhm 2022/07/05
+        setActiveReset();
+
+        KeyPad("4");
+    }
 
     // 간편비밀번호 재설정 Dialog - jhm 2022/07/05
     public void PinNumberReset() {
+        LogUtil.logE("간편비밀번호 재등록 필요..");
         // 실패시 비밀번호 재설정 - jhm 2022/07/05
         CustomDialogListener customDialogListener = new CustomDialogListener() {
             @Override
             public void onCancelButtonClicked() {
-
+                // 닫기 버튼 누른 후 로직 - jhm 2022/07/04
+                passCodeModelList.clear(); // 기존 ArrayList 초기화 - jhm 2022/06/28
+                setActiveReset();
+                binding.passcodeTitleVerify.setVisibility(View.GONE); // 비밀번호가 일치하지 않아요 text
             }
 
             @Override
             public void onOkButtonClicked() {
-            }
-        };
-        CustomDialogPassCodeListener customDialogPassCodeListener = new CustomDialogPassCodeListener() {
-            @Override
-            public void onCancleButtonClicked() {
-                LogUtil.logE("닫기 onclick..");
-                customDialog.dismiss();
-
-                // 닫기 버튼 누른 후 로직 - jhm 2022/07/04
-                passCodeModelList.clear(); // 기존 ArrayList 초기화 - jhm 2022/06/28
-                setActiveReset();
-                binding.passcodeTitleVerify.setVisibility(View.VISIBLE); // 비밀번호가 일치하지 않아요 text
-                KeyPadOnClick();
-            }
-
-            @Override
-            public void onRetryPassCodeButtonClicked() {
                 LogUtil.logE("비밀번호 재설정");
                 PrefsHelper.write("pinNumChk", "true");
                 pinNumber = "";
                 passCodeModelList.clear(); // 기존 ArrayList 초기화 - jhm 2022/06/28
-                customDialog.dismiss();
                 Intent go_join = new Intent(context, JoinActivity.class);
                 context.startActivity(go_join);
                 finish();
+
+                binding.passcodeTitleVerify.setVisibility(View.GONE); // 비밀번호가 일치하지 않아요 text
             }
         };
-        customDialog = new CustomDialog(context, Division.DIALOG_C_PASSWORD, customDialogListener, customDialogPassCodeListener);
-        customDialog.show();
-        LogUtil.logE("간편비밀번호 재등록 필요..");
+
+        DialogManager.INSTANCE.openTwoBtnDialog(context, "비밀번호가 틀렸어요", "비밀번호를 잊으셨나요?", customDialogListener, "비밀번호 재설정");
+
     }
 
-
-    // 로그인 기록이 없어서 최초 pinNumber 등록 - jhm 2022/07/05
-    public void PinNumTwoStep() {
-        PinNumRandom(); // 키패드 초기화 및 숫자 재배열 - jhm 2022/06/28
-        setActiveReset(); // UI 변경 - jhm 2022/06/28
-        setActiveChk(); // UI 변경 - jhm 2022/07/05
-        PinNumberValidate(Division.PIN_VIEWTYPE_1); // PinNumber - jhm 2022/07/05
-    }
-
-    // 로그인 기록이 있지만 비밀번호 변경으로 들어온 경우 - jhm 2022/07/05
-    public void PinNumberUpdate() {
-        PinNumRandom(); // 키패드 초기화 및 숫자 재배열 - jhm 2022/06/28
-        setActiveReset(); // UI 변경 - jhm 2022/06/28
-        setActiveChk(); // UI 변경 - jhm 2022/07/05
-        PinNumberValidate(Division.PIN_VIEWTYPE_2); // PinNumber - jhm 2022/07/05
-    }
-
-    // 더보기 -> 비밀번호 재설정으로 들어온 경우 - jhm 2022/09/16
-    private void PinNumberReUpdate() {
-        PinNumRandom(); // 키패드 초기화 및 숫자 재배열 - jhm 2022/06/28
-        setActiveReset(); // UI 변경 - jhm 2022/06/28
-        setActiveChk(); // UI 변경 - jhm 2022/07/05
-        PinNumberValidate(Division.PIN_VIEWTYPE_2); // PinNumber - jhm 2022/07/05
-    }
-
-
-    // 비밀번호 최초 입력 후 재입력 검증 로직 - jhm 2022/06/28
-    public void PinNumberValidate(String division) {
-        if (passCodeVerifyList.size() == 0) {
-            passCodeVerifyList.addAll(passCodeModelList);
-            passCodeModelList.clear(); // 기존 ArrayList 초기화 - jhm 2022/06/28
-            setActiveReset();
-            KeyPadOnClick();
-            binding.passcodeTitleC.setText(context.getString(R.string.passcode_title_re));
-        } else {
-            System.out.println("passCodeVerifyList 사이즈가 0 이 아님");
-            // 입력받은 Array 사이즈 동일한지 체크 - jhm 2022/06/30
-            if (passCodeModelList.size() == passCodeVerifyList.size()) {
-                // 사이즈가 동일하다면 전체 값을 비교 - jhm 2022/06/30
-                // 값이 동일하다면 - jhm 2022/06/30
-                if (passCodeModelList.containsAll(passCodeVerifyList)) {
-                    System.out.println("두 값이 동일");
-
-                    System.out.println(passCodeModelList.toString());
-                    System.out.println(passCodeVerifyList.toString());
-
-                    Intent intent = getIntent();
-                    Bundle bundle = intent.getExtras();
-
-                    user_name = PrefsHelper.read("name", "");
-                    PrefsHelper.write("inputPinNumber", inputPinNumber);
-                    pinNumber = PrefsHelper.read("inputPinNumber", ""); // 입력받아 저장해놓은 핀번호를 불러온다.
-
-                    LogUtil.logE("user_name : " + user_name);
-                    LogUtil.logE("inputPinNumber : " + pinNumber);
-                    // 기기 ID - jhm 2022/06/30
-                    String deviceId = DeviceInfoUtil.getDeviceId(context);
-                    PrefsHelper.write("deviceId", deviceId);
-
-
-                    if (division.equals("최초")) {
-                        LogUtil.logE("최초로 실행.." + division);
-                        DeviceInfoModel deviceInfo = new DeviceInfoModel(
-                                deviceId,
-                                "MDO0101",
-                                "",
-                                "",
-                                PushToken);
-
-                        NotificationInfoModel notificationInfo = new NotificationInfoModel(
-                                "Y",
-                                "Y",
-                                "Y",
-                                "Y"
-                        );
-
-                        ArrayList<ConsentList> consentList = bundle.getParcelableArrayList("consentList");
-                        for (int index = 0; index < consentList.size(); index++) {
-                            consent.add(new ConsentModel(
-                                    consentList.get(index).getConsentCode(),
-                                    "Y"
-                            ));
-                        }
-
-                        // 다음 회원가입 Join 진행 - jhm 2022/06/30
-                        memberJoinViewModel = new ViewModelProvider(this).get(MemberJoinViewModel.class);
-
-                        // db에 생년월일 insert 시 "-" 추가 - jhm 2022/07/06
-                        String userBirth = bundle.getString("birthDay");
-                        userBirth = userBirth.substring(0, 4) + "-" + userBirth.substring(4, 6) + "-" + userBirth.substring(6, 8);
-
-
-                        joinModel = new JoinModel(
-                                user_name,
-                                pinNumber,
-                                bundle.getString("cellPhoneNo"),
-                                userBirth,
-                                bundle.getString("ci"),
-                                bundle.getString("di"),
-                                bundle.getString("gender"),
-                                bundle.getString("isFido"),
-                                deviceInfo,
-                                notificationInfo,
-                                consent
-                        );
-
-                        Gson gson = new Gson();
-                        System.out.println("joinModel : " + gson.toJson(joinModel));
-                        // 회원가입 진행 - jhm 2022/06/30
-                        memberJoinViewModel.postCallJoinData(joinModel);
-                        // 진행 후 리턴 데이터를 받는다. - jhm 2022/06/30
-                        memberJoinViewModel.joinData.observe(binding.getLifecycleOwner(), new Observer<JoinDTO>() {
-                            @Override
-                            public void onChanged(JoinDTO joinDTO) {
-                                LogUtil.logE("joinVO : " + gson.toJson(joinDTO));
-
-
-                                // 성공 후 Shared를 통하여 저장한다. - jhm 2022/07/03
-                                PrefsHelper.init(context);
-                                PrefsHelper.write("name", user_name);
-                                PrefsHelper.write("inputPinNumber", pinNumber);
-
-                                PrefsHelper.write("isJoin", "true"); // 자동로그인 여부 - jhm 2022/07/06
-                                PrefsHelper.write("pinNumChk", "false"); // 비밀번호 재설정 여부 - jhm 2022/07/06
-
-                                PrefsHelper.write("accessToken", joinDTO.getData().getAccessToken());
-                                PrefsHelper.write("deviceId", joinDTO.getData().getDeviceId());
-                                PrefsHelper.write("expiredAt", joinDTO.getData().getExpiredAt());
-                                PrefsHelper.write("memberId", joinDTO.getData().getMemberId());
-                                PrefsHelper.write("refreshToken", joinDTO.getData().getRefreshToken());
-
-
-                            }
-                        });
-
-                        // 최초 실행 아니고 로그인 되어있는 상태에서 재 진입시 아래 로직 실행 - jhm 2022/08/08
-                    } else {
-
-                        authPinPutViewModel = new ViewModelProvider(this).get(AuthPinPutViewModel.class);
-                        String _memberId = PrefsHelper.read("memberId", "");
-                        pinNumber = PrefsHelper.read("inputPinNumber", "");
-                        LogUtil.logE("최초로그인 아니고 핀번호 검증 실행 : " + pinNumber);
-
-
-                        memberPinModel = new MemberPinModel(_memberId, pinNumber);
-                        authPinPutViewModel.putCallAuthPinData(memberPinModel);
-                        authPinPutViewModel.authPinData.observe(Objects.requireNonNull(binding.getLifecycleOwner()), new Observer<AuthPinDTO>() {
-                            @Override
-                            public void onChanged(AuthPinDTO authPinDTO) {
-                                LogUtil.logE("authPinDTO : " + authPinDTO.getStatus());
-                                PrefsHelper.write("inputPinNumber", pinNumber);
-
-                            }
-                        });
-                        PrefsHelper.write("pinNumChk", "false");
-                    }
-
-                    // 회원가입 성공 후 토큰 발급 진행완료 - jhm 2022/07/01
-                    Intent go_success = new Intent(context, JoinSuccessActivity.class);
-                    go_success.putExtra("name", user_name);
-                    startActivity(go_success);
-                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                    finish();
-                }
-                // 사이즈는 동일하지만 값이 다르면 - jhm 2022/06/30
-                else {
-                    // 처음부터 새로 입력받는다. - jhm 2022/06/30
-                    System.out.println("사이즈는 같지만 값이 다름");
-                    binding.passcodeTitleC.setText(context.getString(R.string.passcode_title_c));
-                    binding.passcodeTitleVerify.setVisibility(View.VISIBLE);
-                    passCodeModelList.clear();
-                    passCodeVerifyList.clear();
-                    setActiveReset();
-                    KeyPadOnClick();
-                }
-            }
-        }
-    }
 
     // 입력비밀번호 뒤에서부터 한자리씩 지우기 - jhm 2022/06/27
     public void PinNumberDelete() {
@@ -728,6 +732,25 @@ public class PassCodeActivity extends AppCompatActivity {
                 setActiveChk();
             }
         });
+    }
+
+    // 키패드에 랜덤으로 숫자를 뽑아 넣어준다. - jhm 2022/06/28
+    public void PinNumRandom() {
+        List<String> padList = new ArrayList<>();
+        for (int index = 0; index < 10; index++) {
+            padList.add(String.valueOf(index));
+        }
+        Collections.shuffle(padList);
+        passCodeViewModel.Code0.setValue(padList.get(0));
+        passCodeViewModel.Code1.setValue(padList.get(1));
+        passCodeViewModel.Code2.setValue(padList.get(2));
+        passCodeViewModel.Code3.setValue(padList.get(3));
+        passCodeViewModel.Code4.setValue(padList.get(4));
+        passCodeViewModel.Code5.setValue(padList.get(5));
+        passCodeViewModel.Code6.setValue(padList.get(6));
+        passCodeViewModel.Code7.setValue(padList.get(7));
+        passCodeViewModel.Code8.setValue(padList.get(8));
+        passCodeViewModel.Code9.setValue(padList.get(9));
     }
 
 
@@ -785,25 +808,13 @@ public class PassCodeActivity extends AppCompatActivity {
             binding.passcode4.setActivated(true);
             binding.passcode5.setActivated(true);
             binding.passcode6.setActivated(false);
-        } else if (passCodeModelList.size() == 6) {
+        } else {
             binding.passcode1.setActivated(true);
             binding.passcode2.setActivated(true);
             binding.passcode3.setActivated(true);
             binding.passcode4.setActivated(true);
             binding.passcode5.setActivated(true);
             binding.passcode6.setActivated(true);
-        }
-    }
-
-
-    public void AutoLogin() {
-        memberId = PrefsHelper.read("memberId", "");
-        LogUtil.logE("memberId : " + memberId);
-        // memberId가 공백이 아니면 이미 회원가입 프로세스를 진행한 것이므로 다음 로직 실행 - jhm 2022/07/03
-        if (!memberId.equals("")) {
-            passCodeModelList.clear();
-            setActiveReset();
-            KeyPadOnClick();
         }
     }
 }

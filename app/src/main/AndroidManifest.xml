@@ -40,14 +40,6 @@
             </intent-filter>
         </activity>
 
-        <service
-            android:name=".firebase.MyFirebaseMessagingService"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
-            </intent-filter>
-        </service>
-
         <activity
             android:name=".view.common.LoginChkActivity"
             android:screenOrientation="portrait" />
@@ -74,12 +66,22 @@
             android:name=".view.portfolioDetail.PortfolioDetailActivity"
             android:screenOrientation="portrait" />
 
+        <activity android:name=".view.purchase.PurchaseActivity"
+            android:screenOrientation="portrait"/>
+
         <activity
             android:name=".view.webview.MagazineDetailWebView"
             android:screenOrientation="portrait" />
 
         <activity
             android:name=".view.bookmark.BookMarkActivity"
+            android:screenOrientation="portrait" />
+
+
+        <!-- 내지갑 -->
+        <!-- 나의 예치금 잔액 상세 -->
+        <activity
+            android:name=".view.deposit.MyDepositActivity"
             android:screenOrientation="portrait" />
 
         <activity
@@ -94,18 +96,105 @@
             android:name=".view.webview.NoticeDetailWebView"
             android:screenOrientation="portrait" />
 
-        <activity android:name=".view.event.EventActivity"
+        <activity
+            android:name=".view.event.EventActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".view.webview.EventDetailWebView"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".view.coupon.CouponActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".view.certification.CertificationActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".view.deleteMember.DeleteMemberActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".view.deleteMember.DeleteMemberDetailActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".view.deleteMember.DeleteMemberSuccessActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".view.notisetting.NotificationSettingActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".view.consent.MoreConsentActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".view.question.QuestionActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".view.withdrawal.WithdrawalActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".view.withdrawal.WithdrawalNextActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".view.withdrawal.WithdrawSuccessActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".view.withdrawal.WithdrawFailActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".view.bank.BankSelectActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".view.bank.BankRegisterActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".view.bank.BankRegisterSuccessActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".view.deposit.DepositChargeActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".view.virtual.VirtualActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".view.virtual.VirtualSuccessActivity"
+            android:screenOrientation="portrait" />
+
+        <activity android:name=".view.purchaseDetail.PurchaseDetailActivity"
             android:screenOrientation="portrait"/>
 
-        <activity android:name=".view.webview.EventDetailWebView"
+        <activity android:name=".view.deed.DeedActivity"
             android:screenOrientation="portrait"/>
 
-        <activity android:name=".view.coupon.CouponActivity"
+        <activity android:name=".view.alarm.AlarmActivity"
             android:screenOrientation="portrait"/>
 
-        <activity android:name=".view.certification.CertificationActivity"
+        <activity android:name=".view.purchase.PurchaseLoadingActivity"
             android:screenOrientation="portrait"/>
 
+        <activity android:name=".view.purchase.PurchaseResultActivity"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".view.authentication.AuthenticationActivity"
+            android:screenOrientation="portrait"/>
 
     </application>
 

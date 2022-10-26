@@ -24,8 +24,9 @@ public class ConsentList implements Parcelable{
     private Integer displayOrder;
     private String createdAt;
     private String isAgreement;
+    private int viewType;
 
-    public ConsentList(boolean isChk ,String consentCode,String consentGroup,String consetTitle,String consetContents,String isMandatory,Integer displayOrder, String createdAt , String isAgreement){
+    public ConsentList(boolean isChk ,String consentCode,String consentGroup,String consetTitle,String consetContents,String isMandatory,Integer displayOrder, String createdAt , String isAgreement , int viewType){
         this.isChk = isChk;
         this.consentCode = consentCode;
         this.consentGroup = consentGroup;
@@ -35,6 +36,7 @@ public class ConsentList implements Parcelable{
         this.displayOrder = displayOrder;
         this.createdAt = createdAt;
         this.isAgreement = isAgreement;
+        this.viewType = viewType;
     }
 
     public ConsentList(Parcel src){
@@ -130,5 +132,13 @@ public class ConsentList implements Parcelable{
 
     public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public int getViewType() {
+        return viewType;
+    }
+
+    public void setViewType(int viewType) {
+        this.viewType = viewType;
     }
 }

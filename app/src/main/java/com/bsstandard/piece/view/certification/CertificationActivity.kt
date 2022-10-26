@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
@@ -11,6 +12,7 @@ import android.provider.Settings
 import android.util.Log
 import android.view.View
 import android.view.WindowInsetsController
+import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_STRONG
@@ -19,11 +21,16 @@ import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
 import com.bsstandard.piece.R
 import com.bsstandard.piece.base.BaseActivity
+import com.bsstandard.piece.data.datasource.local.room.AppDatabase
 import com.bsstandard.piece.data.datasource.shared.PrefsHelper
+import com.bsstandard.piece.data.viewmodel.GetUserViewModel
 import com.bsstandard.piece.databinding.ActivityAccessBinding
+import com.bsstandard.piece.view.deleteMember.DeleteMemberActivity
+import com.bsstandard.piece.view.intro.IntroActivity
 import com.bsstandard.piece.view.passcode.PassCodeActivity
 import com.bsstandard.piece.widget.utils.CommonTwoTypeDialog
 import com.bsstandard.piece.widget.utils.CustomDialogListener
+import com.bsstandard.piece.widget.utils.DialogManager.openAuthDialog
 import com.bsstandard.piece.widget.utils.LogUtil
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.concurrent.Executor
@@ -50,41 +57,60 @@ class CertificationActivity : BaseActivity<ActivityAccessBinding>(R.layout.activ
     val mContext: Context = this@CertificationActivity
 
     // 생체인증 등록시 필요한 Dialog - jhm 2022/09/15
+    // 로그아웃시 필요한 Dialog - jhm 2022/09/19
     private var commonTwoTypeModal: CommonTwoTypeDialog? = null
+
+
     private var status: Int? = null
 
     private lateinit var executor: Executor
     private lateinit var biometricPrompt: BiometricPrompt
     private lateinit var promptInfo: BiometricPrompt.PromptInfo
-    private var isFido: String? = ""
+    private var isFido: String? = PrefsHelper.read("isFido", "N");
+    //private var isFido:String = ""
+
+
+    private val mv by viewModels<GetUserViewModel>()
+
+    // 싱글톤 - jhm 2022/09/18
+    val db = AppDatabase.getInstance(mContext)
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding.lifecycleOwner = this@CertificationActivity
 
-        // UI Setting 최종 - jhm 2022/09/14
-        setStatusBarIconColor(true) // 상태바 아이콘 true : 검정색
-        setStatusBarBgColor("#ffffff") // 상태바 배경색상 설정
-        setNaviBarIconColor(true) // 네비게이션 true : 검정색
-        setNaviBarBgColor("#ffffff") // 네비게이션 배경색
+        binding.apply {
+
+            binding.lifecycleOwner = this@CertificationActivity
+
+            // UI Setting 최종 - jhm 2022/09/14
+            setStatusBarIconColor(true) // 상태바 아이콘 true : 검정색
+            setStatusBarBgColor("#ffffff") // 상태바 배경색상 설정
+            setNaviBarIconColor(true) // 네비게이션 true : 검정색
+            setNaviBarBgColor("#ffffff") // 네비게이션 배경색
 
 
-        // 생체인증 시작시 판별 - jhm 2022/09/16
-        status = BiometricManager.from(this).canAuthenticate()
-        if (status == BiometricManager.BIOMETRIC_SUCCESS) {
-            // 생체인증 사용 가능 - jhm 2022/09/16
-            isChecked()
-            LogUtil.logE("사용 가능")
-        } else {
-            // 생체인증 사용 불가능 - jhm 2022/09/16
-            isChecked()
-            LogUtil.logE("사용 불가능")
+            // 내정보 API - jhm 2022/09/03
+            memberVm = mv
+
+
+            // 생체인증 시작시 판별 - jhm 2022/09/16
+            status = BiometricManager.from(mContext).canAuthenticate()
+            if (status == BiometricManager.BIOMETRIC_SUCCESS) {
+                // 생체인증 사용 가능 - jhm 2022/09/16
+                isChecked()
+                LogUtil.logE("사용 가능")
+            } else {
+                // 생체인증 사용 불가능 - jhm 2022/09/16
+                isChecked()
+                LogUtil.logE("사용 불가능")
+            }
+
+
         }
 
-
-        executor = ContextCompat.getMainExecutor(this)
+        executor = ContextCompat.getMainExecutor(mContext)
         biometricPrompt = BiometricPrompt(this, executor,
             object : BiometricPrompt.AuthenticationCallback() {
                 override fun onAuthenticationError(
@@ -92,7 +118,7 @@ class CertificationActivity : BaseActivity<ActivityAccessBinding>(R.layout.activ
                     errString: CharSequence
                 ) {
                     super.onAuthenticationError(errorCode, errString)
-                    PrefsHelper.write("isFido", "N")
+                    PreferenceUtil(context = mContext).setString("isFido", "N")
                     LogUtil.logE("error : $errString")
                 }
 
@@ -100,13 +126,13 @@ class CertificationActivity : BaseActivity<ActivityAccessBinding>(R.layout.activ
                     result: BiometricPrompt.AuthenticationResult
                 ) {
                     super.onAuthenticationSucceeded(result)
-                    PrefsHelper.write("isFido", "Y")
+                    PreferenceUtil(context = mContext).setString("isFido", "Y")
                     LogUtil.logE("success : $result")
                 }
 
                 override fun onAuthenticationFailed() {
                     super.onAuthenticationFailed()
-                    PrefsHelper.write("isFido", "N")
+                    PreferenceUtil(context = mContext).setString("isFido", "N")
                     LogUtil.logE("failed..")
                 }
             })
@@ -118,91 +144,104 @@ class CertificationActivity : BaseActivity<ActivityAccessBinding>(R.layout.activ
             .build()
 
 
-        binding.switchBtn.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                if(PrefsHelper.read("isFido","").equals("N")) {
-                    // 체크된 상태로 만들시 실행- jhm 2022/09/15
-                    LogUtil.logE("isChecked : $isChecked")
+        binding.switchBtn.isChecked = PreferenceUtil(context = mContext).getString("isFido","N") != "N"
 
-                    val title: String = "생체인증 등록이 필요해요"
-                    val subTitle: String = "생체인증 등록을 진행해 주세요."
-                    val customDialogListener: CustomDialogListener =
-                        object : CustomDialogListener {
-                            @RequiresApi(Build.VERSION_CODES.R)
-                            override fun onOkButtonClicked() {
-                                LogUtil.logE("등록 OnClick..")
-                                commonTwoTypeModal?.dismiss()
-                                PrefsHelper.write("isFido", "Y")
-                                isChecked()
-                                authenticateToEncrypt()
-                            }
-
-                            override fun onCancelButtonClicked() {
-                                LogUtil.logE("뒤로 OnClick..")
-                                commonTwoTypeModal?.dismiss()
-                                PrefsHelper.write("isFido", "N")
-                                isChecked()
-                            }
-                        }
-                    commonTwoTypeModal = CommonTwoTypeDialog(
-                        context = mContext,
-                        "certification_on",
-                        customDialogListener,
-                        "",
-                        title,
-                        subTitle
-                    )
-                    commonTwoTypeModal?.show()
-                }
-            } else {
-                // 체크된 상태 취소시 실행 - jhm 2022/09/15
-                val title: String = "생체인증 해제"
-                val subTitle: String = "생체인증을 사용하지 않도록 설정할까요?"
-
-                val customDialogListener: CustomDialogListener =
-                    object : CustomDialogListener {
-                        override fun onOkButtonClicked() {
-                            LogUtil.logE("취소 OnClick..")
-                            commonTwoTypeModal?.dismiss()
-                            PrefsHelper.write("isFido", "N")
-                            isChecked()
-                        }
-
-                        override fun onCancelButtonClicked() {
-                            LogUtil.logE("확인 OnClick..")
-                            commonTwoTypeModal?.dismiss()
-                            PrefsHelper.write("isFido", "Y")
-                            isChecked()
-                        }
+        binding.switchBtn.setOnClickListener {
+            LogUtil.logE("등록시 OnClick..")
+            if(binding.switchBtn.isChecked) {
+                // 실패시 비밀번호 재설정 - jhm 2022/07/05
+                val customDialogListener: CustomDialogListener = object : CustomDialogListener {
+                    override fun onCancelButtonClicked() {
+                        // 닫기 버튼 누른 후 로직 - jhm 2022/07/04
+                        LogUtil.logE("닫기 OnClick..")
+                        binding.switchBtn.isChecked = false
+                        PreferenceUtil(context = mContext).setString("isFido", "N")
                     }
-                commonTwoTypeModal = CommonTwoTypeDialog(
-                    context = mContext,
-                    "certification_off",
-                    customDialogListener,
-                    "",
-                    title,
-                    subTitle
-                )
-                commonTwoTypeModal?.show()
 
+                    @RequiresApi(Build.VERSION_CODES.R)
+                    override fun onOkButtonClicked() {
+                        LogUtil.logE("생체인증 등록 OnClick..")
+                        binding.switchBtn.isChecked = true
+                        PreferenceUtil(context = mContext).setString("isFido", "Y")
+                        authenticateToEncrypt()
+                    }
+                }
+                openAuthDialog(mContext, "생체인증 등록이 필요해요", "생체인증 등록을 진행해 주세요.", customDialogListener,"생체인증 등록",binding.switchBtn.isChecked)
+            }
+            else {
+                LogUtil.logE("해제시 OnClick..")
+                // 실패시 비밀번호 재설정 - jhm 2022/07/05
+                val customDialogListener: CustomDialogListener = object : CustomDialogListener {
+                    override fun onCancelButtonClicked() {
+                        // 닫기 버튼 누른 후 로직 - jhm 2022/07/04
+                        LogUtil.logE("생체인증 해제 확인 OnClick..")
+                        binding.switchBtn.isChecked = false
+                        PreferenceUtil(context = mContext).setString("isFido", "N")
+                    }
+
+                    override fun onOkButtonClicked() {
+                        LogUtil.logE("생체인증 해제 취소 OnClick..")
+                        binding.switchBtn.isChecked = true
+                        PreferenceUtil(context = mContext).setString("isFido", "Y")
+                    }
+                }
+                openAuthDialog(mContext, "생체인증 해제", "생체인증을 사용하지 않도록 설정할까요?", customDialogListener,"생체인증 해제",binding.switchBtn.isChecked)
             }
         }
-        
-        
-        
-        
+
         // 간편 비밀번호 변경 layout Onclick - jhm 2022/09/16
         binding.passwordLayout.setOnClickListener {
             val intent = Intent(this, PassCodeActivity::class.java)
-            intent.putExtra("isRepassword","isRepassword")
+            intent.putExtra("Step", "3")
             startActivity(intent)
-            overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
+            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+        }
+
+
+        binding.logoutLayout.setOnClickListener {
+            val customDialogListener: CustomDialogListener =
+                object : CustomDialogListener {
+                    @RequiresApi(Build.VERSION_CODES.R)
+                    override fun onOkButtonClicked() {
+                        LogUtil.logE("로그아웃 OnClick..")
+                        PrefsHelper.removeKey(mContext, "memberId");
+                        commonTwoTypeModal?.dismiss()
+
+                        val intent = Intent(mContext, IntroActivity::class.java)
+                        Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+                        startActivity(intent)
+                        finishAffinity() // 이전 앱 화면 모두 제거 및 앱스택 제거 - jhm 2022/08/31
+                    }
+
+                    override fun onCancelButtonClicked() {
+                        LogUtil.logE("취소 OnClick..")
+                        commonTwoTypeModal?.dismiss()
+                    }
+                }
+
+            commonTwoTypeModal = CommonTwoTypeDialog(
+                context = mContext,
+                "logout",
+                customDialogListener,
+                "",
+                "",
+                ""
+            )
+            commonTwoTypeModal?.show()
+        }
+
+        binding.withdrawLayout.setOnClickListener {
+            val intent = Intent(this, DeleteMemberActivity::class.java)
+            startActivity(intent)
+            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         }
     }
 
     // 생체인증 사용 Y/N - jhm 2022/09/16
     private fun isChecked() {
-        isFido = PrefsHelper.read("isFido", "")
+//        isFido = db!!.userDao().getIsFido(PrefsHelper.read("name",""),isFido).toString()
+        isFido = PreferenceUtil(context = mContext).getString("isFido", "N")
         LogUtil.logE("isFido : $isFido")
 
         when (isFido) {
@@ -221,10 +260,10 @@ class CertificationActivity : BaseActivity<ActivityAccessBinding>(R.layout.activ
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == Activity.RESULT_OK) {
             Log.d(TAG, "registerForActivityResult - RESULT_OK")
-            PrefsHelper.write("isFido", "Y")
+            PreferenceUtil(context = mContext).setString("isFido", "Y")
             authenticateToEncrypt()  //생체 인증 가능 여부확인 다시 호출
         } else {
-            PrefsHelper.write("isFido", "N")
+            PreferenceUtil(context = mContext).setString("isFido", "N")
             binding.switchBtn.isChecked = false
             Log.d(TAG, "registerForActivityResult - NOT RESULT_OK")
         }
@@ -264,12 +303,14 @@ class CertificationActivity : BaseActivity<ActivityAccessBinding>(R.layout.activ
                 dialogBuilder
                     .setTitle("PIECE")
                     .setMessage("지문 등록이 필요합니다. 지문등록 설정화면으로 이동하시겠습니까?")
-                    .setPositiveButton("확인") { dialog, which ->
+                    .setPositiveButton("확인") { _, _ ->
                         goBiometricSettings()
                     }
                     .setNegativeButton("취소") { dialog, which ->
                         dialog.cancel()
-                        PrefsHelper.write("isFido", "N")
+//                        isFido = "Y"
+                        PreferenceUtil(context = mContext).setString("isFido", "N")
+//                        db!!.userDao().updateByIsFido("N",PrefsHelper.read("name","")) // update - jhm 2022/09/19
                         binding.switchBtn.isChecked = false
                     }
                 dialogBuilder.show()
@@ -289,9 +330,11 @@ class CertificationActivity : BaseActivity<ActivityAccessBinding>(R.layout.activ
     * */
     private fun goAuthenticate() {
         Log.d(TAG, "goAuthenticate - promptInfo : $promptInfo")
-        promptInfo?.let {
-            PrefsHelper.write("isFido", "Y")
-            biometricPrompt?.authenticate(it);  //인증 실행
+        promptInfo.let {
+            PreferenceUtil(context = mContext).setString("isFido", "Y")
+//            isFido = "Y"
+//            db!!.userDao().updateByIsFido("Y",PrefsHelper.read("name","")) // update - jhm 2022/09/19
+            biometricPrompt.authenticate(it);  //인증 실행
         }
     }
 
@@ -307,8 +350,25 @@ class CertificationActivity : BaseActivity<ActivityAccessBinding>(R.layout.activ
                 BIOMETRIC_STRONG or DEVICE_CREDENTIAL
             )
         }
+        PreferenceUtil(context = mContext).setString("isFido", "Y")
+
+//        isFido = "Y"
+        db!!.userDao().updateByIsFido("Y", PrefsHelper.read("name", "")) // update - jhm 2022/09/19
         startActivityForResult(enrollIntent, 0)
 //        loginLauncher.launch(enrollIntent)
+    }
+
+    class PreferenceUtil(context: Context) {
+        private val prefs: SharedPreferences =
+            context.getSharedPreferences("isFido", Context.MODE_PRIVATE)
+
+        fun setString(key: String, str: String) {
+            prefs.edit().putString(key, str).apply()
+        }
+
+        fun getString(key: String, defValue: String): String {
+            return prefs.getString(key, defValue).toString()
+        }
     }
 
 

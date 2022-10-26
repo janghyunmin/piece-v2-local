@@ -19,10 +19,13 @@ import com.bsstandard.piece.data.viewmodel.GetUserViewModel
 import com.bsstandard.piece.data.viewmodel.MoreViewModel
 import com.bsstandard.piece.databinding.FragmentMoreBinding
 import com.bsstandard.piece.view.certification.CertificationActivity
+import com.bsstandard.piece.view.consent.MoreConsentActivity
 import com.bsstandard.piece.view.coupon.CouponActivity
 import com.bsstandard.piece.view.event.EventActivity
 import com.bsstandard.piece.view.myInfo.MyInfoActivity
 import com.bsstandard.piece.view.notice.NoticeActivity
+import com.bsstandard.piece.view.notisetting.NotificationSettingActivity
+import com.bsstandard.piece.view.question.QuestionActivity
 import com.bsstandard.piece.widget.utils.LogUtil
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.disposables.Disposable
@@ -41,7 +44,7 @@ import io.reactivex.disposables.Disposable
 
 
 @AndroidEntryPoint
-class FragmentMore : Fragment(){
+class FragmentMore : Fragment() {
 
     private var _binding: FragmentMoreBinding? = null
     private val binding get() = _binding!!
@@ -65,9 +68,12 @@ class FragmentMore : Fragment(){
     override fun onDestroy() {
         super.onDestroy()
         disposable?.let { disposable!!.dispose() }
-
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 
     @SuppressLint("SetTextI18n")
     override fun onCreateView(
@@ -85,14 +91,14 @@ class FragmentMore : Fragment(){
         binding.lifecycleOwner = viewLifecycleOwner
 
 
-
-
         // 내정보 API - jhm 2022/09/03
         getUserViewModel = ViewModelProvider(this).get(GetUserViewModel::class.java)
         getUserViewModel!!.getUserData()
 
-        binding.userName.text = PrefsHelper.read("name","") + " 님"
-        binding.dateText.text = PrefsHelper.read("joinDay","") + "일"
+        binding.userName.text = PrefsHelper.read("name", "") + " 님"
+        binding.dateText.text = PrefsHelper.read("joinDay", "") + "일"
+
+        binding.version.text = "v." + PrefsHelper.read("appVersion","")
 
 
         myInfo() // 내정보 상세 - jhm 2022/09/11
@@ -100,6 +106,9 @@ class FragmentMore : Fragment(){
         goEvent() // 이벤트 - jhm 2022/09/11
         goCoupon() // 쿠폰함 - jhm 2022/09/13
         goAccess() // 인증 및 보안 - jhm 2022/09/15
+        goNotiSetting() // 알림 설정 - jhm 2022/09/21
+        goConsent() // 약관 및 개인정보 처리 등 동의 - jhm 2022/09/22
+        goQuestion() // 자주 묻는 질문 - jhm 2022/09/23
 
         return binding.root
     }
@@ -132,11 +141,11 @@ class FragmentMore : Fragment(){
         ) {
             LogUtil.logE("onclick..")
             val intent = Intent(context, MyInfoActivity::class.java)
-            context?.startActivity(intent)
             activity?.overridePendingTransition(
                 android.R.anim.fade_in,
                 android.R.anim.fade_out
             );
+            context?.startActivity(intent)
 
         }
     }
@@ -194,11 +203,57 @@ class FragmentMore : Fragment(){
         ) {
             LogUtil.logE("인증 및 보안 OnClick..")
             val intent = Intent(context, CertificationActivity::class.java)
-            context?.startActivity(intent)
             activity?.overridePendingTransition(
                 android.R.anim.fade_in,
                 android.R.anim.fade_out
             );
+            context?.startActivity(intent)
+
+        }
+    }
+
+    // 알림 및 설정 - jhm 2022/09/21
+    private fun goNotiSetting() {
+        vm.startNotiSetting.observe(
+            viewLifecycleOwner
+        ) {
+            LogUtil.logE("알림 설정 OnClick..")
+            val intent = Intent(context, NotificationSettingActivity::class.java)
+            activity?.overridePendingTransition(
+                android.R.anim.fade_in,
+                android.R.anim.fade_out
+            );
+            context?.startActivity(intent)
+        }
+    }
+
+    // 약관 및 개인정보 처리 등 동의 - jhm 2022/09/22
+    private fun goConsent() {
+        vm.startConsent.observe(
+            viewLifecycleOwner
+        ) {
+            LogUtil.logE("약관 및 개인정보 처리 등 동의")
+            val intent = Intent(context, MoreConsentActivity::class.java)
+            activity?.overridePendingTransition(
+                android.R.anim.fade_in,
+                android.R.anim.fade_out
+            );
+            context?.startActivity(intent)
+        }
+    }
+
+    // 자주 묻는 질문 - jhm 2022/09/23
+    private fun goQuestion() {
+        vm.startQuestion.observe(
+            viewLifecycleOwner
+        ) {
+            LogUtil.logE("자주 묻는 질문")
+            val intent = Intent(context, QuestionActivity::class.java)
+            activity?.overridePendingTransition(
+                android.R.anim.fade_in,
+                android.R.anim.fade_out
+            );
+            context?.startActivity(intent)
         }
     }
 }

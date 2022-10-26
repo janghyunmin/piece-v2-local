@@ -19,6 +19,8 @@ import io.reactivex.schedulers.Schedulers
  * -----------------------------------------------------------
  * 2022/09/11        piecejhm       최초 생성
  */
+
+
 class EventRepository(application: Application) {
     val response = ApiModule.provideRetrofit().create(RetrofitService::class.java)
 

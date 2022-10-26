@@ -10,7 +10,7 @@ import android.view.WindowInsetsController
 import androidx.lifecycle.ViewModelProvider
 import com.bsstandard.piece.R
 import com.bsstandard.piece.base.BaseActivity
-import com.bsstandard.piece.data.viewmodel.NoticeViewModel
+import com.bsstandard.piece.data.viewmodel.BoardViewModel
 import com.bsstandard.piece.databinding.ActivityNoticeBinding
 import com.bsstandard.piece.view.adapter.notice.NoticeAdapter
 import com.bsstandard.piece.view.webview.NoticeDetailWebView
@@ -31,16 +31,17 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class NoticeActivity : BaseActivity<ActivityNoticeBinding>(R.layout.activity_notice){
-    private lateinit var vm: NoticeViewModel
+    private lateinit var vm: BoardViewModel
     private val noticeBinding by lazy { ActivityNoticeBinding.inflate(layoutInflater) }
     //private val vm by viewModels<NoticeViewModel>()
     var mContext: Context = this@NoticeActivity
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        vm = ViewModelProvider(this@NoticeActivity)[NoticeViewModel::class.java]
-        vm.viewInit(binding.noticeRv)
+        vm = ViewModelProvider(this@NoticeActivity)[BoardViewModel::class.java]
+        vm.viewInit(binding.noticeRv,"공지사항")
 
         binding.noticeVm = vm
         binding.lifecycleOwner = this@NoticeActivity
@@ -52,7 +53,7 @@ class NoticeActivity : BaseActivity<ActivityNoticeBinding>(R.layout.activity_not
 
 
 
-        vm.getNotice()
+        vm.getNotice("BRT02", 10 , 1)
 
         vm.noticeAdapter.setOnItemClickListener(object : NoticeAdapter.OnItemClickListener {
             override fun onItemClick(v: View, boardId: String , boardTitle: String, date: String) {

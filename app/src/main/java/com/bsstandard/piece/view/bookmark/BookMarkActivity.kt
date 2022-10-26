@@ -118,16 +118,15 @@ class BookMarkActivity : BaseActivity<ActivityBookmarkBinding>(R.layout.activity
                         LogUtil.logE("v.isSelected : ${v.isSelected}")
                         LogUtil.logE("isFavorite : $isFavorite")
 
-                        //v.isSelected = !v.isSelected
+                        v.isSelected = !v.isSelected
 
-                        // - jhm 2022/08/29
+                        // deleteBookMark call - jhm 2022/08/29
                         response?.deleteBookMark(
                             "Bearer $accessToken",
                             deviceId,
                             memberId,
                             memberBookmarkRemoveModel
-                        )
-                            ?.enqueue(object : Callback<BaseDTO> {
+                        )?.enqueue(object : Callback<BaseDTO> {
                                 @SuppressLint("NotifyDataSetChanged")
                                 override fun onResponse(
                                     call: Call<BaseDTO>,

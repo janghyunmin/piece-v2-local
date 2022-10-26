@@ -20,7 +20,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 
 abstract class EndlessRecyclerViewScrollListener : RecyclerView.OnScrollListener {
     // 현재 스크롤 최소 항목 수
-    private var visibleThreshold = 5
+    private var visibleThreshold = 10
 
     // 로드한 데이터의 현재 오프셋 Index
     private var currentPage = 0

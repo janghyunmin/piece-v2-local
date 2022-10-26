@@ -40,8 +40,8 @@ public class AddressRepository {
         retrofitService = ApiModule.INSTANCE.provideRetrofit().create(RetrofitService.class);
     }
 
-    public MutableLiveData<LocationDTO> getAddressData(String keyword) {
-        Call<LocationDTO> addressCall = retrofitService.getSearchAddress(keyword);
+    public MutableLiveData<LocationDTO> getAddressData(String keyword , int countPerPage) {
+        Call<LocationDTO> addressCall = retrofitService.getSearchAddress(keyword,countPerPage);
         addressCall.enqueue(new Callback<LocationDTO>() {
             @Override
             public void onResponse(Call<LocationDTO> call, Response<LocationDTO> response) {

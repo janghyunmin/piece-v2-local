@@ -8,9 +8,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import androidx.databinding.DataBindingUtil
 import com.bsstandard.piece.R
-import com.bsstandard.piece.databinding.AddressDialogBinding
-import com.bsstandard.piece.databinding.CDialogBinding
-import com.bsstandard.piece.databinding.CDialogPasswordBinding
+import com.bsstandard.piece.databinding.*
 
 /**
  *packageName    : com.bsstandard.piece.widget.utils
@@ -41,7 +39,17 @@ class CustomDialog(
     // 주소 등록 완료 Dialog binding - jhm 2022/09/07
     private lateinit var addressDialogBinding: AddressDialogBinding
 
+    // 계좌 확인 실패시 Dialog binding - jhm 2022/10/05
+    private lateinit var accountFailDialogBinding: AccountFailDialogBinding
 
+    // 가상계좌 입금 확인 Dialog binding - jhm 2022/10/06
+    private lateinit var chargeConfirmDialogBinding: ChargeConfirmDialogBinding
+
+    // 이메일 변경 완료 후 Dialog binding - jhm 2022/10/17
+    private lateinit var changeEmailDialogBinding: ChangeEmailDialogBinding
+
+    // 간편 비밀번호 변경 후 Dialog binding - jhm 2022/10/18
+    private lateinit var changePinDialogBinding: ChangePinDialogBinding
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -115,12 +123,91 @@ class CustomDialog(
                     }
                 }
             }
+
+            "account_fail" -> {
+                LogUtil.logE("계좌 확인 실패 Dialog 호출")
+                accountFailDialogBinding = DataBindingUtil.inflate(
+                    LayoutInflater.from(context),
+                    R.layout.account_fail_dialog,
+                    null, false
+                )
+                setContentView(accountFailDialogBinding.root)
+
+                // 다이얼로그 사이즈 조절
+                context.dialogResize(this, 1f, 0.3f)
+
+                accountFailDialogBinding.apply {
+                    okBtn.setOnClickListener {
+                        listener_c.onOkButtonClicked()
+                    }
+                }
+            }
+
+            "charge_confirm" -> {
+                LogUtil.logE("입금 하셨나요? Dialog 호출")
+                chargeConfirmDialogBinding = DataBindingUtil.inflate(
+                    LayoutInflater.from(context),
+                    R.layout.charge_confirm_dialog,
+                    null, false
+                )
+                setContentView(chargeConfirmDialogBinding.root)
+
+                // 다이얼로그 사이즈 조절
+                context.dialogResize(this, 1f, 0.4f)
+
+                chargeConfirmDialogBinding.apply {
+                    okBtn.setOnClickListener {
+                        listener_c.onOkButtonClicked()
+                    }
+                }
+            }
+
+            "change_email" -> {
+                LogUtil.logE("입금 하셨나요? Dialog 호출")
+                changeEmailDialogBinding = DataBindingUtil.inflate(
+                    LayoutInflater.from(context),
+                    R.layout.change_email_dialog,
+                    null, false
+                )
+                setContentView(changeEmailDialogBinding.root)
+
+                // 다이얼로그 사이즈 조절
+                context.dialogResize(this, 1f, 0.4f)
+
+                changeEmailDialogBinding.apply {
+                    okBtn.setOnClickListener {
+                        listener_c.onOkButtonClicked()
+                    }
+                }
+            }
+
+
+            "change_pin" -> {
+                LogUtil.logE("간편 비밀번호 변경 Dialog 호출")
+                changePinDialogBinding = DataBindingUtil.inflate(
+                    LayoutInflater.from(context),
+                    R.layout.change_email_dialog,
+                    null, false
+                )
+                setContentView(changePinDialogBinding.root)
+
+                // 다이얼로그 사이즈 조절
+                context.dialogResize(this, 1f, 0.4f)
+
+                changePinDialogBinding.apply {
+                    okBtn.setOnClickListener {
+                        listener_c.onOkButtonClicked()
+                    }
+                }
+            }
+
+
         }
 
         // 배경 투명하게 바꿔줌
         window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
         // 취소 불가능
-        setCancelable(false)
+        setCancelable(true)
     }
 }

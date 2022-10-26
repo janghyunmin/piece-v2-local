@@ -54,6 +54,10 @@ class PortfolioDetailViewModel(application: Application) : AndroidViewModel(appl
     // 포트폴리오 하단 구성 layout ArrayList - jhm 2022/08/22
     private val compositionList: ArrayList<PortfolioDetailDTO.Data.Product> = arrayListOf()
 
+    // 증빙 구성 layout ArrayList - jhm 2022/10/12
+    private val documentList: ArrayList<PortfolioDetailDTO.Data.Product.ProductDocument> =
+        arrayListOf()
+
     // 포트폴리오 증빙 구성 ArrayList - jhm 2022/08/25
     private val evidenceList: ArrayList<PortfolioDetailDTO.Data.Product.ProductDocument> =
         arrayListOf()
@@ -75,6 +79,7 @@ class PortfolioDetailViewModel(application: Application) : AndroidViewModel(appl
                     productItemList.clear() // 포트폴리오 정보 구성 ArrayList 초기화 - jhm 2022/08/22
                     compositionList.clear() // 포트폴리오 하단 구성 전체 ArrayList 초기화 - jhm 2022/08/22
                     evidenceList.clear() // 포트폴리오 증빙 구성 ArrayList 초기화 - jhm 2022/08/25
+                    documentList.clear() // 포트폴리오 증빙구성 증빙자료 ArrayList 초기화 - jhm 2022/10/12
 
                     // 포트폴리오 구매포인트 - jhm 2022/08/25
                     for (i in ArrayList(detailResponse.value!!.data.purchaseGuides).indices) {
@@ -87,19 +92,24 @@ class PortfolioDetailViewModel(application: Application) : AndroidViewModel(appl
                         productItemList.add(detailResponse.value!!.data.products[i])
                         compositionList.add(detailResponse.value!!.data.products[i])
 
+
                         portfolioDetailProductAdapter.notifyDataSetChanged()
-                        portfolioDetailCompositionAdapter.notifyDataSetChanged()
+
                     }
 
-                    // 포트폴리오 증빙 구성 - jhm 2022/08/25
-                    if (detailResponse.value!!.data.products.get(0).productDocuments.size != 0) {
-                        for (i in 0 until detailResponse.value!!.data.products.get(0).productDocuments.size) {
-                            evidenceList.add(detailResponse.value!!.data.products[0].productDocuments[i])
-                            portfolioDetailEvidenceAdapter.notifyDataSetChanged()
+                    for(i in 0 until detailResponse.value!!.data.products.size) {
+                        // 포트폴리오 하단 구성 - jhm 2022/08/25
+                        evidenceList.add(detailResponse.value!!.data.products[i].productDocuments[i])
+                        portfolioDetailEvidenceAdapter.notifyDataSetChanged()
+
+                        for(i in 0 until detailResponse.value!!.data.products[i].productDocuments.size) {
+                            // 포트폴리오 증빙 자료 - jhm 2022/10/13
+                            documentList.add(detailResponse.value!!.data.products[i]!!.productDocuments[i])
+                            portfolioDetailCompositionAdapter.notifyDataSetChanged()
                         }
                     }
-
                 } else {
+                    // Room DB Select 조회 후 보여주기 로직 추가해야함 - jhm 2022/10/13
                     LogUtil.logE("포트폴리오 상세 try Error !")
                 }
             } catch (ex: Exception) {
@@ -150,6 +160,10 @@ class PortfolioDetailViewModel(application: Application) : AndroidViewModel(appl
     // 포트폴리오 하단 구성 레이아웃 전체 리스트  - jhm 2022/08/22
     fun getPortfolioCompositionList(): List<PortfolioDetailDTO.Data.Product> {
         return compositionList;
+    }
+
+    fun getProductDocumentList(): List<PortfolioDetailDTO.Data.Product.ProductDocument> {
+        return documentList;
     }
 
     // 포트폴리오 하단 구성품 리스트 - jhm 2022/08/25
