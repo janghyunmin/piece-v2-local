@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:state_selected="true"
+        android:drawable="@drawable/j_btn_text_back"
+        />
+
+    <item  android:state_selected="false"
+        android:drawable="@drawable/btn_round_dadce3"
+        />
+
+
+</selector>

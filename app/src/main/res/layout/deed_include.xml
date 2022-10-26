@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/portfolio_btn"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/j_btn_text_back"
+            android:gravity="center"
+            android:lineHeight="25dp"
+            android:text="이메일로 보내기"
+            android:textColor="@color/white"
+            android:textSize="16dp"
+            android:visibility="visible"
+            app:fontFamily="@font/pretendard_bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@+id/cancleBtn"
+            app:layout_constraintRight_toRightOf="parent" />
+
+        <TextView
+            android:id="@+id/cancleBtn"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/layout_round_e6f9fa"
+            android:gravity="center"
+            android:lineHeight="25dp"
+            android:text="우편으로 받기"
+            android:textColor="@color/c_10cfc9"
+            android:textSize="16dp"
+            android:visibility="visible"
+            app:fontFamily="@font/pretendard_bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/portfolio_btn" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

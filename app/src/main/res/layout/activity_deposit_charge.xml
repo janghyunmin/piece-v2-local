@@ -1,0 +1,357 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="activity"
+            type="com.bsstandard.piece.view.deposit.MyDepositActivity" />
+
+        <!-- 예치금 잔액 ViewModel -->
+        <variable
+            name="depositVm"
+            type="com.bsstandard.piece.data.viewmodel.DepositBalanceViewModel" />
+
+        <!-- 회원 계좌 정보 조회 ViewModel -->
+        <variable
+            name="memberAccountVm"
+            type="com.bsstandard.piece.data.viewmodel.AccountViewModel" />
+
+        <!-- 키패드 ViewModel -->
+        <variable
+            name="numberPad"
+            type="com.bsstandard.piece.view.withdrawal.NumberLiveViewModel"/>
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/top_layout"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/back_img"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:background="@drawable/arrow_left"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    />
+
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/top_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="예치금 충전하기"
+                    android:textColor="@color/c_4a4d55"
+                    android:textSize="16dp"
+                    android:lineHeight="25dp"
+                    app:fontFamily="@font/pretendard_regular"
+                    app:layout_constraintTop_toTopOf="@+id/back_img"
+                    app:layout_constraintBottom_toBottomOf="@+id/back_img"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/middle_layout"
+                app:layout_constraintTop_toBottomOf="@+id/top_layout"
+                android:layout_marginTop="20dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="20dp"
+                    android:lineHeight="28dp"
+                    android:textColor="@color/c_131313"
+                    android:text="충전하실 금액"
+                    android:fontFamily="@font/pretendard_extrabold"
+                    />
+                <TextView
+                    android:id="@+id/title_2"
+                    app:layout_constraintLeft_toRightOf="@+id/title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="20dp"
+                    android:lineHeight="28dp"
+                    android:textColor="@color/c_131313"
+                    android:text="을 입력해주세요."
+                    android:fontFamily="@font/pretendard_regular"
+                    />
+
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/number"
+                    app:layout_constraintTop_toBottomOf="@+id/title"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    android:layout_marginTop="40dp"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textColorHint="@color/c_dadce3"
+                    android:textSize="26dp"
+                    android:lineHeight="34dp"
+                    android:maxLength="20"
+                    android:fontFamily="@font/pretendard_extrabold"
+                    android:textColor="@color/c_131313"
+                    android:visibility="visible"
+                    />
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/won"
+                    app:layout_constraintTop_toBottomOf="@+id/title"
+                    app:layout_constraintLeft_toRightOf="@+id/number"
+                    android:layout_marginTop="40dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="26dp"
+                    android:lineHeight="34dp"
+                    android:fontFamily="@font/pretendard_extrabold"
+                    android:textColor="@color/c_131313"
+                    android:text="원"
+                    android:visibility="gone"
+                    />
+
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/account_layout"
+                    app:layout_constraintTop_toBottomOf="@+id/number"
+                    android:layout_marginTop="38dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/layout_round_f9f9f9"
+                    >
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/passcode_layout"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="20dp"
+                app:layout_constraintBottom_toTopOf="@+id/confirm_btn"
+                android:layout_marginBottom="30dp"
+                >
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_weight="12"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    >
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="70dp"
+                        android:layout_weight="3">
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/code_1"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:text="1"
+                            android:gravity="center"
+                            android:lineHeight="34dp"
+                            android:textColor="@color/c_4a4d55"
+                            android:textSize="26dp"
+                            app:fontFamily="@font/pretendard_extrabold"
+                            />
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/code_2"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:text="2"
+                            android:gravity="center"
+                            android:lineHeight="34dp"
+                            android:textColor="@color/c_4a4d55"
+                            android:textSize="26dp"
+                            app:fontFamily="@font/pretendard_extrabold"
+                            />
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/code_3"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:text="3"
+                            android:gravity="center"
+                            android:lineHeight="34dp"
+                            android:textColor="@color/c_4a4d55"
+                            android:textSize="26dp"
+                            app:fontFamily="@font/pretendard_extrabold"
+                            />
+
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="70dp"
+                        android:layout_weight="3">
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/code_4"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:text="4"
+                            android:gravity="center"
+                            android:lineHeight="34dp"
+                            android:textColor="@color/c_4a4d55"
+                            android:textSize="26dp"
+                            app:fontFamily="@font/pretendard_extrabold"
+                            />
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/code_5"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:text="5"
+                            android:gravity="center"
+                            android:lineHeight="34dp"
+                            android:textColor="@color/c_4a4d55"
+                            android:textSize="26dp"
+                            app:fontFamily="@font/pretendard_extrabold"
+                            />
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/code_6"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:text="6"
+                            android:gravity="center"
+                            android:lineHeight="34dp"
+                            android:textColor="@color/c_4a4d55"
+                            android:textSize="26dp"
+                            app:fontFamily="@font/pretendard_extrabold"
+                            />
+
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="70dp"
+                        android:layout_weight="3">
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/code_7"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:text="7"
+                            android:gravity="center"
+                            android:lineHeight="34dp"
+                            android:textColor="@color/c_4a4d55"
+                            android:textSize="26dp"
+                            app:fontFamily="@font/pretendard_extrabold"
+                            />
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/code_8"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:text="8"
+                            android:gravity="center"
+                            android:lineHeight="34dp"
+                            android:textColor="@color/c_4a4d55"
+                            android:textSize="26dp"
+                            app:fontFamily="@font/pretendard_extrabold"
+                            />
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/code_9"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:text="9"
+                            android:gravity="center"
+                            android:lineHeight="34dp"
+                            android:textColor="@color/c_4a4d55"
+                            android:textSize="26dp"
+                            app:fontFamily="@font/pretendard_extrabold"
+                            />
+
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="70dp"
+                        android:layout_weight="1">
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/clear_text"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:text="@string/passcode_clear"
+                            android:gravity="center"
+                            android:lineHeight="20dp"
+                            android:textColor="@color/c_4a4d55"
+                            android:textSize="14dp"
+                            app:fontFamily="@font/pretendard_regular"
+                            />
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/code_0"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:text="0"
+                            android:gravity="center"
+                            android:lineHeight="34dp"
+                            android:textColor="@color/c_4a4d55"
+                            android:textSize="26dp"
+                            app:fontFamily="@font/pretendard_extrabold"
+                            />
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/clear"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:layout_weight="1"
+                            android:drawableStart="@drawable/keypad_clear_icon_1"
+                            android:paddingLeft="40dp"
+                            />
+                    </LinearLayout>
+                </LinearLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/confirm_btn"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="25dp"
+                android:layout_marginEnd="12dp"
+                android:background="@drawable/j_selector"
+                android:gravity="center"
+                android:lineHeight="25dp"
+                android:text="확인"
+                android:textColor="@drawable/j_selector_text_color"
+                android:textSize="14dp"
+                app:fontFamily="@font/pretendard_bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                />
+
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

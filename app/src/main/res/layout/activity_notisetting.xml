@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="activity"
+            type="com.bsstandard.piece.view.notisetting.NotificationSettingActivity" />
+
+        <!-- 회원 정보 조회 -->
+        <variable
+            name="memberVm"
+            type="com.bsstandard.piece.data.viewmodel.GetUserViewModel" />
+
+        <!-- 회원 정보 변경 -->
+        <variable
+            name="mvPut"
+            type="com.bsstandard.piece.data.viewmodel.MemberPutViewModel" />
+
+        <!-- 약관 목록 -->
+        <variable
+            name="mvConsent"
+            type="com.bsstandard.piece.data.viewmodel.ConsentViewModel" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/top_layout"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/back_img"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:background="@drawable/arrow_left"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    />
+
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/top_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="알림 설정"
+                    android:textColor="@color/c_4a4d55"
+                    android:textSize="16dp"
+                    android:lineHeight="25dp"
+                    app:fontFamily="@font/pretendard_regular"
+                    app:layout_constraintTop_toTopOf="@+id/back_img"
+                    app:layout_constraintBottom_toBottomOf="@+id/back_img"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/title_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@+id/top_layout"
+                android:layout_marginTop="20dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                >
+                <TextView
+                    android:id="@+id/title_1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:text="자산 및 공지"
+                    android:textColor="@color/c_4a4d55"
+                    android:textSize="16dp"
+                    android:lineHeight="25dp"
+                    android:fontFamily="@font/pretendard_bold"
+                    />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+            <View
+                android:id="@+id/line1"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="20dp"
+                android:background="@color/c_f2f3f4"
+                app:layout_constraintTop_toBottomOf="@+id/title_layout" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/assetNotification_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@+id/line1"
+                android:layout_marginTop="20dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                >
+                <TextView
+                    android:id="@+id/assetNotification_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    android:text="자산 변동"
+                    android:textColor="@color/c_4a4d55"
+                    android:textSize="16dp"
+                    android:lineHeight="25dp"
+                    android:fontFamily="@font/pretendard_regular"
+                    />
+                <TextView
+                    android:id="@+id/assetNotification_title_2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/assetNotification_title"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_marginTop="5dp"
+                    android:text="예치금, 구매 내역, 배분금 변동 시 알려 드려요."
+                    android:textColor="@color/c_b8bcc8"
+                    android:textSize="12dp"
+                    android:lineHeight="16dp"
+                    android:fontFamily="@font/pretendard_regular"
+                    />
+
+                <Switch
+                    android:id="@+id/assetNotification_switch"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:gravity="center"
+                    app:switchMinWidth="45dp"
+                    android:textOff=""
+                    android:textOn=""
+                    android:thumbTextPadding="15dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:ignore="UseSwitchCompatOrMaterialXml" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+            <View
+                android:id="@+id/line2"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="20dp"
+                android:background="@color/c_f2f3f4"
+                app:layout_constraintTop_toBottomOf="@+id/assetNotification_layout" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/portfolioNotification_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@+id/line2"
+                android:layout_marginTop="20dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                >
+                <TextView
+                    android:id="@+id/portfolioNotification_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    android:text="포트폴리오"
+                    android:textColor="@color/c_4a4d55"
+                    android:textSize="16dp"
+                    android:lineHeight="25dp"
+                    android:fontFamily="@font/pretendard_regular"
+                    />
+                <TextView
+                    android:id="@+id/portfolioNotification_title_2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/portfolioNotification_title"
+                    android:text="오픈 예정, 완판 시 알려드려요."
+                    android:textColor="@color/c_b8bcc8"
+                    android:textSize="12dp"
+                    android:lineHeight="16dp"
+                    android:fontFamily="@font/pretendard_regular"
+                    />
+
+                <Switch
+                    android:id="@+id/portfolioNotification_switch"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:gravity="center"
+                    app:switchMinWidth="45dp"
+                    android:textOff=""
+                    android:textOn=""
+                    android:thumbTextPadding="15dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:ignore="UseSwitchCompatOrMaterialXml" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <View
+                android:id="@+id/line3"
+                android:layout_marginTop="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:background="@color/c_f2f3f4"
+                app:layout_constraintTop_toBottomOf="@+id/portfolioNotification_layout" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/event_noti_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@+id/line3"
+                android:layout_marginTop="20dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                >
+                <TextView
+                    android:id="@+id/title_2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:text="이벤트·혜택 알림"
+                    android:textColor="@color/c_4a4d55"
+                    android:textSize="16dp"
+                    android:lineHeight="25dp"
+                    android:fontFamily="@font/pretendard_bold"
+                    />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+            <View
+                android:id="@+id/line4"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:background="@color/c_f2f3f4"
+                app:layout_constraintTop_toBottomOf="@+id/event_noti_layout" />
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/marketingSms_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@+id/line4"
+                android:layout_marginTop="20dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                >
+                <TextView
+                    android:id="@+id/marketingSms_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    android:text="문자 알림"
+                    android:textColor="@color/c_4a4d55"
+                    android:textSize="16dp"
+                    android:lineHeight="25dp"
+                    android:fontFamily="@font/pretendard_regular"
+                    />
+
+                <Switch
+                    android:id="@+id/marketingSms_switch"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:gravity="center"
+                    app:switchMinWidth="45dp"
+                    android:textOff=""
+                    android:textOn=""
+                    android:thumbTextPadding="15dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:ignore="UseSwitchCompatOrMaterialXml" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+            <View
+                android:id="@+id/line5"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:background="@color/c_f2f3f4"
+                app:layout_constraintTop_toBottomOf="@+id/marketingSms_layout" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/marketingApp_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@+id/line5"
+                android:layout_marginTop="20dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                >
+                <TextView
+                    android:id="@+id/marketingApp_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    android:text="앱 알림"
+                    android:textColor="@color/c_4a4d55"
+                    android:textSize="16dp"
+                    android:lineHeight="25dp"
+                    android:fontFamily="@font/pretendard_regular"
+                    />
+
+                <Switch
+                    android:id="@+id/marketingApp_switch"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:gravity="center"
+                    app:switchMinWidth="45dp"
+                    android:textOff=""
+                    android:textOn=""
+                    android:thumbTextPadding="15dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

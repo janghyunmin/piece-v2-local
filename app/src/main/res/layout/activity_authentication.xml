@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="auth"
+            type="com.bsstandard.piece.view.authentication.AuthenticationActivity" />
+
+        <variable
+            name="authViewModel"
+            type="com.bsstandard.piece.view.authentication.AuthInputViewModel" />
+    </data>
+
+    <ScrollView
+        android:id="@+id/sv_root"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/top_layout"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/close_icon"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginRight="16dp"
+                    android:background="@drawable/close_icon"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/content_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@+id/top_layout">
+
+                <TextView
+                    android:id="@+id/top_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:fontFamily="@font/pretendard_extrabold"
+                    android:lineHeight="34sp"
+                    android:text="실명 인증"
+                    android:textColor="@color/c_4a4d55"
+                    android:textSize="26sp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/subTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="5dp"
+                    android:fontFamily="@font/pretendard_regular"
+                    android:lineHeight="16sp"
+                    android:text="피스는 현물 조각구매 매매차익에 대한 \n기타소득세 및 원천징수세 신고를 위해 주민번호를 수집하고 있습니다."
+                    android:textColor="@color/c_8c919f"
+                    android:textSize="12sp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/top_title" />
+
+
+                <TextView
+                    android:id="@+id/notice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16sp"
+                    android:layout_marginTop="15dp"
+                    android:fontFamily="@font/pretendard_regular"
+                    android:lineHeight="16sp"
+                    android:text="@string/auth_notice"
+                    android:textColor="@color/c_8c919f"
+                    android:textSize="12sp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/subTitle" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/member_layout"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="40dp"
+                android:layout_marginEnd="16dp"
+                android:paddingBottom="100dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/content_layout">
+
+                <TextView
+                    android:id="@+id/bank_host"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/pretendard_bold"
+                    android:lineHeight="20sp"
+                    android:text="예금주"
+                    android:textColor="@color/c_4a4d55"
+                    android:textSize="14sp"
+                    app:layout_constraintLeft_toLeftOf="parent" />
+
+                <TextView
+                    android:id="@+id/name"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:background="@color/c_f9f9f9"
+                    android:fontFamily="@font/pretendard_regular"
+                    android:lineHeight="25sp"
+                    android:gravity="center|left"
+                    android:text="김피스"
+                    android:textColor="@color/c_8c919f"
+                    android:textSize="16sp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/bank_host" />
+
+                <View
+                    android:id="@+id/line"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/c_b8bcc8"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/name" />
+
+                <TextView
+                    android:id="@+id/number"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="30dp"
+                    android:fontFamily="@font/pretendard_bold"
+                    android:lineHeight="20sp"
+                    android:text="주민등록번호"
+                    android:textColor="@color/c_4a4d55"
+                    android:textSize="14sp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/line" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/number_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/number">
+
+                    <androidx.appcompat.widget.AppCompatEditText
+                        android:id="@+id/first"
+                        android:layout_width="0dp"
+                        android:layout_height="55dp"
+                        android:gravity="left|center"
+                        android:inputType="number"
+                        android:lineHeight="23dp"
+                        android:maxLength="6"
+                        android:maxLines="1"
+                        android:padding="5dp"
+                        android:text="@={authViewModel.userFirst}"
+                        android:onTextChanged="@{authViewModel.onTextChanged}"
+                        android:textColor="@color/c_4a4d55"
+                        android:textSize="16dp"
+                        android:theme="@style/Piece_EditText"
+                        app:fontFamily="@font/pretendard_regular"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toLeftOf="@+id/line2" />
+
+                    <View
+                        android:id="@+id/line2"
+                        android:layout_width="11dp"
+                        android:layout_height="1dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:background="@color/c_131313"
+                        app:layout_constraintBottom_toBottomOf="@+id/first"
+                        app:layout_constraintLeft_toRightOf="@+id/first"
+                        app:layout_constraintRight_toLeftOf="@+id/last"
+                        app:layout_constraintTop_toTopOf="@+id/first" />
+
+                    <androidx.appcompat.widget.AppCompatEditText
+                        android:id="@+id/last"
+                        android:layout_width="0dp"
+                        android:layout_height="55dp"
+                        android:gravity="left|center"
+                        android:inputType="number"
+                        android:lineHeight="23dp"
+                        android:maxLength="7"
+                        android:maxLines="1"
+                        android:padding="5dp"
+                        android:text="@={authViewModel.userLast}"
+                        android:onTextChanged="@{authViewModel.onTextChanged}"
+                        android:textColor="@color/c_4a4d55"
+                        android:textSize="16dp"
+                        android:theme="@style/Piece_EditText"
+                        app:fontFamily="@font/pretendard_regular"
+                        app:layout_constraintLeft_toRightOf="@+id/line2"
+                        app:layout_constraintRight_toRightOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/footer_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/auth_btn"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:background="@drawable/j_selector"
+                    android:gravity="center"
+                    android:text="실명 인증하기"
+                    android:textColor="@color/white"
+                    android:textSize="16dp"
+                    app:fontFamily="@font/pretendard_extrabold"
+                    app:layout_constraintBottom_toBottomOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+</layout>

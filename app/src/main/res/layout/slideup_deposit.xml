@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <data>
+        <variable
+            name="depositDialog"
+            type="com.bsstandard.piece.view.deposit.DepositDialog" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/j_dialog_back_round"
+        android:paddingBottom="20dp"
+        app:behavior_hideable="true"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+        <!--    style="@style/AppModalStyle"-->
+
+        <TextView
+            android:id="@+id/c_top_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:gravity="center"
+            android:text="거래 내역"
+            android:textColor="@color/c_4a4d55"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            app:fontFamily="@font/pretendard_extrabold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/close_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/x_icon"
+            app:layout_constraintBottom_toBottomOf="@+id/c_top_title"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/c_top_title" />
+
+        <!-- 전체 select start -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/all_selected_layout"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/c_top_title"
+            android:layout_marginTop="30dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+
+            <TextView
+                android:id="@+id/all_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="전체"
+                android:textColor="@color/c_757983"
+                android:textSize="16dp"
+                android:lineHeight="25dp"
+                android:fontFamily="@font/pretendard_regular"
+                />
+
+            <ImageView
+                android:id="@+id/arrow_down_1"
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:background="@drawable/arrow_down_w"
+                android:visibility="visible"
+                />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+        <!-- 전체 select end -->
+
+        <!-- 조각 거래 내역 start -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/purchase_selected_layout"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/all_selected_layout"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            >
+
+            <TextView
+                android:id="@+id/purchase_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="조각 거래 내역"
+                android:textColor="@color/c_757983"
+                android:textSize="16dp"
+                android:lineHeight="25dp"
+                android:fontFamily="@font/pretendard_regular"
+                />
+
+            <ImageView
+                android:id="@+id/arrow_down_2"
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:background="@drawable/arrow_down_w"
+                android:visibility="gone"
+                />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+        <!-- 조각 거래 내역 end -->
+
+
+
+        <!-- 예치금 입출금 내역 start -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/deposit_selected_layout"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/purchase_selected_layout"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            >
+
+            <TextView
+                android:id="@+id/deposit_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="예치금 입출금 내역"
+                android:textColor="@color/c_757983"
+                android:textSize="16dp"
+                android:lineHeight="25dp"
+                android:fontFamily="@font/pretendard_regular"
+                />
+
+            <ImageView
+                android:id="@+id/arrow_down_3"
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:background="@drawable/arrow_down_w"
+                android:visibility="gone"
+                />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+        <!-- 예치금 입출금 내역 end -->
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

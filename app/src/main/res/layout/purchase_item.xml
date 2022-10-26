@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="portfolioVm"
+            type="com.bsstandard.piece.data.viewmodel.PortfolioViewModel" />
+
+        <variable
+            name="purchaseVm"
+            type="com.bsstandard.piece.data.viewmodel.PurchaseViewModel" />
+
+        <variable
+            name="pos"
+            type="Integer" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="230dp"
+        android:layout_height="358dp"
+        android:layout_marginEnd="15dp"
+        >
+
+        <ImageView
+            android:id="@+id/thumnailPath"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginBottom="15dp"
+            android:layout_width="230dp"
+            android:layout_height="343dp"
+            android:fitsSystemWindows="true"
+            android:transitionName="@{purchaseVm.purchaseItem.get(pos).portfolio.representThumbnailImagePath}"
+            app:representThumbnailImagePath='@{purchaseVm.purchaseItem.get(pos).portfolio.representThumbnailImagePath.toString()}'
+            />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/purchaseAt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textSize="14dp"
+            android:lineHeight="20dp"
+            android:textColor="@color/c_ffffff"
+            android:layout_marginTop="40dp"
+            android:rotation="-90"
+            android:fontFamily="@font/pretendard_bold"
+            app:layout_constraintLeft_toLeftOf="@+id/piece_icon"
+            app:layout_constraintRight_toRightOf="@+id/piece_icon"
+            app:layout_constraintTop_toTopOf="@+id/thumnailPath"
+            app:purchaseAt='@{purchaseVm.purchaseItem.get(pos).purchaseAt.toString()}'
+            />
+
+
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/piece_icon"
+            app:layout_constraintRight_toRightOf="@+id/thumnailPath"
+            app:layout_constraintBottom_toBottomOf="@+id/thumnailPath"
+            android:layout_marginBottom="15dp"
+            android:layout_marginRight="12dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:background="@drawable/ownpiece_icon"
+            />
+
+        <TextView
+            android:id="@+id/purchasePieceVolume"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1"
+            android:textSize="20dp"
+            android:lineHeight="28dp"
+            android:textColor="@color/c_ffffff"
+            android:layout_marginBottom="15dp"
+            android:fontFamily="@font/pretendard_extrabold"
+            app:layout_constraintLeft_toLeftOf="@+id/piece_icon"
+            app:layout_constraintRight_toRightOf="@+id/piece_icon"
+            android:rotation="-90"
+            app:layout_constraintBottom_toTopOf="@+id/piece_icon"
+            app:purchasePieceVolume='@{purchaseVm.purchaseItem.get(pos).purchasePieceVolume.toString()}'
+            />
+
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

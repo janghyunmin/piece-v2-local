@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="profitPop"
+            type="com.bsstandard.piece.view.fragment.dialog.ProfitBottomSheetDialog" />
+
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/j_dialog_back_round"
+        app:behavior_hideable="true"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/img_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/top_title"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_marginTop="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:lineHeight="28sp"
+                android:text="분배금 정산 완료"
+                android:fontFamily="@font/pretendard_bold"
+                />
+
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/lottie"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_marginTop="50dp"
+                android:layout_width="200dp"
+                android:layout_height="200dp"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/number"
+                app:layout_constraintTop_toBottomOf="@+id/lottie"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:lineHeight="28sp"
+                android:text="99,999,999"
+                android:fontFamily="@font/pretendard_bold"
+                />
+
+            <TextView
+                android:id="@+id/text"
+                app:layout_constraintBottom_toBottomOf="@+id/number"
+                app:layout_constraintLeft_toRightOf="@+id/number"
+                android:layout_marginStart="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="원"
+                android:fontFamily="@font/pretendard_regular"
+                android:textColor="@color/c_4a4d55"
+                android:textSize="16sp"
+                android:lineHeight="25sp"
+                />
+
+            <TextView
+                android:id="@+id/notice"
+                app:layout_constraintTop_toBottomOf="@+id/number"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="수익 분배금이 김피스님을 기다리고 있어요! \n 실명인증을 하시면 예치금으로 입금해 드려요."
+                android:fontFamily="@font/pretendard_regular"
+                android:textSize="14sp"
+                android:lineHeight="20sp"
+                android:textColor="@color/c_8c919f"
+                />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/bottom_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/img_layout"
+            android:layout_marginTop="50dp"
+            >
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/confirm_btn"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_marginTop="30dp"
+                android:background="@drawable/j_btn_text_back"
+                android:gravity="center"
+                android:text="인증하고 분배금받기"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:lineHeight="25sp"
+                app:fontFamily="@font/pretendard_bold"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                 />
+
+<!--            <TextView-->
+<!--                android:id="@+id/cancleBtn"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="48dp"-->
+<!--                android:layout_marginTop="30dp"-->
+<!--                android:background="@drawable/layout_round_e6f9fa"-->
+<!--                android:gravity="center"-->
+<!--                android:text="다음에 할께요"-->
+<!--                android:textColor="@color/c_10cfc9"-->
+<!--                android:textSize="16sp"-->
+<!--                android:lineHeight="25sp"-->
+<!--                android:layout_marginStart="16dp"-->
+<!--                app:fontFamily="@font/pretendard_bold"-->
+<!--                app:layout_constraintLeft_toLeftOf="parent"-->
+<!--                app:layout_constraintRight_toLeftOf="@+id/confirm_btn"-->
+<!--                />-->
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

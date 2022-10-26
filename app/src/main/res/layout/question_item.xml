@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="boardVm"
+            type="com.bsstandard.piece.data.viewmodel.BoardViewModel" />
+
+        <variable
+            name="pos"
+            type="Integer" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/noticeTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16dp"
+            android:lineHeight="25dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="16dp"
+            android:fontFamily="@font/pretendard_regular"
+            android:textColor="@color/c_8c919f"
+            app:questionTitle="@{boardVm.questionItem.get(pos).title}"
+            />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:background="@drawable/arrow_down"
+            app:layout_constraintTop_toTopOf="@+id/noticeTitle"
+            app:layout_constraintBottom_toBottomOf="@+id/noticeTitle"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginEnd="16dp"
+            />
+
+        <View
+            android:id="@+id/line"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="20dp"
+            android:background="@color/c_f2f3f4"
+            app:layout_constraintTop_toBottomOf="@+id/noticeTitle" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/content_layout"
+            app:layout_constraintTop_toBottomOf="@+id/line"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/c_f2f3f4"
+            android:padding="16dp"
+            android:visibility="gone"
+            >
+
+            <TextView
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:id="@+id/content_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="아이디/비밀번호를 잊어버렸어요."
+                android:textSize="16dp"
+                android:lineHeight="25dp"
+                android:textColor="@color/c_8c919f"
+                android:fontFamily="@font/pretendard_extrabold"
+                />
+            <TextView
+                android:id="@+id/contents"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="14dp"
+                android:lineHeight="20dp"
+                app:layout_constraintTop_toBottomOf="@+id/content_title"
+                android:layout_marginTop="20dp"
+                android:textColor="@color/c_8c919f"
+                android:text="피스 앱은 회원님의 안전하고 간편한 서비스 이용을 위해 기존 방식의 아이디/비밀번호 대신 새로운 방식의 '간편 비밀번호'를 적용하고 있습니다.\n간편 비밀번호는 암호화된 코드 기술을 이용해 회원님을 식별하며, 회원님의 정보를 더욱 안전하게 관리합니다.\n만일, 간편 비밀번호를 잊은 경우에는 본인 확인 절차를 다시 진행하여 간편 비밀번호를 재설정하면 됩니다.\n참고로, 간편 비밀번호 대신 평소 주로 사용하는 생체인증 기능을 활성화하여 더욱 편리하게 로그인할 수도 있습니다. ('더보기' > '설정' > '인증 및 보안' > '생체인증 사용' 활성화)"
+                />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

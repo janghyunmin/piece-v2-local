@@ -1,0 +1,689 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="activity"
+            type="com.bsstandard.piece.view.purchaseDetail.PurchaseDetailActivity" />
+
+        <variable
+            name="portfolioDetailViewModel"
+            type="com.bsstandard.piece.view.portfolioDetail.PortfolioDetailViewModel" />
+
+        <!-- 구매 정보 조회 ( 소유 조각 ) ViewModel -->
+        <variable
+            name="purchaseVm"
+            type="com.bsstandard.piece.data.viewmodel.PurchaseViewModel" />
+
+        <variable
+            name="purchaseConfirmVm"
+            type="com.bsstandard.piece.data.viewmodel.PurchaseConfirmViewModel" />
+
+        <variable
+            name="pos"
+            type="Integer" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ScrollView
+            android:id="@+id/parent_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:fillViewport="true"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/top_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="80dp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/back_img"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
+                        android:background="@drawable/arrow_left"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/top_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:lineHeight="25dp"
+                        android:text="소유 조각"
+                        android:textColor="@color/c_4a4d55"
+                        android:textSize="16dp"
+                        app:fontFamily="@font/pretendard_regular"
+                        app:layout_constraintBottom_toBottomOf="@+id/back_img"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/back_img" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/img_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="230dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="16dp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/top_layout">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/portfolio_img"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:adjustViewBounds="true"
+                        android:scaleType="centerCrop"
+                        android:transitionName="@{purchaseVm.purchaseItem.get(pos).portfolio.representImagePath}"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="15dp"
+                        android:fontFamily="@font/pretendard_bold"
+                        android:lineHeight="20dp"
+                        android:text=""
+                        android:textColor="@color/c_ffffff"
+                        android:textSize="14dp"
+                        app:layout_constraintBottom_toBottomOf="@+id/piece_icon"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/piece_icon"
+
+                        />
+
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/piece_icon"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginBottom="12dp"
+                        android:background="@drawable/purchase_left_icon"
+                        android:rotation="90"
+                        app:layout_constraintBottom_toBottomOf="@+id/portfolio_img"
+                        app:layout_constraintLeft_toLeftOf="@+id/portfolio_img" />
+
+                    <TextView
+                        android:id="@+id/volume"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:fontFamily="@font/pretendard_extrabold"
+                        android:lineHeight="28dp"
+                        android:text=""
+                        android:textColor="@color/c_ffffff"
+                        android:textSize="20dp"
+                        app:layout_constraintBottom_toBottomOf="@id/piece_icon"
+                        app:layout_constraintLeft_toRightOf="@+id/piece_icon"
+                        app:layout_constraintTop_toTopOf="@+id/piece_icon"
+
+                        />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/item_info_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="60dp"
+                    android:layout_marginEnd="16dp"
+                    app:layout_constraintTop_toBottomOf="@+id/img_layout">
+
+                    <TextView
+                        android:id="@+id/title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/pretendard_extrabold"
+                        android:gravity="left"
+                        android:lineHeight="28dp"
+                        android:text="소유 정보"
+                        android:textColor="@color/c_131313"
+                        android:textSize="20dp" />
+
+                    <!-- 구매 일자 -->
+                    <ImageView
+                        android:id="@+id/purchase_date_img"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="40dp"
+                        android:background="@drawable/purchase_icon_1"
+                        app:layout_constraintTop_toBottomOf="@+id/title" />
+
+                    <TextView
+                        android:id="@+id/purchase_date_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:fontFamily="@font/pretendard_bold"
+                        android:lineHeight="25dp"
+                        android:text="구매 일자"
+                        android:textColor="@color/c_131313"
+                        android:textSize="16dp"
+                        app:layout_constraintBottom_toBottomOf="@+id/purchase_date_img"
+                        app:layout_constraintLeft_toRightOf="@+id/purchase_date_img"
+                        app:layout_constraintTop_toTopOf="@+id/purchase_date_img" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/purchase_date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/pretendard_regular"
+                        android:lineHeight="25dp"
+                        android:text=""
+                        android:textColor="@color/c_131313"
+                        android:textSize="16dp"
+                        app:layout_constraintBottom_toBottomOf="@+id/purchase_date_img"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/purchase_date_img" />
+
+
+                    <!-- 조각 수 -->
+                    <ImageView
+                        android:id="@+id/purchase_count_img"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="20dp"
+                        android:background="@drawable/purchase_icon_2"
+                        app:layout_constraintTop_toBottomOf="@+id/purchase_date_img" />
+
+                    <TextView
+                        android:id="@+id/purchase_count_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:fontFamily="@font/pretendard_bold"
+                        android:lineHeight="25dp"
+                        android:text="조각 수"
+                        android:textColor="@color/c_131313"
+                        android:textSize="16dp"
+                        app:layout_constraintBottom_toBottomOf="@+id/purchase_count_img"
+                        app:layout_constraintLeft_toRightOf="@+id/purchase_count_img"
+                        app:layout_constraintTop_toTopOf="@+id/purchase_count_img" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/purchase_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/pretendard_regular"
+                        android:lineHeight="25dp"
+                        android:text=""
+                        android:textColor="@color/c_131313"
+                        android:textSize="16dp"
+                        app:layout_constraintBottom_toBottomOf="@+id/purchase_count_img"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/purchase_count_img" />
+
+
+                    <!-- 총 구매 금액 -->
+                    <ImageView
+                        android:id="@+id/purchase_buy_img"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="20dp"
+                        android:background="@drawable/purchase_icon_3"
+                        app:layout_constraintTop_toBottomOf="@+id/purchase_count_img" />
+
+                    <TextView
+                        android:id="@+id/purchase_buy_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:fontFamily="@font/pretendard_bold"
+                        android:lineHeight="25dp"
+                        android:text="총 구매 금액"
+                        android:textColor="@color/c_131313"
+                        android:textSize="16dp"
+                        app:layout_constraintBottom_toBottomOf="@+id/purchase_buy_img"
+                        app:layout_constraintLeft_toRightOf="@+id/purchase_buy_img"
+                        app:layout_constraintTop_toTopOf="@+id/purchase_buy_img" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/purchase_buy"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/pretendard_regular"
+                        android:lineHeight="25dp"
+                        android:text=""
+                        android:textColor="@color/c_131313"
+                        android:textSize="16dp"
+                        app:layout_constraintBottom_toBottomOf="@+id/purchase_buy_img"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/purchase_buy_img" />
+
+                    <!-- 소유주 -->
+                    <ImageView
+                        android:id="@+id/proprietor_img"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="20dp"
+                        android:background="@drawable/purchase_icon_4"
+                        app:layout_constraintTop_toBottomOf="@+id/purchase_buy_img" />
+
+                    <TextView
+                        android:id="@+id/purchase_proprietor_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:fontFamily="@font/pretendard_bold"
+                        android:lineHeight="25dp"
+                        android:text="소유주"
+                        android:textColor="@color/c_131313"
+                        android:textSize="16dp"
+                        app:layout_constraintBottom_toBottomOf="@+id/proprietor_img"
+                        app:layout_constraintLeft_toRightOf="@+id/proprietor_img"
+                        app:layout_constraintTop_toTopOf="@+id/proprietor_img" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/purchase_proprietor"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/pretendard_regular"
+                        android:lineHeight="25dp"
+                        android:text="김피스"
+                        android:textColor="@color/c_131313"
+                        android:textSize="16dp"
+                        app:layout_constraintBottom_toBottomOf="@+id/proprietor_img"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/proprietor_img" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                <TextView
+                    android:id="@+id/document_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginEnd="16dp"
+                    android:fontFamily="@font/pretendard_extrabold"
+                    android:gravity="left"
+                    android:lineHeight="28dp"
+                    android:text="소유 증서"
+                    android:textColor="@color/c_131313"
+                    android:textSize="20dp"
+                    app:layout_constraintTop_toBottomOf="@+id/item_info_layout" />
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/item_info_layout2"
+                    android:layout_width="match_parent"
+                    android:layout_height="65dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="16dp"
+                    android:background="@drawable/layout_round_ffffff"
+                    android:elevation="5dp"
+                    app:layout_constraintTop_toBottomOf="@+id/document_title">
+
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/document"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:fontFamily="@font/pretendard_bold"
+                        android:gravity="left"
+                        android:lineHeight="25dp"
+                        android:text=""
+                        android:textColor="@color/c_10cfc9"
+                        android:textSize="16dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_marginEnd="16dp"
+                        android:background="@drawable/arrow_right_c10cfc9"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/image_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginEnd="16dp"
+                    app:layout_constraintTop_toBottomOf="@+id/item_info_layout2">
+
+                    <TextView
+                        android:id="@+id/composition_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/pretendard_extrabold"
+                        android:gravity="left"
+                        android:lineHeight="28dp"
+                        android:text="증빙 자료"
+                        android:textColor="@color/c_131313"
+                        android:textSize="20dp" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/compositionRv"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/composition_title" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/composition_item_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        app:layout_constraintTop_toBottomOf="@+id/compositionRv">
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/documentRv"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/buy_info_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="20dp"
+                    android:paddingBottom="30dp"
+                    app:layout_constraintTop_toBottomOf="@+id/image_layout">
+
+                    <TextView
+                        android:id="@+id/buy_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:fontFamily="@font/pretendard_extrabold"
+                        android:gravity="left"
+                        android:lineHeight="28dp"
+                        android:text="구매 정보"
+                        android:textColor="@color/c_131313"
+                        android:textSize="20dp" />
+
+                    <!-- 포트폴리오 정보 layout start -->
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/portfolio_info_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginBottom="60dp"
+                        android:background="@drawable/layout_round_ffffff"
+                        android:elevation="10dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/buy_title">
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/text_1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="15dp"
+                            android:layout_marginTop="15dp"
+                            android:fontFamily="@font/pretendard_bold"
+                            android:lineHeight="20dp"
+                            android:text="포트폴리오"
+                            android:textColor="@color/c_757983"
+                            android:textSize="14dp"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/info_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="15dp"
+                            android:layout_marginEnd="15dp"
+                            android:fontFamily="@font/pretendard_regular"
+                            android:lineHeight="20dp"
+                            android:textColor="@color/c_757983"
+                            android:textSize="14dp"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/text_2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="15dp"
+                            android:layout_marginTop="15dp"
+                            android:fontFamily="@font/pretendard_bold"
+                            android:lineHeight="20dp"
+                            android:text="구성"
+                            android:textColor="@color/c_757983"
+                            android:textSize="14dp"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/text_1" />
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/productsRv"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="30dp"
+                            android:layout_marginEnd="15dp"
+                            app:layout_constraintLeft_toRightOf="@+id/text_2"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toTopOf="@+id/text_2" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/text_3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="15dp"
+                            android:layout_marginTop="15dp"
+                            android:fontFamily="@font/pretendard_bold"
+                            android:lineHeight="20dp"
+                            android:text="총 판매 금액"
+                            android:textColor="@color/c_757983"
+                            android:textSize="14dp"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/productsRv" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/all_amount"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="15dp"
+                            android:fontFamily="@font/pretendard_regular"
+                            android:lineHeight="20dp"
+                            android:textColor="@color/c_757983"
+                            android:textSize="14dp"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toTopOf="@+id/text_3" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/text_4"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="15dp"
+                            android:layout_marginTop="15dp"
+                            android:fontFamily="@font/pretendard_bold"
+                            android:lineHeight="20dp"
+                            android:text="구매가능금액"
+                            android:textColor="@color/c_757983"
+                            android:textSize="14dp"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/text_3" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/purchase_amount"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="15dp"
+                            android:fontFamily="@font/pretendard_regular"
+                            android:lineHeight="20dp"
+                            android:textColor="@color/c_757983"
+                            android:textSize="14dp"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toTopOf="@+id/text_4" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/purchase_amount_count"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="15dp"
+                            android:fontFamily="@font/pretendard_regular"
+                            android:lineHeight="20dp"
+                            android:textColor="@color/c_757983"
+                            android:textSize="10dp"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/purchase_amount" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/text_5"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="15dp"
+                            android:layout_marginTop="15dp"
+                            android:layout_marginBottom="15dp"
+                            android:fontFamily="@font/pretendard_bold"
+                            android:lineHeight="20dp"
+                            android:text="운용 기간"
+                            android:textColor="@color/c_757983"
+                            android:textSize="14dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/text_4" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/oper_date_detail"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="15dp"
+                            android:fontFamily="@font/pretendard_regular"
+                            android:lineHeight="20dp"
+                            android:textColor="@color/c_757983"
+                            android:textSize="14dp"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toTopOf="@+id/text_5" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                    <!-- 포트폴리오 정보 layout end -->
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        </ScrollView>
+
+        <!-- Bottom Button Layout Start -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/btn_layout"
+            android:layout_width="match_parent"
+            android:layout_height="130dp"
+            android:background="@drawable/linear_gradient"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/root_layout"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="48dp">
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/portfolio_btn"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:background="@drawable/j_btn_text_back"
+                    android:gravity="center"
+                    android:lineHeight="25dp"
+                    android:text=""
+                    android:textColor="@color/white"
+                    android:textSize="16dp"
+                    android:visibility="visible"
+                    app:fontFamily="@font/pretendard_bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toRightOf="@+id/cancleBtn"
+                    app:layout_constraintRight_toRightOf="parent"
+                    />
+
+                <TextView
+                    android:id="@+id/cancleBtn"
+                    android:layout_width="107dp"
+                    android:layout_height="48dp"
+                    android:layout_marginEnd="10dp"
+                    android:background="@drawable/layout_round_e6f9fa"
+                    android:gravity="center"
+                    android:lineHeight="25dp"
+                    android:text="구매 취소"
+                    android:textColor="@color/c_10cfc9"
+                    android:textSize="16dp"
+                    android:visibility="visible"
+                    app:fontFamily="@font/pretendard_bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toLeftOf="@+id/portfolio_btn" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+<!--            <androidx.appcompat.widget.AppCompatTextView-->
+<!--                android:id="@+id/confirm_btn"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="50dp"-->
+<!--                android:layout_marginStart="16dp"-->
+<!--                android:layout_marginTop="25dp"-->
+<!--                android:layout_marginEnd="16dp"-->
+<!--                android:background="@drawable/layout_round_10cfc9"-->
+<!--                android:gravity="center"-->
+<!--                android:lineHeight="25dp"-->
+<!--                android:text="포트폴리오 보러가기"-->
+<!--                android:textColor="@drawable/j_selector_text_color"-->
+<!--                android:textSize="16dp"-->
+<!--                android:visibility="gone"-->
+<!--                app:fontFamily="@font/pretendard_bold"-->
+<!--                app:layout_constraintBottom_toBottomOf="parent" />-->
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+        <!-- Bottom Button Layout End -->
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</layout>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="activity"
+            type="com.bsstandard.piece.view.withdrawal.WithdrawSuccessActivity" />
+
+        <!-- 예치금 잔액 ViewModel -->
+        <variable
+            name="depositVm"
+            type="com.bsstandard.piece.data.viewmodel.DepositBalanceViewModel" />
+
+        <!-- 회원 계좌 정보 조회 ViewModel -->
+        <variable
+            name="memberAccountVm"
+            type="com.bsstandard.piece.data.viewmodel.AccountViewModel" />
+
+    </data>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        tools:context=".view.withdrawal.WithdrawSuccessActivity">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/withdraw_success_lottie"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_marginTop="155dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/title"
+            app:layout_constraintTop_toBottomOf="@+id/withdraw_success_lottie"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginTop="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="출금이 완료되었어요"
+            android:textSize="26dp"
+            android:lineHeight="34dp"
+            android:textColor="@color/c_131313"
+            android:fontFamily="@font/pretendard_regular"
+            />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/subTitle"
+            app:layout_constraintTop_toBottomOf="@+id/title"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginTop="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="예치금 500,000원이 \n 카카오뱅크 계좌로 입금되었어요."
+            android:textSize="14dp"
+            android:lineHeight="20dp"
+            android:textColor="@color/c_8c919f"
+            android:fontFamily="@font/pretendard_regular"
+            />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/confirm_btn"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="25dp"
+            android:layout_marginEnd="12dp"
+            android:background="@drawable/layout_round_10cfc9"
+            android:gravity="center"
+            android:lineHeight="25dp"
+            android:text="확인"
+            android:textColor="@drawable/j_selector_text_color"
+            android:textSize="14dp"
+            app:fontFamily="@font/pretendard_bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

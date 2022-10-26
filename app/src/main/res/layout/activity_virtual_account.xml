@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="activity"
+            type="com.bsstandard.piece.view.virtual.VirtualActivity" />
+
+        <!-- 약관 조회 ViewModel -->
+        <!-- 약관 목록 -->
+        <variable
+            name="mvConsent"
+            type="com.bsstandard.piece.data.viewmodel.ConsentViewModel" />
+
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/top_layout"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/back_img"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:background="@drawable/arrow_left"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/title_layout"
+                app:layout_constraintTop_toBottomOf="@+id/top_layout"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/title1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="가상 계좌 생성"
+                    android:textSize="26dp"
+                    android:lineHeight="34dp"
+                    android:textColor="@color/c_4a4d55"
+                    android:fontFamily="@font/pretendard_extrabold"
+                    />
+
+                <TextView
+                    android:id="@+id/title2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@+id/title1"
+                    android:layout_marginTop="5dp"
+                    android:text="가입된 휴대폰 번호로 가상 계좌번호를 생성합니다."
+                    android:textSize="12dp"
+                    android:lineHeight="16dp"
+                    android:textColor="@color/c_8c919f"
+                    android:fontFamily="@font/pretendard_regular"
+                    />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/phone_layout"
+                app:layout_constraintTop_toBottomOf="@+id/title_layout"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="40dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/title3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="휴대폰 번호"
+                    android:textSize="14dp"
+                    android:lineHeight="20dp"
+                    android:textColor="@color/c_4a4d55"
+                    android:fontFamily="@font/pretendard_bold"
+                    />
+
+                <TextView
+                    android:id="@+id/phone"
+                    android:layout_width="match_parent"
+                    android:layout_height="52dp"
+                    android:background="@color/c_f9f9f9"
+                    android:fontFamily="@font/pretendard_regular"
+                    android:gravity="left|center"
+                    android:lineHeight="25dp"
+                    android:text="010-1234-5678"
+                    android:textColor="@color/c_8c919f"
+                    android:textSize="16dp"
+                    app:layout_constraintTop_toBottomOf="@+id/title3" />
+
+                <View
+                    android:id="@+id/line"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/c_8c919f"
+                    app:layout_constraintTop_toBottomOf="@+id/phone" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/consent_layout"
+                app:layout_constraintBottom_toTopOf="@+id/confirm_btn"
+                android:layout_marginBottom="40dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <CheckBox
+                    android:id="@+id/all_chk"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="54dp"
+                    android:background="@drawable/all_chk_selector"
+                    android:button="@null"
+                    app:layout_constraintStart_toStartOf="parent"
+                    />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/c_all_agree"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:lineHeight="25px"
+                    android:text="@string/c_all_agree"
+                    android:textColor="@color/c_b8bcc8"
+                    android:textSize="16sp"
+                    app:fontFamily="@font/pretendard_bold"
+                    app:layout_constraintBottom_toBottomOf="@+id/all_chk"
+                    app:layout_constraintLeft_toRightOf="@+id/all_chk"
+                    app:layout_constraintTop_toTopOf="@+id/all_chk" />
+
+                <View
+                    android:id="@+id/line_1"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="16dp"
+                    android:background="@color/c_eaecf0"
+                    app:layout_constraintTop_toBottomOf="@+id/all_chk" />
+
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/consentRV"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/line_1" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/confirm_btn"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="25dp"
+                android:layout_marginEnd="12dp"
+                android:background="@drawable/j_selector"
+                android:gravity="center"
+                android:lineHeight="25dp"
+                android:text="인증하기"
+                android:textColor="@drawable/j_selector_text_color"
+                android:textSize="14dp"
+                app:fontFamily="@font/pretendard_bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

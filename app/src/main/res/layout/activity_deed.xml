@@ -1,0 +1,840 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="activity"
+            type="com.bsstandard.piece.view.deed.DeedActivity" />
+
+        <variable
+            name="portfolioDetailViewModel"
+            type="com.bsstandard.piece.view.portfolioDetail.PortfolioDetailViewModel" />
+
+        <!-- 구매 정보 조회 ( 소유 조각 ) ViewModel -->
+        <variable
+            name="purchaseVm"
+            type="com.bsstandard.piece.data.viewmodel.PurchaseViewModel" />
+
+        <variable
+            name="pos"
+            type="Integer" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ScrollView
+            android:id="@+id/parent_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            android:layout_weight="1"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/top_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="80dp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/back_img"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
+                        android:background="@drawable/arrow_left"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/top_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:lineHeight="25dp"
+                        android:text="소유 증서"
+                        android:textColor="@color/c_4a4d55"
+                        android:textSize="16dp"
+                        app:fontFamily="@font/pretendard_regular"
+                        app:layout_constraintBottom_toBottomOf="@+id/back_img"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/back_img" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/top_title_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="16dp"
+                    android:paddingBottom="100dp"
+                    app:layout_constraintTop_toBottomOf="@+id/top_layout">
+
+                    <TextView
+                        android:id="@+id/deed_title_1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/pretendard_extrabold"
+                        android:gravity="left"
+                        android:lineHeight="28dp"
+                        android:text="@string/deed_title_1"
+                        android:textColor="@color/c_131313"
+                        android:textSize="20dp"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/deed_title_2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:background="@drawable/layout_round_f2f3f4"
+                        android:padding="15dp"
+                        app:layout_constraintTop_toBottomOf="@+id/deed_title_1">
+
+                        <TextView
+                            android:id="@+id/title_2"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:fontFamily="@font/pretendard_regular"
+                            android:lineHeight="25dp"
+                            android:text="@string/deed_title_2"
+                            android:textSize="16dp" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <!-- 제 1조 -->
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/deed_title_3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:background="@drawable/layout_round_f2f3f4"
+                        android:padding="15dp"
+                        app:layout_constraintTop_toBottomOf="@+id/deed_title_2">
+
+                        <TextView
+                            android:id="@+id/parent_title_1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/pretendard_bold"
+                            android:lineHeight="25dp"
+                            android:text="제 1조"
+                            android:textColor="@color/c_8c919f"
+                            android:textSize="16dp" />
+
+                        <TextView
+                            android:id="@+id/title_3"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:fontFamily="@font/pretendard_regular"
+                            android:lineHeight="25dp"
+                            android:text="@string/deed_title_3"
+                            android:textSize="16dp"
+                            app:layout_constraintTop_toBottomOf="@+id/parent_title_1" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                    <!-- 제 2조 -->
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/deed_title_4"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:background="@drawable/layout_round_f2f3f4"
+                        android:padding="15dp"
+                        app:layout_constraintTop_toBottomOf="@+id/deed_title_3">
+
+                        <TextView
+                            android:id="@+id/parent_title_2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/pretendard_bold"
+                            android:lineHeight="25dp"
+                            android:text="제 2조 (당사자)"
+                            android:textColor="@color/c_8c919f"
+                            android:textSize="16dp" />
+
+                        <TextView
+                            android:id="@+id/title_4"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:fontFamily="@font/pretendard_regular"
+                            android:lineHeight="25dp"
+                            android:text="@string/deed_title_4"
+                            android:textSize="16dp"
+                            app:layout_constraintTop_toBottomOf="@+id/parent_title_2" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <!-- 제 3조 ( 진행해야함 )-->
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/deed_title_5"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:background="@drawable/layout_round_f2f3f4"
+                        android:padding="15dp"
+                        app:layout_constraintTop_toBottomOf="@+id/deed_title_4">
+
+                        <TextView
+                            android:id="@+id/parent_title_3"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/pretendard_bold"
+                            android:lineHeight="25dp"
+                            android:text="제3조 (구매 대상 및 대금 지급)"
+                            android:textColor="@color/c_8c919f"
+                            android:textSize="16dp" />
+
+                        <TextView
+                            android:id="@+id/title_5"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:fontFamily="@font/pretendard_regular"
+                            android:lineHeight="25dp"
+                            android:text="@string/deed_title_5"
+                            android:textSize="16dp"
+                            app:layout_constraintTop_toBottomOf="@+id/parent_title_3" />
+
+                        <View
+                            android:id="@+id/line"
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="10dp"
+                            android:background="@color/c_8c919f"
+                            app:layout_constraintTop_toBottomOf="@+id/title_5" />
+
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/p_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginTop="10dp"
+                            android:fontFamily="@font/pretendard_regular"
+                            android:lineHeight="25dp"
+                            android:text="구매 대상"
+                            android:textSize="16dp"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/line" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/title"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginTop="10dp"
+                            android:fontFamily="@font/pretendard_regular"
+                            android:lineHeight="25dp"
+                            android:text=""
+                            android:textSize="16dp"
+                            app:layout_constraintLeft_toRightOf="@+id/p_title"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/line" />
+
+                        <View
+                            android:id="@+id/line1"
+                            android:layout_width="match_parent"
+                            android:layout_height="0.5dp"
+                            android:layout_marginTop="5dp"
+                            android:background="@color/c_8c919f"
+                            app:layout_constraintTop_toBottomOf="@+id/title" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/p_amount"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginTop="5dp"
+                            android:fontFamily="@font/pretendard_regular"
+                            android:lineHeight="25dp"
+                            android:text="구매 수량"
+                            android:textSize="16dp"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/line1" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/amount"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginTop="5dp"
+                            android:fontFamily="@font/pretendard_regular"
+                            android:lineHeight="25dp"
+                            android:text=""
+                            android:textSize="16dp"
+                            app:layout_constraintLeft_toRightOf="@+id/p_amount"
+                            app:layout_constraintTop_toBottomOf="@+id/line1" />
+
+                        <View
+                            android:id="@+id/line2"
+                            android:layout_width="match_parent"
+                            android:layout_height="0.5dp"
+                            android:layout_marginTop="5dp"
+                            android:background="@color/c_8c919f"
+                            app:layout_constraintTop_toBottomOf="@+id/amount" />
+
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/p_account"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginTop="5dp"
+                            android:fontFamily="@font/pretendard_regular"
+                            android:lineHeight="25dp"
+                            android:text="구매 대금"
+                            android:textSize="16dp"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/line2" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/account"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginTop="5dp"
+                            android:fontFamily="@font/pretendard_regular"
+                            android:lineHeight="25dp"
+                            android:text=""
+                            android:textSize="16dp"
+                            app:layout_constraintLeft_toRightOf="@+id/p_account"
+                            app:layout_constraintTop_toBottomOf="@+id/line2" />
+
+                        <View
+                            android:id="@+id/line3"
+                            android:layout_width="match_parent"
+                            android:layout_height="0.5dp"
+                            android:layout_marginTop="5dp"
+                            android:background="@color/c_8c919f"
+                            app:layout_constraintTop_toBottomOf="@+id/account" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/p_confirm"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginTop="5dp"
+                            android:fontFamily="@font/pretendard_regular"
+                            android:lineHeight="25dp"
+                            android:text="구매 확인"
+                            android:textSize="16dp"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/line3" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/confirm"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginTop="5dp"
+                            android:fontFamily="@font/pretendard_regular"
+                            android:lineHeight="25dp"
+                            android:text=""
+                            android:textSize="16dp"
+                            app:layout_constraintLeft_toRightOf="@+id/p_confirm"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/line3" />
+
+                        <View
+                            android:id="@+id/line4"
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="10dp"
+                            android:background="@color/c_8c919f"
+                            app:layout_constraintTop_toBottomOf="@+id/confirm" />
+
+
+                        <TextView
+                            android:id="@+id/title_5_1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:fontFamily="@font/pretendard_regular"
+                            android:lineHeight="25dp"
+                            android:text="@string/deed_title_5_1"
+                            android:textSize="16dp"
+                            app:layout_constraintTop_toBottomOf="@+id/line4" />
+
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                    <!-- 제 4조 -->
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/deed_title_6"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:background="@drawable/layout_round_f2f3f4"
+                        android:padding="15dp"
+                        app:layout_constraintTop_toBottomOf="@+id/deed_title_5">
+
+                        <TextView
+                            android:id="@+id/parent_title_4"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/pretendard_bold"
+                            android:lineHeight="25dp"
+                            android:text="제4조 (분할 소유권 취득 및 자산 관리 처분 위임의 개시)"
+                            android:textColor="@color/c_8c919f"
+                            android:textSize="16dp" />
+
+                        <TextView
+                            android:id="@+id/title_6"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:fontFamily="@font/pretendard_regular"
+                            android:lineHeight="25dp"
+                            android:text="@string/deed_title_6"
+                            android:textSize="16dp"
+                            app:layout_constraintTop_toBottomOf="@+id/parent_title_4" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <!-- 제 5조 -->
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/deed_title_7"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:background="@drawable/layout_round_f2f3f4"
+                        android:padding="15dp"
+                        app:layout_constraintTop_toBottomOf="@+id/deed_title_6">
+
+                        <TextView
+                            android:id="@+id/parent_title_5"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/pretendard_bold"
+                            android:lineHeight="25dp"
+                            android:text="제5조 (분할 소유권의 처분)"
+                            android:textColor="@color/c_8c919f"
+                            android:textSize="16dp" />
+
+                        <TextView
+                            android:id="@+id/title_7"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:fontFamily="@font/pretendard_regular"
+                            android:lineHeight="25dp"
+                            android:text="@string/deed_title_7"
+                            android:textSize="16dp"
+                            app:layout_constraintTop_toBottomOf="@+id/parent_title_5" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <!-- 제 6조 -->
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/deed_title_8"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:background="@drawable/layout_round_f2f3f4"
+                        android:padding="15dp"
+                        app:layout_constraintTop_toBottomOf="@+id/deed_title_7">
+
+                        <TextView
+                            android:id="@+id/parent_title_6"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/pretendard_bold"
+                            android:lineHeight="25dp"
+                            android:text="제6조 (계약의 목적)"
+                            android:textColor="@color/c_8c919f"
+                            android:textSize="16dp" />
+
+                        <TextView
+                            android:id="@+id/title_8"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:fontFamily="@font/pretendard_regular"
+                            android:lineHeight="25dp"
+                            android:text="@string/deed_title_8"
+                            android:textSize="16dp"
+                            app:layout_constraintTop_toBottomOf="@+id/parent_title_6" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <!-- 제 7조 -->
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/deed_title_9"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:background="@drawable/layout_round_f2f3f4"
+                        android:padding="15dp"
+                        app:layout_constraintTop_toBottomOf="@+id/deed_title_8">
+
+                        <TextView
+                            android:id="@+id/parent_title_7"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/pretendard_bold"
+                            android:lineHeight="25dp"
+                            android:text="제7조 (자산에 대한 처분 권한 위임 – 분할소유관계의 해소)"
+                            android:textColor="@color/c_8c919f"
+                            android:textSize="16dp" />
+
+                        <TextView
+                            android:id="@+id/title_9"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:fontFamily="@font/pretendard_regular"
+                            android:lineHeight="25dp"
+                            android:text="@string/deed_title_9"
+                            android:textSize="16dp"
+                            app:layout_constraintTop_toBottomOf="@+id/parent_title_7" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <!-- 제 8조 -->
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/deed_title_10"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:background="@drawable/layout_round_f2f3f4"
+                        android:padding="15dp"
+                        app:layout_constraintTop_toBottomOf="@+id/deed_title_9">
+
+                        <TextView
+                            android:id="@+id/parent_title_8"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/pretendard_bold"
+                            android:lineHeight="25dp"
+                            android:text="제8조 (매각 대금 정산 및 수수료)"
+                            android:textColor="@color/c_8c919f"
+                            android:textSize="16dp" />
+
+                        <TextView
+                            android:id="@+id/title_10"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:fontFamily="@font/pretendard_regular"
+                            android:lineHeight="25dp"
+                            android:text="@string/deed_title_10"
+                            android:textSize="16dp"
+                            app:layout_constraintTop_toBottomOf="@+id/parent_title_8" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                    <!-- 제 9조 -->
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/deed_title_11"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:background="@drawable/layout_round_f2f3f4"
+                        android:padding="15dp"
+                        app:layout_constraintTop_toBottomOf="@+id/deed_title_10">
+
+                        <TextView
+                            android:id="@+id/parent_title_9"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/pretendard_bold"
+                            android:lineHeight="25dp"
+                            android:text="제9조 (예치금 관리)"
+                            android:textColor="@color/c_8c919f"
+                            android:textSize="16dp" />
+
+                        <TextView
+                            android:id="@+id/title_11"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:fontFamily="@font/pretendard_regular"
+                            android:lineHeight="25dp"
+                            android:text="@string/deed_title_11"
+                            android:textSize="16dp"
+                            app:layout_constraintTop_toBottomOf="@+id/parent_title_9" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <!-- 제 10조 -->
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/deed_title_12"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:background="@drawable/layout_round_f2f3f4"
+                        android:padding="15dp"
+                        app:layout_constraintTop_toBottomOf="@+id/deed_title_11">
+
+                        <TextView
+                            android:id="@+id/parent_title_10"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/pretendard_bold"
+                            android:lineHeight="25dp"
+                            android:text="제10조 (분할 소유권의 구매 확정 및 취소 및 환불)"
+                            android:textColor="@color/c_8c919f"
+                            android:textSize="16dp" />
+
+                        <TextView
+                            android:id="@+id/title_12"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:fontFamily="@font/pretendard_regular"
+                            android:lineHeight="25dp"
+                            android:text="@string/deed_title_12"
+                            android:textSize="16dp"
+                            app:layout_constraintTop_toBottomOf="@+id/parent_title_10" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <!-- 제 11조 -->
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/deed_title_13"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:background="@drawable/layout_round_f2f3f4"
+                        android:padding="15dp"
+                        app:layout_constraintTop_toBottomOf="@+id/deed_title_12">
+
+                        <TextView
+                            android:id="@+id/parent_title_11"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/pretendard_bold"
+                            android:lineHeight="25dp"
+                            android:text="제11조 (계약의 체결)"
+                            android:textColor="@color/c_8c919f"
+                            android:textSize="16dp" />
+
+                        <TextView
+                            android:id="@+id/title_13"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:fontFamily="@font/pretendard_regular"
+                            android:lineHeight="25dp"
+                            android:text="@string/deed_title_13"
+                            android:textSize="16dp"
+                            app:layout_constraintTop_toBottomOf="@+id/parent_title_11" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <!-- 갑/을 layout -->
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/member_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        app:layout_constraintTop_toBottomOf="@+id/deed_title_13">
+
+                        <TextView
+                            android:id="@+id/owner"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/pretendard_regular"
+                            android:lineHeight="25dp"
+                            android:text="갑 : 장현민"
+                            android:textColor="@color/c_8c919f"
+                            android:textSize="16dp" />
+
+                        <TextView
+                            android:id="@+id/address"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="5dp"
+                            android:layout_marginTop="5dp"
+                            android:fontFamily="@font/pretendard_regular"
+                            android:lineHeight="25dp"
+                            android:text="주소 : 인천광역시 서구 청라라임로 85(청라동, 청라린스트라우스) 린스트라우스 103동 804호"
+                            android:textColor="@color/c_8c919f"
+                            android:textSize="16dp"
+                            app:layout_constraintTop_toBottomOf="@+id/owner" />
+
+                        <TextView
+                            android:id="@+id/buy_date"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="5dp"
+                            android:layout_marginTop="5dp"
+                            android:fontFamily="@font/pretendard_regular"
+                            android:lineHeight="25dp"
+                            android:text="구매계약일 : 2022년 4월 12일"
+                            android:textColor="@color/c_8c919f"
+                            android:textSize="16dp"
+                            app:layout_constraintTop_toBottomOf="@+id/address" />
+
+                        <TextView
+                            android:id="@+id/sign_title_1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="5dp"
+                            android:layout_marginTop="5dp"
+                            android:fontFamily="@font/pretendard_regular"
+                            android:lineHeight="25dp"
+                            android:text="서명: 전자 서명으로 대체(자동)"
+                            android:textColor="@color/c_8c919f"
+                            android:textSize="16dp"
+                            app:layout_constraintTop_toBottomOf="@+id/buy_date" />
+
+
+                        <TextView
+                            android:id="@+id/contractor"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp"
+                            android:fontFamily="@font/pretendard_regular"
+                            android:lineHeight="25dp"
+                            android:text="을 : (주)바이셀스탠다드"
+                            android:textColor="@color/c_8c919f"
+                            android:textSize="16dp"
+                            app:layout_constraintTop_toBottomOf="@+id/sign_title_1" />
+
+                        <TextView
+                            android:id="@+id/c_address"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="5dp"
+                            android:layout_marginTop="5dp"
+                            android:fontFamily="@font/pretendard_regular"
+                            android:lineHeight="25dp"
+                            android:text="주소 : 서울시 강서구 공항대로 194 퀸즈파크12차 1013호"
+                            android:textColor="@color/c_8c919f"
+                            android:textSize="16dp"
+                            app:layout_constraintTop_toBottomOf="@+id/contractor" />
+
+                        <TextView
+                            android:id="@+id/number"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="5dp"
+                            android:layout_marginTop="5dp"
+                            android:fontFamily="@font/pretendard_regular"
+                            android:lineHeight="25dp"
+                            android:text="법인등록번호: 110111-7035606"
+                            android:textColor="@color/c_8c919f"
+                            android:textSize="16dp"
+                            app:layout_constraintTop_toBottomOf="@+id/c_address" />
+
+                        <TextView
+                            android:id="@+id/sign_title_2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="5dp"
+                            android:layout_marginTop="5dp"
+                            android:fontFamily="@font/pretendard_regular"
+                            android:lineHeight="25dp"
+                            android:text="서명: 전자 서명으로 대체"
+                            android:textColor="@color/c_8c919f"
+                            android:textSize="16dp"
+                            app:layout_constraintTop_toBottomOf="@+id/number" />
+
+                        <TextView
+                            android:id="@+id/sign_title_3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="5dp"
+                            android:layout_marginTop="5dp"
+                            android:fontFamily="@font/pretendard_regular"
+                            android:lineHeight="25dp"
+                            android:text="(자동)"
+                            android:textColor="@color/c_8c919f"
+                            android:textSize="16dp"
+                            app:layout_constraintBottom_toBottomOf="@+id/sign_title_2"
+                            app:layout_constraintLeft_toRightOf="@+id/sign_title_2"
+                            app:layout_constraintTop_toTopOf="@+id/sign_title_2" />
+
+
+                        <ImageView
+                            android:id="@+id/stemp_icon"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/stamp"
+                            app:layout_constraintBottom_toBottomOf="@+id/sign_title_3"
+                            app:layout_constraintLeft_toLeftOf="@+id/sign_title_3"
+                            app:layout_constraintRight_toRightOf="@+id/sign_title_3"
+                            app:layout_constraintTop_toTopOf="@+id/sign_title_3" />
+
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </ScrollView>
+
+        <!-- Bottom Button Layout Start -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/btn_layout"
+            android:layout_width="match_parent"
+            android:layout_height="170dp"
+            android:background="@drawable/linear_gradient"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/portfolio_btn"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/j_btn_text_back"
+                android:gravity="center"
+                android:lineHeight="25dp"
+                android:text="이메일로 보내기"
+                android:textColor="@color/white"
+                android:textSize="16dp"
+                android:visibility="visible"
+                app:fontFamily="@font/pretendard_bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toRightOf="@+id/cancleBtn"
+                app:layout_constraintRight_toRightOf="parent" />
+
+            <TextView
+                android:id="@+id/cancleBtn"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="30dp"
+                android:background="@drawable/layout_round_e6f9fa"
+                android:gravity="center"
+                android:lineHeight="25dp"
+                android:text="우편으로 받기"
+                android:textColor="@color/c_10cfc9"
+                android:textSize="16dp"
+                android:visibility="visible"
+                app:fontFamily="@font/pretendard_bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@+id/portfolio_btn" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+        <!-- Bottom Button Layout End -->
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</layout>

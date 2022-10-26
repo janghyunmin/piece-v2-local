@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="activity"
+            type="com.bsstandard.piece.view.notisetting.NotificationSettingActivity" />
+
+        <variable
+            name="questionVm"
+            type="com.bsstandard.piece.data.viewmodel.BoardViewModel" />
+
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/top_layout"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/back_img"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:background="@drawable/arrow_left"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/top_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:lineHeight="25dp"
+                    android:text="자주 묻는 질문"
+                    android:textColor="@color/c_4a4d55"
+                    android:textSize="16dp"
+                    app:fontFamily="@font/pretendard_regular"
+                    app:layout_constraintBottom_toBottomOf="@+id/back_img"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/back_img" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.core.widget.NestedScrollView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/top_layout">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/content_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="30dp"
+                        android:fontFamily="@font/pretendard_extrabold"
+                        android:gravity="left"
+                        android:lineHeight="34dp"
+                        android:text="무엇을 \n도와드릴까요?"
+                        android:textColor="@color/c_4a4d55"
+                        android:textSize="26dp"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintLeft_toLeftOf="parent" />
+
+                    <TextView
+                        android:id="@+id/subTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:fontFamily="@font/pretendard_regular"
+                        android:lineHeight="20dp"
+                        android:text="챗봇 상담을 이용하기 전에 \n원하는 답변을 더 빠르게 찾을 수 있어요"
+                        android:textColor="@color/c_8c919f"
+                        android:textSize="14dp"
+                        app:layout_constraintLeft_toLeftOf="@+id/title"
+                        app:layout_constraintTop_toBottomOf="@+id/title"
+                        app:layout_constraintBottom_toBottomOf="@+id/icon_layout"
+                        />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/icon_layout"
+                        android:layout_width="150dp"
+                        android:layout_height="150dp"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="@+id/subTitle"
+                        app:layout_constraintRight_toRightOf="parent">
+
+                        <ImageView
+                            android:id="@+id/character"
+                            android:layout_width="150dp"
+                            android:layout_height="150dp"
+                            android:background="@drawable/question_icon"
+                            app:layout_constraintRight_toRightOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/tab_parent"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="24dp"
+                        app:layout_constraintTop_toBottomOf="@+id/icon_layout">
+
+                        <com.google.android.material.tabs.TabLayout
+                            android:id="@+id/tabs"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="left"
+                            android:orientation="horizontal"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:tabIndicatorAnimationMode="elastic"
+                            app:tabIndicatorColor="@color/c_10cfc9"
+                            app:tabIndicatorFullWidth="true"
+                            app:tabIndicatorHeight="2dp"
+                            app:tabMinWidth="0dp"
+                            app:tabMode="scrollable"
+                            app:tabSelectedTextColor="@color/c_4a4d55"
+                            app:tabTextAppearance="@style/tab_text"
+                            app:tabTextColor="@color/c_dadce3" />
+
+                        <View
+                            android:id="@+id/line"
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/c_f2f3f4"
+                            app:layout_constraintTop_toBottomOf="@+id/tabs" />
+
+                        <FrameLayout
+                            android:id="@+id/tabContent"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/line">
+
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/questionRv"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent" />
+
+                        </FrameLayout>
+
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.core.widget.NestedScrollView>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
