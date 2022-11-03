@@ -1,7 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Theme.TransparentStatusBar" parent="Theme.MaterialComponents.Light.NoActionBar">
-        <item name="windowActionBar">false</item>
+        <item name="windowActionBar">true</item>
         <item name="windowNoTitle">true</item>
         <item name="colorPrimaryDark">@android:color/transparent</item>
 
@@ -9,7 +9,14 @@
         <item name="android:windowSoftInputMode">adjustResize</item>
 
         <item name="android:windowActivityTransitions">true</item> <!-- recyclerview animation 처리 -->
+
+        <!--        // 액티비티 내의 뷰들이 Transition이 가능하도록 한다-->
         <item name="android:windowContentTransitions">true</item>
+        <!--        // 액티비티 이동 시 입장 애니메이션-->
+        <item name="android:windowSharedElementEnterTransition">@transition/image_shared_element_transition</item>
+        <!--        // 액티비티 이동 시 퇴장 애니메이션-->
+        <item name="android:windowSharedElementExitTransition">@transition/image_shared_element_transition</item>
+
         <!-- Status bar color. -->
         <item name="android:windowTranslucentStatus">false</item> <!-- StatusBar 를 반투명하게 설정한다. -->
         <item name="android:statusBarColor">@color/trans</item> <!-- StatusBar 색상 -->
@@ -27,4 +34,10 @@
 
         <item name="bottomSheetDialogTheme">@style/CustomBottomSheetDialogTheme</item>
     </style>
+
+    <style name="Theme.Heardot.NoActionBar" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <item name="android:statusBarColor">@android:color/white</item>
+        <item name="android:windowLightStatusBar">true</item>
+    </style>
+
 </resources>

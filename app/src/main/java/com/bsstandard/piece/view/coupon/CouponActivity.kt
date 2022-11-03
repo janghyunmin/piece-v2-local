@@ -2,6 +2,7 @@ package com.bsstandard.piece.view.coupon
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
@@ -17,9 +18,11 @@ import com.bsstandard.piece.R
 import com.bsstandard.piece.base.BaseActivity
 import com.bsstandard.piece.data.viewmodel.CouponViewModel
 import com.bsstandard.piece.databinding.ActivityCouponBinding
-import com.bsstandard.piece.widget.utils.CommonTwoTypeDialog
+import com.bsstandard.piece.view.common.NetworkActivity
 import com.bsstandard.piece.widget.utils.CustomDialogListener
+import com.bsstandard.piece.widget.utils.DialogManager
 import com.bsstandard.piece.widget.utils.LogUtil
+import com.bsstandard.piece.widget.utils.NetworkConnection
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.disposables.Disposable
 
@@ -46,17 +49,11 @@ class CouponActivity : BaseActivity<ActivityCouponBinding>(R.layout.activity_cou
 
     //    private lateinit var vm: CouponViewModel
     var mContext: Context = this@CouponActivity
-
-    // 쿠폰 등록하기 클릭시 필요한 Dialog - jhm 2022/09/13
-    private var commonTwoTypeModal: CommonTwoTypeDialog? = null
-
-    // 쿠폰 사용 완료 후 Dialog - jhm 2022/09/14
-    private var commonTwoTypeReturnModal: CommonTwoTypeDialog? = null
-
-    // 사용시 유의사항 - jhm 2022/09/14
-    private var commonTwoTypeNoticeModal: CommonTwoTypeDialog? = null
-
     var mUserInputCode: String? = null
+
+    // 쿠폰 Dialog Title, subTitle 변수 - jhm 2022/10/27
+    private var title: String = "";
+    private var subTitle: String = "";
 
 
     @SuppressLint("SetJavaScriptEnabled", "SetTextI18n")
@@ -81,82 +78,107 @@ class CouponActivity : BaseActivity<ActivityCouponBinding>(R.layout.activity_cou
             setNaviBarIconColor(true) // 네비게이션 true : 검정색
             setNaviBarBgColor("#f2f3f4") // 네비게이션 배경색
 
-            // 바깥영역 터치시 키보드 내리기 - jhm 2022/09/14
-            binding.root.setOnClickListener {
-                hideKeyboard()
-            }
-
-            // 닫기 - jhm 2022/09/14
-            binding.backImg.setOnClickListener {
-                finish()
-            }
-
-            // 사용시 유의사항 Text Onclick - jhm 2022/09/14
-            binding.noticeText.setOnClickListener {
-                // 유의사항 text 정렬 - jhm 2022/09/14
-                getCouponNotice()
-
-            }
-
-
-
-            val userCouponCodeObserver =
-                Observer { userInputCode: String ->
-                    mUserInputCode = userInputCode
-                }
-
-            vm.getCodeInput().observe(this@CouponActivity, userCouponCodeObserver)
-            vm.getCodeInput().observe(this@CouponActivity, Observer {
-                mUserInputCode = it
-                LogUtil.logE("입력값 : $mUserInputCode")
-                // 입력값이 빈값이면 clear Icon Gone - jhm 2022/09/13
-                if (mUserInputCode.toString().isEmpty()) {
-                    binding.clearIcon.visibility = View.GONE
-                    binding.confirmBtn.isSelected = false
-                }
-                // 입력값이 1글자라도 있으면 clear Icon Visible - jhm 2022/09/13
-                else {
-                    binding.clearIcon.visibility = View.VISIBLE
-                    binding.confirmBtn.isSelected = true
-
-                    // input text clear - jhm 2022/09/13
-                    binding.clearIcon.setOnClickListener {
-                        binding.editText.setText("")
-                    }
-
-                    binding.confirmBtn.setOnClickListener {
-                        val customDialogListener: CustomDialogListener =
-                            object : CustomDialogListener {
-                                override fun onCancelButtonClicked() {
-                                    LogUtil.logE("닫기 OnClick..")
-                                    commonTwoTypeModal?.dismiss()
-                                }
-
-                                override fun onOkButtonClicked() {
-                                    LogUtil.logE("쿠폰 사용하기 OnClick 완료")
-                                    vm.getCoupon(mUserInputCode.toString())
-                                    vm.couponResponse.observe(this@CouponActivity) {
-                                        commonTwoTypeModal?.dismiss()
-                                        LogUtil.logE("vm.response : " + vm.couponResponse.value)
-                                    }
-                                    Handler(Looper.getMainLooper()).postDelayed({
-                                        getReturnMessage()
-                                    }, 400)
-                                }
-                            }
-                        commonTwoTypeModal = CommonTwoTypeDialog(
-                            context = mContext,
-                            "coupon",
-                            customDialogListener,
-                            "",
-                            "",
-                            ""
-                        )
-                        commonTwoTypeModal?.show()
-                    }
-                }
-            })
         }
+
+        val networkConnection = NetworkConnection(applicationContext)
+        networkConnection.observe(this) { isConnected -> // 인터넷 연결되어있음 - jhm 2022/11/02
+            if (isConnected) {
+                // 바깥영역 터치시 키보드 내리기 - jhm 2022/09/14
+                binding.root.setOnClickListener {
+                    hideKeyboard()
+                }
+
+                // 닫기 - jhm 2022/09/14
+                binding.backImg.setOnClickListener {
+                    finish()
+                }
+
+                // 사용시 유의사항 Text Onclick - jhm 2022/09/14
+                binding.noticeText.setOnClickListener {
+                    // 유의사항 text 정렬 - jhm 2022/09/14
+                    DialogManager.openLeftDalog(
+                        mContext, "사용시 유의사항",
+                        mContext.getString(R.string.notice),
+                        "확인했어요!"
+                    )
+                }
+
+
+                val userCouponCodeObserver =
+                    Observer { userInputCode: String ->
+                        mUserInputCode = userInputCode
+                    }
+
+                vm.getCodeInput().observe(this@CouponActivity, userCouponCodeObserver)
+                vm.getCodeInput().observe(this@CouponActivity, Observer { it ->
+                    mUserInputCode = it
+                    LogUtil.logE("입력값 : $mUserInputCode")
+                    // 입력값이 빈값이면 clear Icon Gone - jhm 2022/09/13
+                    if (mUserInputCode.toString().isEmpty()) {
+                        binding.clearIcon.visibility = View.GONE
+                        binding.confirmBtn.isSelected = false
+                    }
+                    // 입력값이 1글자라도 있으면 clear Icon Visible - jhm 2022/09/13
+                    else {
+                        binding.clearIcon.visibility = View.VISIBLE
+                        binding.confirmBtn.isSelected = true
+
+                        // input text clear - jhm 2022/09/13
+                        binding.clearIcon.setOnClickListener {
+                            binding.editText.setText("")
+                        }
+
+                        binding.confirmBtn.setOnClickListener {
+                            val customDialogListener: CustomDialogListener =
+                                object : CustomDialogListener {
+                                    override fun onCancelButtonClicked() {
+                                        LogUtil.logE("닫기 OnClick..")
+                                    }
+
+                                    override fun onOkButtonClicked() {
+                                        LogUtil.logE("쿠폰 사용하기 OnClick 완료")
+                                        vm.getCoupon(mUserInputCode.toString())
+                                        vm.responseCode.observe(this@CouponActivity) {
+                                            var response = it
+                                            if (response.equals("200")) {
+                                                title = "쿠폰 사용 완료"
+                                                subTitle = "쿠폰이 사용 되었어요!"
+                                            } else if (response.equals("208")) {
+                                                title = "쿠폰 등록 실패"
+                                                subTitle = "이미 사용된 쿠폰이에요."
+                                            } else if (response.equals("400")) {
+                                                title = "쿠폰 등록 실패"
+                                                subTitle = "회원정보가 일치하지 않아요."
+                                            } else if (response.equals("404")) {
+                                                title = "쿠폰 등록 실패"
+                                                subTitle = "쿠폰번호가 유효하지 않아요."
+                                            } else {
+                                                title = "쿠폰 등록 실패"
+                                                subTitle = "사용 가능한 쿠폰이 아닙니다!"
+                                            }
+                                        }
+                                        Handler(Looper.getMainLooper()).postDelayed({
+                                            DialogManager.openNotGoDalog(mContext, title, subTitle)
+                                        }, 400)
+                                    }
+                                }
+                            DialogManager.openTwoBtnDialog(
+                                mContext,
+                                "쿠폰을 바로 사용할까요?",
+                                "등록 완료된 쿠포은 취소할 수 없어요.",
+                                customDialogListener,
+                                "쿠폰 사용"
+                            )
+                        }
+                    }
+                })
+            } else {
+                val intent = Intent(applicationContext, NetworkActivity::class.java)
+                startActivity(intent)
+            }
+        }
+
+
 
     }
 
@@ -171,51 +193,6 @@ class CouponActivity : BaseActivity<ActivityCouponBinding>(R.layout.activity_cou
         disposable?.let { disposable!!.dispose() }
     }
 
-    private fun getReturnMessage() {
-        val customDialogListener_2: CustomDialogListener =
-            object : CustomDialogListener {
-                override fun onOkButtonClicked() {
-                    LogUtil.logE("쿠폰 사용 완료 OnClick..")
-                    commonTwoTypeReturnModal?.dismiss()
-                }
-
-                override fun onCancelButtonClicked() {
-                    LogUtil.logE("쿠폰 취소 OnClick..")
-                }
-            }
-        commonTwoTypeReturnModal = CommonTwoTypeDialog(
-            context = mContext,
-            "coupon_response",
-            customDialogListener_2,
-            vm.couponResponse.value?.message.toString(),
-            "",
-            ""
-        )
-        commonTwoTypeReturnModal?.show()
-    }
-
-
-    private fun getCouponNotice() {
-        val customDialogListener_3: CustomDialogListener =
-            object : CustomDialogListener {
-                override fun onOkButtonClicked() {
-                    commonTwoTypeNoticeModal?.dismiss()
-                }
-
-                override fun onCancelButtonClicked() {
-                    TODO("Not yet implemented")
-                }
-            }
-        commonTwoTypeNoticeModal = CommonTwoTypeDialog(
-            context = mContext,
-        "coupon_notice",
-            customDialogListener_3,
-            mContext.getString(R.string.notice),
-            "",
-            ""
-        )
-        commonTwoTypeNoticeModal?.show()
-    }
 
     // 키보드 숨기기 - jhm 2022/09/14
     private fun hideKeyboard() {

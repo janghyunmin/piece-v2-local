@@ -23,6 +23,10 @@
             name="activity"
             type="com.bsstandard.piece.view.portfolioDetail.PortfolioDetailActivity" />
 
+        <variable
+            name="portfolioNotiViewModel"
+            type="com.bsstandard.piece.data.viewmodel.PortfolioNotificationViewModel" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -38,7 +42,6 @@
             app:layout_collapseMode="parallax"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent" />
-
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/top_layout"
@@ -170,7 +173,7 @@
                                         android:layout_height="150dp"
                                         app:layout_constraintTop_toTopOf="parent"
                                         app:layout_constraintTop_toBottomOf="@+id/progress"
-                                        tools:ignore="NotSibling" />
+                                        />
 
 
                                 </androidx.constraintlayout.widget.ConstraintLayout>
@@ -1299,22 +1302,86 @@
 
 
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
-        <!-- Bottom Button Layout Start -->
+
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/btn_layout"
             android:layout_width="match_parent"
-            android:layout_height="130dp"
+            android:layout_height="150dp"
             android:background="@drawable/linear_gradient"
             app:layout_constraintBottom_toBottomOf="parent">
+
+            <!-- 알림 신청 layout -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/union_layout"
+                app:layout_constraintBottom_toTopOf="@+id/noti_radius"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="22dp"
+                android:visibility="gone"
+                >
+
+                <ImageView
+                    android:id="@+id/noti_layout_icon"
+                    android:layout_width="300dp"
+                    android:layout_height="60dp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    android:layout_marginStart="16dp"
+                    android:background="@drawable/noti_layout_icon"
+                    />
+
+                <TextView
+                    android:id="@+id/noti_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="@+id/noti_layout_icon"
+                    app:layout_constraintLeft_toLeftOf="@+id/noti_layout_icon"
+                    app:layout_constraintBottom_toBottomOf="@+id/noti_layout_icon"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginBottom="10dp"
+                    android:text="알림 신청하고 오픈알림을 가장 먼저 받으세요!"
+                    android:gravity="center"
+                    android:textSize="14sp"
+                    android:lineHeight="20sp"
+                    android:fontFamily="@font/pretendard_bold"
+                    android:textColor="@color/c_ffffff"
+                    />
+
+                <ImageView
+                    android:id="@+id/close_icon"
+                    app:layout_constraintRight_toRightOf="@+id/noti_layout_icon"
+                    app:layout_constraintTop_toTopOf="@+id/noti_text"
+                    app:layout_constraintBottom_toBottomOf="@+id/noti_text"
+                    android:layout_marginEnd="12sp"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:background="@drawable/x_icon_white_small"
+                    />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+            <!-- Bottom Button Layout Start -->
+
+            <TextView
+                android:id="@+id/noti_radius"
+                android:layout_width="50dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="16dp"
+                android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:background="@drawable/layout_round_border_eaecf0"/>
 
             <com.airbnb.lottie.LottieAnimationView
                 android:id="@+id/notiView"
                 android:layout_width="50dp"
                 android:layout_height="48dp"
-                android:layout_marginStart="16dp"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent" />
+                android:visibility="visible"
+                app:layout_constraintTop_toTopOf="@+id/noti_radius"
+                app:layout_constraintLeft_toLeftOf="@+id/noti_radius"
+                app:layout_constraintRight_toRightOf="@+id/noti_radius"
+                app:layout_constraintBottom_toBottomOf="@+id/noti_radius"
+                />
+
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/portfolio_btn"
@@ -1332,7 +1399,7 @@
                 android:visibility="gone"
                 app:fontFamily="@font/pretendard_bold"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toRightOf="@+id/notiView"
+                app:layout_constraintLeft_toRightOf="@+id/noti_radius"
                 app:layout_constraintRight_toRightOf="parent" />
 
 

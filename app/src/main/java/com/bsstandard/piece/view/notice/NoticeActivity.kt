@@ -13,8 +13,10 @@ import com.bsstandard.piece.base.BaseActivity
 import com.bsstandard.piece.data.viewmodel.BoardViewModel
 import com.bsstandard.piece.databinding.ActivityNoticeBinding
 import com.bsstandard.piece.view.adapter.notice.NoticeAdapter
+import com.bsstandard.piece.view.common.NetworkActivity
 import com.bsstandard.piece.view.webview.NoticeDetailWebView
 import com.bsstandard.piece.widget.utils.LogUtil
+import com.bsstandard.piece.widget.utils.NetworkConnection
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -40,35 +42,50 @@ class NoticeActivity : BaseActivity<ActivityNoticeBinding>(R.layout.activity_not
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        vm = ViewModelProvider(this@NoticeActivity)[BoardViewModel::class.java]
-        vm.viewInit(binding.noticeRv,"공지사항")
+        binding.apply {
+            vm = ViewModelProvider(this@NoticeActivity)[BoardViewModel::class.java]
+            vm.viewInit(binding.noticeRv,"공지사항")
 
-        binding.noticeVm = vm
-        binding.lifecycleOwner = this@NoticeActivity
+            setStatusBarIconColor(true) // 상태바 아이콘 true : 검정색
+            setStatusBarBgColor("#ffffff") // 상태바 배경색상 설정
+            setNaviBarIconColor(true) // 네비게이션 true : 검정색
+            setNaviBarBgColor("#ffffff") // 네비게이션 배경색
 
-        setStatusBarIconColor(true) // 상태바 아이콘 true : 검정색
-        setStatusBarBgColor("#ffffff") // 상태바 배경색상 설정
-        setNaviBarIconColor(true) // 네비게이션 true : 검정색
-        setNaviBarBgColor("#ffffff") // 네비게이션 배경색
+            binding.noticeVm = vm
+            binding.lifecycleOwner = this@NoticeActivity
+
+        }
 
 
-
-        vm.getNotice("BRT02", 10 , 1)
-
-        vm.noticeAdapter.setOnItemClickListener(object : NoticeAdapter.OnItemClickListener {
-            override fun onItemClick(v: View, boardId: String , boardTitle: String, date: String) {
-                LogUtil.logE("boardId: $boardId")
-                LogUtil.logE("boardTitle: $boardTitle")
-                LogUtil.logE("date: $date")
-                val intent = Intent(mContext, NoticeDetailWebView::class.java)
-                intent.putExtra("boardId", boardId)
-                overridePendingTransition(
-                    android.R.anim.fade_in,
-                    android.R.anim.fade_out
-                );
+        val networkConnection = NetworkConnection(applicationContext)
+        networkConnection.observe(this) { isConnected -> // 인터넷 연결되어있음 - jhm 2022/11/02
+            if (isConnected) {
+                vm.getNotice("BRT02", 100 , 1)
+                vm.noticeAdapter.setOnItemClickListener(object : NoticeAdapter.OnItemClickListener {
+                    override fun onItemClick(v: View, boardId: String , boardTitle: String, date: String) {
+                        LogUtil.logE("boardId: $boardId")
+                        LogUtil.logE("boardTitle: $boardTitle")
+                        LogUtil.logE("date: $date")
+                        val intent = Intent(mContext, NoticeDetailWebView::class.java)
+                        intent.putExtra("boardId", boardId)
+                        overridePendingTransition(
+                            android.R.anim.fade_in,
+                            android.R.anim.fade_out
+                        );
+                        startActivity(intent)
+                    }
+                })
+            } else {
+                val intent = Intent(applicationContext, NetworkActivity::class.java)
                 startActivity(intent)
             }
-        })
+        }
+
+
+
+
+
+
     }
 
     /** Util start **/

@@ -14,7 +14,17 @@
         <action
             android:id="@+id/navToPortoflioDetailActivity"
             app:destination="@id/PortfolioDetailActivity"
-            />
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
+        <action
+            android:id="@+id/navToPortfolioDetailFragment"
+            app:destination="@id/PortfolioDetailFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@animator/nav_default_pop_exit_anim" />
     </keep_state_fragment>
     <keep_state_fragment
         android:id="@+id/FragmentMagazine"
@@ -92,5 +102,18 @@
             app:argType="string"
             />
     </activity>
+    <fragment
+        android:id="@+id/PortfolioDetailFragment"
+        android:name="com.bsstandard.piece.view.portfolioDetail.PortfolioDetailFragment"
+        tools:layout="@layout/portfolio_item">
+        <argument
+            android:name="portfolioId"
+            app:argType="string"
+            />
+        <argument
+            android:name="portfolioImagePath"
+            app:argType="string"
+            />
+    </fragment>
 </navigation>
 

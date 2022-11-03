@@ -25,10 +25,8 @@ import com.bsstandard.piece.data.viewmodel.ConsentViewModel;
 import com.bsstandard.piece.data.viewmodel.GetUserViewModel;
 import com.bsstandard.piece.data.viewmodel.MemberPutViewModel;
 import com.bsstandard.piece.databinding.SlideDetailAddressBinding;
-import com.bsstandard.piece.widget.utils.CustomDialog;
 import com.bsstandard.piece.widget.utils.CustomDialogListener;
-import com.bsstandard.piece.widget.utils.CustomDialogPassCodeListener;
-import com.bsstandard.piece.widget.utils.Division;
+import com.bsstandard.piece.widget.utils.DialogManager;
 import com.bsstandard.piece.widget.utils.LogUtil;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
@@ -73,8 +71,6 @@ public class MyInfoDetailBottomSheetDialog extends BottomSheetDialogFragment imp
     private MemberModifyModel memberModifyModel;
     private GetUserViewModel getUserViewModel;
 
-    // 주소변경 완료 후 Dialog - jhm 2022/09/07
-    public CustomDialog customDialog;
 
     public MyInfoDetailBottomSheetDialog(Context context) {
         this.context = context;
@@ -137,12 +133,14 @@ public class MyInfoDetailBottomSheetDialog extends BottomSheetDialogFragment imp
                 String email = PrefsHelper.read("email", "");
                 String isFido = PrefsHelper.read("isFido", "");
 
+
+
                 NotificationModel notification = new NotificationModel(
                         PrefsHelper.read("memberId", ""),
-                        "Y",
-                        "Y",
-                        "Y",
-                        "Y"
+                        PrefsHelper.read("assetNotification","N"),
+                        PrefsHelper.read("portfolioNotification","N"),
+                        PrefsHelper.read("marketingSms","N"),
+                        PrefsHelper.read("marketingApp","N")
                 );
 
                 consentList.clear();
@@ -163,6 +161,7 @@ public class MyInfoDetailBottomSheetDialog extends BottomSheetDialogFragment imp
                     @Override
                     public void onChanged(MemberPutDTO memberPutDTO) {
                         LogUtil.logE("회원 정보 변경 완료 " + memberPutDTO.getStatus());
+                        getUserViewModel.getUserData();
 
                         PrefsHelper.write("roadAddr", roadAddr);
                         PrefsHelper.write("jibunAddr", slideDetailAddressBinding.detailAdress.getText().toString());
@@ -178,20 +177,9 @@ public class MyInfoDetailBottomSheetDialog extends BottomSheetDialogFragment imp
                             public void onOkButtonClicked() {
                                 LogUtil.logE("주소 변경 완료");
                                 getUserViewModel.getUserData();
-                                customDialog.dismiss();
                             }
                         };
-                        CustomDialogPassCodeListener customDialogPassCodeListener = new CustomDialogPassCodeListener() {
-                            @Override
-                            public void onCancleButtonClicked() {
-                            }
-
-                            @Override
-                            public void onRetryPassCodeButtonClicked() {
-                            }
-                        };
-                        customDialog = new CustomDialog(context, Division.DIALOG_ADDRESS_CONFIRM, customDialogListener, customDialogPassCodeListener);
-                        customDialog.show();
+                        DialogManager.INSTANCE.openNotGoDalog(context,"주소 등록 완료","주소가 성공적으로 등록되었어요.");
                     }
                 });
                 break;

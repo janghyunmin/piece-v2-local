@@ -14,10 +14,10 @@ import androidx.lifecycle.ViewModelProvider;
 import com.bsstandard.piece.R;
 import com.bsstandard.piece.data.datamodel.dmodel.MemberPinModel;
 import com.bsstandard.piece.data.datamodel.dmodel.consent.ConsentList;
-import com.bsstandard.piece.data.datamodel.dmodel.join.ConsentModel;
-import com.bsstandard.piece.data.datamodel.dmodel.join.DeviceInfoModel;
+import com.bsstandard.piece.data.datamodel.dmodel.join.Consents;
+import com.bsstandard.piece.data.datamodel.dmodel.join.DevieInfo;
 import com.bsstandard.piece.data.datamodel.dmodel.join.JoinModel;
-import com.bsstandard.piece.data.datamodel.dmodel.join.NotificationInfoModel;
+import com.bsstandard.piece.data.datamodel.dmodel.join.NotificationInfo;
 import com.bsstandard.piece.data.datasource.shared.PrefsHelper;
 import com.bsstandard.piece.data.dto.AuthPinDTO;
 import com.bsstandard.piece.data.dto.BaseDTO;
@@ -31,15 +31,16 @@ import com.bsstandard.piece.data.viewmodel.PutTokenViewModel;
 import com.bsstandard.piece.databinding.ActivityPasscodeBinding;
 import com.bsstandard.piece.di.hilt.ApiModule;
 import com.bsstandard.piece.retrofit.RetrofitService;
+import com.bsstandard.piece.view.common.NetworkActivity;
 import com.bsstandard.piece.view.join.JoinActivity;
 import com.bsstandard.piece.view.join.JoinSuccessActivity;
 import com.bsstandard.piece.view.main.MainActivity;
 import com.bsstandard.piece.view.purchase.PurchaseLoadingActivity;
-import com.bsstandard.piece.widget.utils.CustomDialog;
 import com.bsstandard.piece.widget.utils.CustomDialogListener;
 import com.bsstandard.piece.widget.utils.DeviceInfoUtil;
 import com.bsstandard.piece.widget.utils.DialogManager;
 import com.bsstandard.piece.widget.utils.LogUtil;
+import com.bsstandard.piece.widget.utils.NetworkConnection;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -74,16 +75,15 @@ public class PassCodeActivity extends AppCompatActivity {
     private ArrayList<String> passCodeModelList = new ArrayList<>(); // 첫번째 간편비밀번호 저장 ArrayList
     private ArrayList<String> passCodeVerifyList = new ArrayList<>(); // 두번째 간편비밀번호 저장 ArrayList
     public String PushToken = "";
-    public CustomDialog customDialog;
 
 
     // 회원가입 진행 Model - jhm 2022/06/30
     private MemberJoinViewModel memberJoinViewModel;
     private JoinModel joinModel;
-    private ArrayList<ConsentModel> consent = new ArrayList<>();
+    private ArrayList<Consents> consents = new ArrayList<>();
 
     // 회원가입 후 완료 화면시 넘겨줄 데이터 - jhm 2022/07/03
-    private String user_name = "";
+    private String name = "";
     private String pinNumber;
     private String inputPinNumber;
     private String memberId;
@@ -101,9 +101,6 @@ public class PassCodeActivity extends AppCompatActivity {
     private AuthPinPutViewModel authPinPutViewModel;
     private MemberPinModel memberPinModel;
 
-
-    // 회원가입 유무 , 간편비밀번호 체크 변수 - jhm 2022/08/08
-    public String isJoin;
 
 
     // 화면 진입시 필요한 분기 변수 - jhm 2022/10/17
@@ -135,58 +132,67 @@ public class PassCodeActivity extends AppCompatActivity {
         passCodeViewModel = new ViewModelProvider(this).get(PassCodeViewModel.class);
         binding.setPasscode(passCodeViewModel);
 
-
-        passCodeModelList.clear();
-        passCodeVerifyList.clear();
-
-
-        //InitFirebaseToken(); // Firebase Token - jhm 2022/07/01
-
-        // 최초 로그인인지 , 최초 로그인이 아니고 재접속 인지 , 비밀번호 변경인지 분기 - jhm 2022/10/17
-        Intent intent = getIntent();
-        if (intent != null) {
-            Step = intent.getExtras().getString("Step");
-            LogUtil.logE("Step 진입 단계 :  " + Step);
-            switch (Step) {
-                // 최초 로그인일때 - jhm 2022/10/17
-                case "1":
-                    PinNumRandom(); // 간편 비밀번호 0~9 위치 랜덤 - jhm 2022/06/27
-                    PinNumberClear(); // 간편 비밀번호 입력값 모두 초기화 - jhm 2022/06/27
-                    KeyPad("1"); // 키패드 입력 로직 - jhm 2022/06/27
-                    break;
-
-                // 최초 로그인이 아닐때 - jhm 2022/10/18
-                case "2":
-                    PinNumRandom(); // 간편 비밀번호 0~9 위치 랜덤 - jhm 2022/06/27
-                    PinNumberClear(); // 간편 비밀번호 입력값 모두 초기화 - jhm 2022/06/27
-                    KeyPad("2"); // 키패드 입력 로직 - jhm 2022/06/27
-                    break;
-
-                // 내정보 - 인증 및 보안 - 비밀번호 재설정 케이스 일때 - jhm 2022/10/17
-                case "3":
-                    PinNumRandom(); // 간편 비밀번호 0~9 위치 랜덤 - jhm 2022/06/27
-                    PinNumberClear(); // 간편 비밀번호 입력값 모두 초기화 - jhm 2022/06/27
-                    binding.passcodeTitleC.setText("현재 비밀번호를 입력해 주세요.");
-                    KeyPad("3"); // 키패드 입력 로직 - jhm 2022/06/27
-                    break;
-                // 포트폴리오 구매로 진입하였을 경우 - jhm 2022/10/21
-                case "5":
-                    PinNumRandom(); // 간편 비밀번호 0~9 위치 랜덤 - jhm 2022/06/27
-                    PinNumberClear(); // 간편 비밀번호 입력값 모두 초기화 - jhm 2022/06/27
-                    KeyPad("5"); // 키패드 입력 로직 - jhm 2022/06/27
-                    break;
-            }
-
-        }
-
-        binding.clear.setOnClickListener(new View.OnClickListener() {
+        NetworkConnection networkConnection = new NetworkConnection(getApplicationContext());
+        networkConnection.observe(this, new Observer<Boolean>() {
             @Override
-            public void onClick(View v) {
-                PinNumberDelete(); // 번호 뒤에서부터 지우는 로직 - jhm 2022/06/27
+            public void onChanged(Boolean isConnected) {
+                // 인터넷 연결되어있음 - jhm 2022/11/02
+                if(isConnected) {
+                    passCodeModelList.clear();
+                    passCodeVerifyList.clear();
+
+                    // 최초 로그인인지 , 최초 로그인이 아니고 재접속 인지 , 비밀번호 변경인지 분기 - jhm 2022/10/17
+                    Intent intent = getIntent();
+                    if (intent != null) {
+                        Step = intent.getExtras().getString("Step");
+                        LogUtil.logE("Step 진입 단계 :  " + Step);
+                        switch (Step) {
+                            // 최초 로그인일때 - jhm 2022/10/17
+                            case "1":
+                                PinNumRandom(); // 간편 비밀번호 0~9 위치 랜덤 - jhm 2022/06/27
+                                PinNumberClear(); // 간편 비밀번호 입력값 모두 초기화 - jhm 2022/06/27
+                                KeyPad("1"); // 키패드 입력 로직 - jhm 2022/06/27
+                                break;
+
+                            // 최초 로그인이 아닐때 - jhm 2022/10/18
+                            case "2":
+                                PinNumRandom(); // 간편 비밀번호 0~9 위치 랜덤 - jhm 2022/06/27
+                                PinNumberClear(); // 간편 비밀번호 입력값 모두 초기화 - jhm 2022/06/27
+                                KeyPad("2"); // 키패드 입력 로직 - jhm 2022/06/27
+                                break;
+
+                            // 내정보 - 인증 및 보안 - 비밀번호 재설정 케이스 일때 - jhm 2022/10/17
+                            case "3":
+                                PinNumRandom(); // 간편 비밀번호 0~9 위치 랜덤 - jhm 2022/06/27
+                                PinNumberClear(); // 간편 비밀번호 입력값 모두 초기화 - jhm 2022/06/27
+                                binding.passcodeTitleC.setText("현재 비밀번호를 입력해 주세요.");
+                                KeyPad("3"); // 키패드 입력 로직 - jhm 2022/06/27
+                                break;
+                            // 포트폴리오 구매로 진입하였을 경우 - jhm 2022/10/21
+                            case "5":
+                                PinNumRandom(); // 간편 비밀번호 0~9 위치 랜덤 - jhm 2022/06/27
+                                PinNumberClear(); // 간편 비밀번호 입력값 모두 초기화 - jhm 2022/06/27
+                                KeyPad("5"); // 키패드 입력 로직 - jhm 2022/06/27
+                                break;
+                        }
+
+                    }
+
+                    binding.clear.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            PinNumberDelete(); // 번호 뒤에서부터 지우는 로직 - jhm 2022/06/27
+                        }
+                    });
+
+                }
+                // 인터넷 연결 안되어있음 - jhm 2022/11/02
+                else {
+                    Intent intent = new Intent(context, NetworkActivity.class);
+                    startActivity(intent);
+                }
             }
         });
-
-
     }
 
 
@@ -335,20 +341,24 @@ public class PassCodeActivity extends AppCompatActivity {
 
                                 pinNumber = PrefsHelper.read("inputPinNumber", "");
 
-                                user_name = PrefsHelper.read("name", "");
+                                name = PrefsHelper.read("name", "");
 //                                String deviceId = DeviceInfoUtil.getDeviceId(context);
                                 String deviceId = DeviceInfoUtil.getUUID(context);
                                 PrefsHelper.write("deviceId", deviceId);
 
+                                LogUtil.logE("deviceId  : " + deviceId);
+                                LogUtil.logE("fbToken  : " + PrefsHelper.read("fcmToken",""));
+
+
                                 LogUtil.logE("최초 로그인 시도");
-                                DeviceInfoModel deviceInfo = new DeviceInfoModel(
+                                DevieInfo deviceInfo = new DevieInfo(
                                         deviceId,
                                         "MDO0101",
                                         "",
-                                        "",
+                                        PrefsHelper.read("fcmToken",""),
                                         PrefsHelper.read("fcmToken",""));
 
-                                NotificationInfoModel notificationInfo = new NotificationInfoModel(
+                                NotificationInfo notificationInfo = new NotificationInfo(
                                         "Y",
                                         "Y",
                                         "Y",
@@ -357,66 +367,87 @@ public class PassCodeActivity extends AppCompatActivity {
 
                                 ArrayList<ConsentList> consentList = bundle.getParcelableArrayList("consentList");
                                 for (int index = 0; index < consentList.size(); index++) {
-                                    consent.add(new ConsentModel(
+                                    consents.add(new Consents(
                                             consentList.get(index).getConsentCode(),
                                             "Y"
                                     ));
+                                    LogUtil.logE("code : " + consents.get(index).getConsentCode());
+                                    LogUtil.logE("isAgreement : " + consents.get(index).getIsAgreement());
+
                                 }
 
                                 // 다음 회원가입 Join 진행 - jhm 2022/06/30
                                 memberJoinViewModel = new ViewModelProvider(this).get(MemberJoinViewModel.class);
 
                                 // db에 생년월일 insert 시 "-" 추가 - jhm 2022/07/06
-                                String userBirth = bundle.getString("birthDay");
-                                userBirth = userBirth.substring(0, 4) + "-" + userBirth.substring(4, 6) + "-" + userBirth.substring(6, 8);
+                                String birthDay = bundle.getString("birthDay");
+                                birthDay = birthDay.substring(0, 4) + "-" + birthDay.substring(4, 6) + "-" + birthDay.substring(6, 8);
 
                                 joinModel = new JoinModel(
-                                        user_name,
+                                        name,
                                         pinNumber,
                                         bundle.getString("cellPhoneNo"),
-                                        userBirth,
+                                        birthDay,
                                         bundle.getString("ci"),
                                         bundle.getString("di"),
                                         bundle.getString("gender"),
                                         bundle.getString("isFido"),
                                         deviceInfo,
                                         notificationInfo,
-                                        consent
+                                        consents
                                 );
 
                                 Gson gson = new Gson();
 
+                                LogUtil.logE("name : " + name);
+                                LogUtil.logE("pinNumber : " + pinNumber);
+                                LogUtil.logE("cellPhoneNo : " + bundle.getString("cellPhoneNo"));
+                                LogUtil.logE("birthDay : " + birthDay);
+                                LogUtil.logE("ci : " + bundle.getString("ci"));
+                                LogUtil.logE("di : " + bundle.getString("di"));
+                                LogUtil.logE("gender : " + bundle.getString("gender"));
+                                LogUtil.logE("isFido : " + bundle.getString("isFido"));
+
+                                LogUtil.logE("deviceInfo" + gson.toJson(deviceInfo));
+                                LogUtil.logE("notificationInfo" + gson.toJson(notificationInfo));
+                                LogUtil.logE("consents" + gson.toJson(consents));
+
                                 // 회원가입 진행 - jhm 2022/10/18
                                 memberJoinViewModel.postCallJoinData(joinModel);
-                                memberJoinViewModel.joinData.observe(binding.getLifecycleOwner(), new Observer<JoinDTO>() {
+                                memberJoinViewModel.joinData.observe(Objects.requireNonNull(binding.getLifecycleOwner()), new Observer<JoinDTO>() {
                                     @Override
                                     public void onChanged(JoinDTO joinDTO) {
-                                        LogUtil.logE("joinVO : " + gson.toJson(joinDTO));
+                                        try {
+                                            if(joinDTO!=null) {
+                                                // 성공 후 Shared를 통하여 저장한다. - jhm 2022/07/03
+                                                PrefsHelper.write("name", name);
+                                                PrefsHelper.write("inputPinNumber", pinNumber);
 
+                                                PrefsHelper.write("pinNumChk", "false"); // 비밀번호 재설정 여부 - jhm 2022/07/06
 
-                                        // 성공 후 Shared를 통하여 저장한다. - jhm 2022/07/03
-                                        PrefsHelper.write("name", user_name);
-                                        PrefsHelper.write("inputPinNumber", pinNumber);
+                                                PrefsHelper.write("accessToken", joinDTO.getData().getAccessToken());
+                                                PrefsHelper.write("deviceId", joinDTO.getData().getDeviceId());
+                                                PrefsHelper.write("expiredAt", joinDTO.getData().getExpiredAt());
+                                                PrefsHelper.write("memberId", joinDTO.getData().getMemberId()); // 화면 재진입시 해당값이 없으면 최초 로그인 시도 - jhm 2022/10/18
+                                                PrefsHelper.write("refreshToken", joinDTO.getData().getRefreshToken());
 
-                                        PrefsHelper.write("isJoin", "true"); // 자동로그인 여부 - jhm 2022/07/06
-                                        PrefsHelper.write("pinNumChk", "false"); // 비밀번호 재설정 여부 - jhm 2022/07/06
-
-                                        PrefsHelper.write("accessToken", joinDTO.getData().getAccessToken());
-                                        PrefsHelper.write("deviceId", joinDTO.getData().getDeviceId());
-                                        PrefsHelper.write("expiredAt", joinDTO.getData().getExpiredAt());
-                                        PrefsHelper.write("memberId", joinDTO.getData().getMemberId()); // 화면 재진입시 해당값이 없으면 최초 로그인 시도 - jhm 2022/10/18
-                                        PrefsHelper.write("refreshToken", joinDTO.getData().getRefreshToken());
-
-
+                                                // 회원가입 성공 후 토큰 발급 진행완료 - jhm 2022/07/01
+                                                Intent go_success = new Intent(context, JoinSuccessActivity.class);
+                                                go_success.putExtra("name", name);
+                                                startActivity(go_success);
+                                                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                                                finish();
+                                            }
+                                            else {
+                                                LogUtil.logE("회원가입 실퍄");
+                                            }
+                                        } catch (Exception ex) {
+                                            ex.printStackTrace();
+                                            LogUtil.logE("회원가입 실패 " + ex.getMessage());
+                                        }
                                     }
                                 });
 
-                                // 회원가입 성공 후 토큰 발급 진행완료 - jhm 2022/07/01
-                                Intent go_success = new Intent(context, JoinSuccessActivity.class);
-                                go_success.putExtra("name", user_name);
-                                startActivity(go_success);
-                                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                                finish();
                             }
                             // 사이즈는 같지만 서로 입력한 비밀번호 Array 값이 다름 - jhm 2022/10/18
                             else {
@@ -520,6 +551,7 @@ public class PassCodeActivity extends AppCompatActivity {
                                                     }
                                                 } catch (Exception ex) {
                                                     ex.printStackTrace();
+                                                    // 에러호출페이지 생성 - jhm 2022/11/01
                                                     LogUtil.logE("Token 재 생성 실패..");
                                                 }
                                             }
@@ -610,7 +642,7 @@ public class PassCodeActivity extends AppCompatActivity {
                                 memberPinModel = new MemberPinModel(memberId, inputPinNumber);
                                 authPinPutViewModel.putCallAuthPinData(memberPinModel);
 
-                                DialogManager.INSTANCE.openDalog(context, "비밀번호 변경 완료", "확인을 누르면 설정으로 이동해요.", this);
+                                DialogManager.INSTANCE.openDalog(context, "비밀번호 변경 완료", "확인을 누르면 설정으로 이동해요.", "확인",this);
 
                             }
                             // 사이즈는 같지만 서로 입력한 비밀번호 Array 값이 다름 - jhm 2022/10/18

@@ -14,9 +14,11 @@ import androidx.lifecycle.ViewModelProvider
 import com.bsstandard.piece.R
 import com.bsstandard.piece.base.BaseActivity
 import com.bsstandard.piece.databinding.ActivityDepositChargeBinding
+import com.bsstandard.piece.view.common.NetworkActivity
 import com.bsstandard.piece.view.virtual.VirtualActivity
 import com.bsstandard.piece.view.withdrawal.NumberLiveViewModel
 import com.bsstandard.piece.widget.utils.LogUtil
+import com.bsstandard.piece.widget.utils.NetworkConnection
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.DecimalFormat
 
@@ -33,7 +35,8 @@ import java.text.DecimalFormat
  */
 
 @AndroidEntryPoint
-class DepositChargeActivity : BaseActivity<ActivityDepositChargeBinding>(R.layout.activity_deposit_charge) , Observer<String> {
+class DepositChargeActivity :
+    BaseActivity<ActivityDepositChargeBinding>(R.layout.activity_deposit_charge), Observer<String> {
     val mContext: Context = this@DepositChargeActivity
 
     private var textAmount: MutableLiveData<String> = MutableLiveData()
@@ -42,7 +45,7 @@ class DepositChargeActivity : BaseActivity<ActivityDepositChargeBinding>(R.layou
 
     // last live amount - jhm 2022/10/06
     private val sb = StringBuilder()
-    
+
     // 충전 입금금액 넘겨줄 파라미터 변수 - jhm 2022/10/07
     private var liveText: MutableLiveData<String> = MutableLiveData()
     var chargeMoney: String = ""
@@ -63,149 +66,150 @@ class DepositChargeActivity : BaseActivity<ActivityDepositChargeBinding>(R.layou
             setStatusBarBgColor("#ffffff") // 상태바 배경색상 설정
             setNaviBarIconColor(true) // 네비게이션 true : 검정색
             setNaviBarBgColor("#ffffff") // 네비게이션 배경색
-
         }
 
         nvm = ViewModelProvider(this@DepositChargeActivity)[NumberLiveViewModel::class.java]
         binding.numberPad = nvm
 
-        nvm.textAmount.observe(this,this)
 
-
-
-
-        binding.number.text = ""
-        binding.number.hint = "얼마를 충전할까요?"
-        binding.confirmBtn.isSelected = false
-
-
-
-
-        val decimal = DecimalFormat("#,###")
-        var depositText: String = ""
-        liveText.observe(this@DepositChargeActivity, Observer {
-            if (it.isNotEmpty()) {
-
-                depositText = decimal.format(it.toInt())
-                binding.number.text = "$depositText 원"
-
-            } else {
-
-                sb.setLength(0) // string builder 초기화 - jhm 2022/10/21
-                chargeMoney = "" // 입력값 초기화 - jhm 2022/10/21
+        val networkConnection = NetworkConnection(applicationContext)
+        networkConnection.observe(this) { isConnected -> // 인터넷 연결되어있음 - jhm 2022/11/02
+            if (isConnected) {
+                nvm.textAmount.observe(this, this)
                 binding.number.text = ""
-                binding.number.hint = "얼마를 보낼까요?"
+                binding.number.hint = "얼마를 충전할까요?"
                 binding.confirmBtn.isSelected = false
-            }
-        })
-
-        // 확인 버튼 - jhm 2022/10/04
-        binding.confirmBtn.setOnClickListener {
-            if (binding.confirmBtn.isSelected) {
-                LogUtil.logE("충전 확인 버튼 OnClick..")
-                val intent = Intent(mContext, VirtualActivity::class.java)
-                intent.putExtra("chargeMoney", binding.number.text.toString()) // 충전할 금액 - jhm 2022/10/06
-                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                startActivity(intent)
-                finish()
-            }
-        }
 
 
-        /**
-         * 1~9 키패드 OnClick
-         * **/
-        binding.code1.setOnClickListener {
-            if (sb.toString().length < 10) {
-                chargeMoney = sb.append("1").toString()
-                liveText.value = chargeMoney
-                binding.confirmBtn.isSelected = true
-            }
+                val decimal = DecimalFormat("#,###")
+                var depositText: String = ""
+                liveText.observe(this@DepositChargeActivity, Observer {
+                    if (it.isNotEmpty()) {
 
-        }
-        binding.code2.setOnClickListener {
-            if (sb.toString().length < 10) {
-                chargeMoney = sb.append("2").toString()
-                liveText.value = chargeMoney
-                binding.confirmBtn.isSelected = true
-            }
-        }
-        binding.code3.setOnClickListener {
-            if (sb.toString().length < 10) {
-                chargeMoney = sb.append("3").toString()
-                liveText.value = chargeMoney
-                binding.confirmBtn.isSelected = true
-            }
-        }
-        binding.code4.setOnClickListener {
-            if (sb.toString().length < 10) {
-                chargeMoney = sb.append("4").toString()
-                liveText.value = chargeMoney
-                binding.confirmBtn.isSelected = true
-            }
-        }
-        binding.code5.setOnClickListener {
-            if (sb.toString().length < 10) {
-                chargeMoney = sb.append("5").toString()
-                liveText.value = chargeMoney
-                binding.confirmBtn.isSelected = true
-            }
-        }
-        binding.code6.setOnClickListener {
-            if (sb.toString().length < 10) {
-                chargeMoney = sb.append("6").toString()
-                liveText.value = chargeMoney
-                binding.confirmBtn.isSelected = true
-            }
-        }
-        binding.code7.setOnClickListener {
-            if (sb.toString().length < 10) {
-                chargeMoney = sb.append("7").toString()
-                liveText.value = chargeMoney
-                binding.confirmBtn.isSelected = true
-            }
-        }
-        binding.code8.setOnClickListener {
-            if (sb.toString().length < 10) {
-                chargeMoney = sb.append("8").toString()
-                liveText.value = chargeMoney
-                binding.confirmBtn.isSelected = true
-            }
-        }
-        binding.code9.setOnClickListener {
-            if (sb.toString().length < 10) {
-                chargeMoney = sb.append("9").toString()
-                liveText.value = chargeMoney
-                binding.confirmBtn.isSelected = true
-            }
-        }
-        binding.code0.setOnClickListener {
-            if (sb.toString().length < 10) {
-                if(sb.substring(0,chargeMoney.length).equals("0")) {
-                    binding.confirmBtn.isSelected = false
-                } else {
-                    chargeMoney = sb.append("0").toString()
-                    liveText.value = chargeMoney
-                    binding.confirmBtn.isSelected = true
+                        depositText = decimal.format(it.toInt())
+                        binding.number.text = "$depositText 원"
+
+                    } else {
+
+                        sb.setLength(0) // string builder 초기화 - jhm 2022/10/21
+                        chargeMoney = "" // 입력값 초기화 - jhm 2022/10/21
+                        binding.number.text = ""
+                        binding.number.hint = "얼마를 보낼까요?"
+                        binding.confirmBtn.isSelected = false
+                    }
+                })
+
+                // 확인 버튼 - jhm 2022/10/04
+                binding.confirmBtn.setOnClickListener {
+                    if (binding.confirmBtn.isSelected) {
+                        LogUtil.logE("충전 확인 버튼 OnClick..")
+                        val intent = Intent(mContext, VirtualActivity::class.java)
+                        intent.putExtra(
+                            "chargeMoney",
+                            binding.number.text.toString()
+                        ) // 충전할 금액 - jhm 2022/10/06
+                        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                        startActivity(intent)
+                        finish()
+                    }
                 }
+
+
+                /**
+                 * 1~9 키패드 OnClick
+                 * **/
+                binding.code1.setOnClickListener {
+                    if (sb.toString().length < 10) {
+                        chargeMoney = sb.append("1").toString()
+                        liveText.value = chargeMoney
+                        binding.confirmBtn.isSelected = true
+                    }
+
+                }
+                binding.code2.setOnClickListener {
+                    if (sb.toString().length < 10) {
+                        chargeMoney = sb.append("2").toString()
+                        liveText.value = chargeMoney
+                        binding.confirmBtn.isSelected = true
+                    }
+                }
+                binding.code3.setOnClickListener {
+                    if (sb.toString().length < 10) {
+                        chargeMoney = sb.append("3").toString()
+                        liveText.value = chargeMoney
+                        binding.confirmBtn.isSelected = true
+                    }
+                }
+                binding.code4.setOnClickListener {
+                    if (sb.toString().length < 10) {
+                        chargeMoney = sb.append("4").toString()
+                        liveText.value = chargeMoney
+                        binding.confirmBtn.isSelected = true
+                    }
+                }
+                binding.code5.setOnClickListener {
+                    if (sb.toString().length < 10) {
+                        chargeMoney = sb.append("5").toString()
+                        liveText.value = chargeMoney
+                        binding.confirmBtn.isSelected = true
+                    }
+                }
+                binding.code6.setOnClickListener {
+                    if (sb.toString().length < 10) {
+                        chargeMoney = sb.append("6").toString()
+                        liveText.value = chargeMoney
+                        binding.confirmBtn.isSelected = true
+                    }
+                }
+                binding.code7.setOnClickListener {
+                    if (sb.toString().length < 10) {
+                        chargeMoney = sb.append("7").toString()
+                        liveText.value = chargeMoney
+                        binding.confirmBtn.isSelected = true
+                    }
+                }
+                binding.code8.setOnClickListener {
+                    if (sb.toString().length < 10) {
+                        chargeMoney = sb.append("8").toString()
+                        liveText.value = chargeMoney
+                        binding.confirmBtn.isSelected = true
+                    }
+                }
+                binding.code9.setOnClickListener {
+                    if (sb.toString().length < 10) {
+                        chargeMoney = sb.append("9").toString()
+                        liveText.value = chargeMoney
+                        binding.confirmBtn.isSelected = true
+                    }
+                }
+                binding.code0.setOnClickListener {
+                    if (sb.toString().length < 10) {
+                        if (sb.substring(0, chargeMoney.length).equals("0")) {
+                            binding.confirmBtn.isSelected = false
+                        } else {
+                            chargeMoney = sb.append("0").toString()
+                            liveText.value = chargeMoney
+                            binding.confirmBtn.isSelected = true
+                        }
+                    }
+                }
+
+                // 1자리씩 삭제 - jhm 2022/10/21
+                binding.clear.setOnClickListener {
+                    removeNumber()
+                }
+
+                // 초기화 버튼 - jhm 2022/10/21
+                binding.clearText.setOnClickListener {
+                    sb.setLength(0) // string builder 초기화 - jhm 2022/10/21
+                    binding.number.text = ""
+                    binding.number.hint = "얼마를 보낼까요?"
+                    binding.confirmBtn.isSelected = false
+                }
+            } else {
+                val intent = Intent(applicationContext, NetworkActivity::class.java)
+                startActivity(intent)
             }
-        }
-
-
-
-
-
-        // 1자리씩 삭제 - jhm 2022/10/21
-        binding.clear.setOnClickListener {
-            removeNumber()
-        }
-
-        // 초기화 버튼 - jhm 2022/10/21
-        binding.clearText.setOnClickListener {
-            sb.setLength(0) // string builder 초기화 - jhm 2022/10/21
-            binding.number.text = ""
-            binding.number.hint = "얼마를 보낼까요?"
-            binding.confirmBtn.isSelected = false
         }
     }
 
@@ -219,6 +223,7 @@ class DepositChargeActivity : BaseActivity<ActivityDepositChargeBinding>(R.layou
         binding.number.text = chargeMoney
 
     }
+
     // 마지막 입력값 제거 - jhm 2022/10/21
     fun removeLastNchars(str: String, n: Int): String {
         LogUtil.logE("str length : " + str.length)
@@ -229,7 +234,7 @@ class DepositChargeActivity : BaseActivity<ActivityDepositChargeBinding>(R.layou
     @SuppressLint("SetTextI18n")
     private fun removeNumber() {
         if (chargeMoney.isNotEmpty()) {
-            if(chargeMoney.substring(0,0) == "0") {
+            if (chargeMoney.substring(0, 0) == "0") {
                 LogUtil.logE("앞에 0먼저 오면 반응 x")
             } else {
                 chargeMoney = sb.substring(0, chargeMoney.length - 1).toString()
@@ -238,8 +243,6 @@ class DepositChargeActivity : BaseActivity<ActivityDepositChargeBinding>(R.layou
             }
         }
     }
-
-
 
 
     /** Util start **/

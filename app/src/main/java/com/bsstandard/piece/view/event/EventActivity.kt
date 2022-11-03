@@ -13,8 +13,10 @@ import com.bsstandard.piece.base.BaseActivity
 import com.bsstandard.piece.data.viewmodel.EventViewModel
 import com.bsstandard.piece.databinding.ActivityEventBinding
 import com.bsstandard.piece.view.adapter.event.EventAdapter
+import com.bsstandard.piece.view.common.NetworkActivity
 import com.bsstandard.piece.view.webview.EventDetailWebView
 import com.bsstandard.piece.widget.utils.LogUtil
+import com.bsstandard.piece.widget.utils.NetworkConnection
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -30,43 +32,52 @@ import dagger.hilt.android.AndroidEntryPoint
  */
 
 @AndroidEntryPoint
-class EventActivity : BaseActivity<ActivityEventBinding>(R.layout.activity_event){
+class EventActivity : BaseActivity<ActivityEventBinding>(R.layout.activity_event) {
     private lateinit var vm: EventViewModel
     val mContext: Context = this@EventActivity
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        vm = ViewModelProvider(this@EventActivity)[EventViewModel::class.java]
-        vm.viewInit(binding.eventRv)
+        binding.apply {
+            vm = ViewModelProvider(this@EventActivity)[EventViewModel::class.java]
+            vm.viewInit(binding.eventRv)
 
-        binding.eventVm = vm
-        binding.lifecycleOwner = this@EventActivity
-
-        
-        // UI Setting 최종 - jhm 2022/09/14
-        setStatusBarIconColor(true) // 상태바 아이콘 true : 검정색
-        setStatusBarBgColor("#ffffff") // 상태바 배경색상 설정
-        setNaviBarIconColor(true) // 네비게이션 true : 검정색
-        setNaviBarBgColor("#ffffff") // 네비게이션 배경색
+            binding.eventVm = vm
+            binding.lifecycleOwner = this@EventActivity
 
 
+            // UI Setting 최종 - jhm 2022/09/14
+            setStatusBarIconColor(true) // 상태바 아이콘 true : 검정색
+            setStatusBarBgColor("#ffffff") // 상태바 배경색상 설정
+            setNaviBarIconColor(true) // 네비게이션 true : 검정색
+            setNaviBarBgColor("#ffffff") // 네비게이션 배경색
+        }
 
-        vm.getEvent()
-        vm.eventAdapter.setOnItemClickListener(object : EventAdapter.OnItemClickListener {
-            override fun onItemClick(v: View, eventId: String, eventImagePath: String) {
-                LogUtil.logE("eventId : $eventId")
-                LogUtil.logE("eventImagePath : $eventImagePath")
-                val intent = Intent(mContext, EventDetailWebView::class.java)
-                intent.putExtra("eventId", eventId)
-                overridePendingTransition(
-                    android.R.anim.fade_in,
-                    android.R.anim.fade_out
-                );
+
+        val networkConnection = NetworkConnection(applicationContext)
+        networkConnection.observe(this) { isConnected -> // 인터넷 연결되어있음 - jhm 2022/11/02
+            if (isConnected) {
+                vm.getEvent()
+                vm.eventAdapter.setOnItemClickListener(object : EventAdapter.OnItemClickListener {
+                    override fun onItemClick(v: View, eventId: String, eventImagePath: String) {
+                        LogUtil.logE("eventId : $eventId")
+                        LogUtil.logE("eventImagePath : $eventImagePath")
+                        val intent = Intent(mContext, EventDetailWebView::class.java)
+                        intent.putExtra("eventId", eventId)
+                        overridePendingTransition(
+                            android.R.anim.fade_in,
+                            android.R.anim.fade_out
+                        );
+                        startActivity(intent)
+
+                    }
+                })
+            } else {
+                val intent = Intent(applicationContext, NetworkActivity::class.java)
                 startActivity(intent)
-
             }
-        })
+        }
     }
 
 

@@ -22,9 +22,11 @@ import com.bsstandard.piece.databinding.ActivityVirtualAccountBinding
 import com.bsstandard.piece.di.hilt.ApiModule
 import com.bsstandard.piece.retrofit.RetrofitService
 import com.bsstandard.piece.view.adapter.consent.ConsentAdapter
+import com.bsstandard.piece.view.common.NetworkActivity
 import com.bsstandard.piece.view.webview.ConsentDetailWebView
 import com.bsstandard.piece.widget.utils.Division
 import com.bsstandard.piece.widget.utils.LogUtil
+import com.bsstandard.piece.widget.utils.NetworkConnection
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.disposables.Disposable
 import retrofit2.Call
@@ -45,7 +47,8 @@ import retrofit2.Response
 
 
 @AndroidEntryPoint
-class VirtualActivity : BaseActivity<ActivityVirtualAccountBinding>(R.layout.activity_virtual_account){
+class VirtualActivity :
+    BaseActivity<ActivityVirtualAccountBinding>(R.layout.activity_virtual_account) {
 
     private val context: Context = this@VirtualActivity
     private val consentViewModel by viewModels<ConsentViewModel>() // consentViewModel - jhm 2022/09/21
@@ -53,9 +56,10 @@ class VirtualActivity : BaseActivity<ActivityVirtualAccountBinding>(R.layout.act
 
     private var consentAdapter: ConsentAdapter? = null
     private var layoutManager: RecyclerView.LayoutManager? = null
-    private var consentList: ArrayList<ConsentList?>? = ArrayList() // 약관 adapter 연결 List - jhm 2022/09/22
+    private var consentList: ArrayList<ConsentList?>? =
+        ArrayList() // 약관 adapter 연결 List - jhm 2022/09/22
     var chkCnt = 4
-    
+
     // 가상계좌 생성시 인증번호 API - jhm 2022/10/06
     val response: RetrofitService? = ApiModule.provideRetrofit().create(RetrofitService::class.java)
     val accessToken: String = PrefsHelper.read("accessToken", "")
@@ -65,6 +69,7 @@ class VirtualActivity : BaseActivity<ActivityVirtualAccountBinding>(R.layout.act
 
     var virtualSmsDialog: VirtualSmsDialog? = null
     var chargeMoney: String = ""
+
     companion object {
         const val TAG: String = "VirtualActivity"
     }
@@ -83,41 +88,52 @@ class VirtualActivity : BaseActivity<ActivityVirtualAccountBinding>(R.layout.act
         binding.apply {
             binding.lifecycleOwner = this@VirtualActivity
             mvConsent = consentViewModel
-            consentViewModel.getConsentData("SETTLE").observe(this@VirtualActivity , Observer {
-                LogUtil.logE("약관 목록 조회")
 
-                consentList?.clear()
-
-                for (index in it.data.indices) {
-                    consentList!!.add(
-                        ConsentList(
-                            true,
-                            it.data[index].consentCode,
-                            it.data[index].consentGroup,
-                            it.data[index].consentTitle,
-                            it.data[index].consentContents,
-                            it.data[index].isMandatory,
-                            it.data[index].displayOrder,
-                            it.data[index].createdAt,
-                            it.data[index].isMandatory,
-                            Division.SETTLE_CONSET
-                        )
-                    )
-                }
-
-                // 약관 목록 UI - jhm 2022/09/22
-                ConsentUI()
-            })
         }
 
-        var intent = intent
-        chargeMoney = intent.getStringExtra("chargeMoney").toString()
-        LogUtil.logE("넘겨받은 충전할 금액 값 : $chargeMoney")
+        val networkConnection = NetworkConnection(applicationContext)
+        networkConnection.observe(this) { isConnected -> // 인터넷 연결되어있음 - jhm 2022/11/02
+            if (isConnected) {
+
+                consentViewModel.getConsentData("SETTLE")
+                    .observe(this@VirtualActivity, Observer {
+                        LogUtil.logE("약관 목록 조회")
+
+                        consentList?.clear()
+
+                        for (index in it.data.indices) {
+                            consentList!!.add(
+                                ConsentList(
+                                    true,
+                                    it.data[index].consentCode,
+                                    it.data[index].consentGroup,
+                                    it.data[index].consentTitle,
+                                    it.data[index].consentContents,
+                                    it.data[index].isMandatory,
+                                    it.data[index].displayOrder,
+                                    it.data[index].createdAt,
+                                    it.data[index].isMandatory,
+                                    Division.SETTLE_CONSET
+                                )
+                            )
+                        }
+
+                        // 약관 목록 UI - jhm 2022/09/22
+                        ConsentUI()
+                    })
+            } else {
+                val intent = Intent(applicationContext, NetworkActivity::class.java)
+                startActivity(intent)
+            }
+
+            var intent = intent
+            chargeMoney = intent.getStringExtra("chargeMoney").toString()
+            LogUtil.logE("넘겨받은 충전할 금액 값 : $chargeMoney")
 
 
-
-        // 사용자 휴대폰 번호 - jhm 2022/10/06
-        binding.phone.text = PrefsHelper.read("cellPhoneNo","")
+            // 사용자 휴대폰 번호 - jhm 2022/10/06
+            binding.phone.text = PrefsHelper.read("cellPhoneNo", "")
+        }
     }
 
     private fun ConsentUI() {
@@ -133,7 +149,7 @@ class VirtualActivity : BaseActivity<ActivityVirtualAccountBinding>(R.layout.act
 
         // 전체 체크박스 클릭시 - jhm 2022/10/06
         binding.allChk.setOnClickListener {
-            if(binding.allChk.isChecked) {
+            if (binding.allChk.isChecked) {
                 LogUtil.logE("전체 체크박스 클릭")
                 consentAdapter!!.selectAll()
                 setEnabledBtn(4)
@@ -145,7 +161,7 @@ class VirtualActivity : BaseActivity<ActivityVirtualAccountBinding>(R.layout.act
 
         // 필수 개별 체크시 모두동의 해제 및 선택 로직 - jhm 2022/10/06
         consentAdapter!!.setOnClickListener {
-            if(it) chkCnt++
+            if (it) chkCnt++
             else chkCnt--
 
             binding.allChk.isChecked = chkCnt == consentList?.size
@@ -166,7 +182,7 @@ class VirtualActivity : BaseActivity<ActivityVirtualAccountBinding>(R.layout.act
     }
 
     private fun setEnabledBtn(cnt: Int) {
-        if(cnt == consentList?.size) {
+        if (cnt == consentList?.size) {
             binding.confirmBtn.isSelected = true
 
             // 약관 동의 후 확인버튼 클릭 - jhm 2022/10/06
@@ -187,15 +203,18 @@ class VirtualActivity : BaseActivity<ActivityVirtualAccountBinding>(R.layout.act
                         try {
                             LogUtil.logE("휴대폰 점유 인증 성공 !")
                             val bundleData = Bundle()
-                            bundleData.putString("chargeMoney",chargeMoney)
-                            bundleData.putString("mchtTrdNo",response.body()?.data?.mchtTrdNo.toString())
+                            bundleData.putString("chargeMoney", chargeMoney)
+                            bundleData.putString(
+                                "mchtTrdNo",
+                                response.body()?.data?.mchtTrdNo.toString()
+                            )
                             // 인증번호 입력하는 BottomSheetDialog 호출 - jhm 2022/10/06
                             virtualSmsDialog = VirtualSmsDialog(context)
                             virtualSmsDialog!!.isCancelable = false
                             virtualSmsDialog!!.arguments = bundleData
-                            virtualSmsDialog!!.show(supportFragmentManager,Division.DIALOG_V_SMS)
+                            virtualSmsDialog!!.show(supportFragmentManager, Division.DIALOG_V_SMS)
 
-                        } catch (ex : Exception) {
+                        } catch (ex: Exception) {
                             LogUtil.logE("휴대폰 점유 인증 실패 !")
                             ex.printStackTrace()
                         }
@@ -207,8 +226,7 @@ class VirtualActivity : BaseActivity<ActivityVirtualAccountBinding>(R.layout.act
                 })
             }
 
-        }
-        else {
+        } else {
             binding.confirmBtn.isSelected = false
         }
     }
@@ -220,7 +238,6 @@ class VirtualActivity : BaseActivity<ActivityVirtualAccountBinding>(R.layout.act
         disposable?.let { disposable!!.dispose() }
 
     }
-
 
 
     /** Util start **/

@@ -34,8 +34,8 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                android:transitionName="@{eventViewModel.eventItem.get(pos).representThumbnailPath}"
-                app:imageUrl="@{eventViewModel.eventItem.get(pos).representThumbnailPath}"
+                android:transitionName='@{eventViewModel.eventItem.get(pos).representThumbnailPath ?? ""}'
+                app:imageUrl='@{eventViewModel.eventItem.get(pos).representThumbnailPath ?? "" }'
                 />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

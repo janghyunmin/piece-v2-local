@@ -50,13 +50,8 @@ class CouponViewModel(application: Application) :
     val couponResponse: LiveData<CouponDTO>
         get() = _couponResponse
 
-    private val _status: MutableLiveData<String> = MutableLiveData()
-    val status: LiveData<String>
-        get() = _status
-
-    private val _message: MutableLiveData<String> = MutableLiveData()
-    val message: LiveData<String>
-        get() = _message
+    private val _responseCode: MutableLiveData<String> = MutableLiveData()
+    val responseCode: LiveData<String> get() = _responseCode
 
     @SuppressLint("CheckResult")
     fun getCoupon(couponCode: String) {
@@ -67,66 +62,36 @@ class CouponViewModel(application: Application) :
             try {
                 response.enqueue(object : Callback<CouponDTO> {
                     override fun onResponse(call: Call<CouponDTO>, response: Response<CouponDTO>) {
-                        LogUtil.logE("onSuccess.." + response.code())
-                        LogUtil.logE("isSuccessful : " + response.isSuccessful)
-                        LogUtil.logE("body : " + response.body().toString())
-                        LogUtil.logE("errorBody : " + response.errorBody().toString())
                         try {
                             // 쿠폰 성공 - jhm 2022/09/14
                             if (response.code() == 200) {
-                                LogUtil.logE("쿠폰번호 정상 입력 Error !")
-                                _couponResponse.value = response.body()
-                                _status.value = response.body()?.status
-                                _message.value = response.body()?.message
-
-                                _couponResponse.postValue(response.body())
-                                _status.postValue(response.body()?.status)
-                                _message.postValue(response.body()?.message)
-
+                                LogUtil.logE("쿠폰번호 정상 입력 !")
+                                _responseCode.value = response.code().toString()
+                                _responseCode.postValue(response.code().toString())
                             }
                             // 이미 사용한 쿠폰 - jhm 2022/09/14
                             else if (response.code() == 208) {
                                 LogUtil.logE("이미 사용된 쿠폰 번호 Error !")
-                                _couponResponse.value = response.body()
-                                _status.value = response.body()?.status
-                                _message.value = response.body()?.message
-
-                                _couponResponse.postValue(response.body())
-                                _status.postValue(response.body()?.status)
-                                _message.postValue(response.body()?.message)
+                                _responseCode.value = response.code().toString()
+                                _responseCode.postValue(response.code().toString())
                             }
                             // 회원 정보가 일치하지 않을때 - jhm 2022/09/14
                             else if (response.code() == 400) {
                                 LogUtil.logE("회원 정보 불일치 Error !")
-                                _couponResponse.value = response.body()
-                                _status.value = response.body()?.status
-                                _message.value = response.body()?.message
-
-                                _couponResponse.postValue(response.body())
-                                _status.postValue(response.body()?.status)
-                                _message.postValue(response.body()?.message)
+                                _responseCode.value = response.code().toString()
+                                _responseCode.postValue(response.code().toString())
                             }
                             // 사용할 수 있는 쿠폰이 없을때 - jhm 2022/09/14
                             else if (response.code() == 404) {
                                 LogUtil.logE("쿠폰번호 잘못 입력 Error !")
-                                _couponResponse.value = response.body()
-                                _status.value = response.body()?.status
-                                _message.value = response.body()?.message
-
-                                _couponResponse.postValue(response.body())
-                                _status.postValue(response.body()?.status)
-                                _message.postValue(response.body()?.message)
+                                _responseCode.value = response.code().toString()
+                                _responseCode.postValue(response.code().toString())
                             }
                             // 사용 가능한 쿠폰이 아니거나 사용기한을 넘겼을때 - jhm 2022/09/14
                             else {
                                 LogUtil.logE("사용 가능한 쿠폰이 아닙니다 !")
-                                _couponResponse.value = response.body()
-                                _status.value = response.body()?.status
-                                _message.value = response.body()?.message
-
-                                _couponResponse.postValue(response.body())
-                                _status.postValue(response.body()?.status)
-                                _message.postValue(response.body()?.message)
+                                _responseCode.value = response.code().toString()
+                                _responseCode.postValue(response.code().toString())
                             }
                         } catch (ex: Exception) {
                             ex.printStackTrace()

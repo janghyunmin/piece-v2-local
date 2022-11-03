@@ -28,7 +28,7 @@ public class EventDTO {
     private String message;
     @SerializedName("data")
     @Expose
-    private List<Datum> data = null;
+    private Data data;
 
     public String getStatus() {
         return status;
@@ -54,93 +54,245 @@ public class EventDTO {
         this.message = message;
     }
 
-    public List<Datum> getData() {
+    public Data getData() {
         return data;
     }
 
-    public void setData(List<Datum> data) {
+    public void setData(Data data) {
         this.data = data;
     }
+    public class Data {
 
-    public class Datum {
-
-        @SerializedName("eventId")
+        @SerializedName("events")
         @Expose
-        private String eventId;
-        @SerializedName("title")
+        private List<Event> events = null;
+        @SerializedName("totalCount")
         @Expose
-        private String title;
-        @SerializedName("contents")
+        private Integer totalCount;
+        @SerializedName("page")
         @Expose
-        private String contents;
-        @SerializedName("eventBeginDate")
+        private Integer page;
+        @SerializedName("length")
         @Expose
-        private String eventBeginDate;
-        @SerializedName("eventEndDate")
-        @Expose
-        private String eventEndDate;
-        @SerializedName("representThumbnailPath")
-        @Expose
-        private String representThumbnailPath;
-        @SerializedName("createdAt")
-        @Expose
-        private String createdAt;
+        private Integer length;
 
-        public String getEventId() {
-            return eventId;
+        public List<Event> getEvents() {
+            return events;
         }
 
-        public void setEventId(String eventId) {
-            this.eventId = eventId;
+        public void setEvents(List<Event> events) {
+            this.events = events;
         }
 
-        public String getTitle() {
-            return title;
+        public Integer getTotalCount() {
+            return totalCount;
         }
 
-        public void setTitle(String title) {
-            this.title = title;
+        public void setTotalCount(Integer totalCount) {
+            this.totalCount = totalCount;
         }
 
-        public String getContents() {
-            return contents;
+        public Integer getPage() {
+            return page;
         }
 
-        public void setContents(String contents) {
-            this.contents = contents;
+        public void setPage(Integer page) {
+            this.page = page;
         }
 
-        public String getEventBeginDate() {
-            return eventBeginDate;
+        public Integer getLength() {
+            return length;
         }
 
-        public void setEventBeginDate(String eventBeginDate) {
-            this.eventBeginDate = eventBeginDate;
+        public void setLength(Integer length) {
+            this.length = length;
         }
 
-        public String getEventEndDate() {
-            return eventEndDate;
-        }
+        public class Event {
 
-        public void setEventEndDate(String eventEndDate) {
-            this.eventEndDate = eventEndDate;
-        }
+            @SerializedName("eventId")
+            @Expose
+            private String eventId;
+            @SerializedName("title")
+            @Expose
+            private String title;
+            @SerializedName("contents")
+            @Expose
+            private String contents;
+            @SerializedName("eventBeginDate")
+            @Expose
+            private String eventBeginDate;
+            @SerializedName("eventEndDate")
+            @Expose
+            private String eventEndDate;
+            @SerializedName("representThumbnailPath")
+            @Expose
+            private String representThumbnailPath;
+            @SerializedName("createdAt")
+            @Expose
+            private String createdAt;
+            @SerializedName("shareUrl")
+            @Expose
+            private String shareUrl;
+            @SerializedName("eventButtons")
+            @Expose
+            private List<EventButton> eventButtons = null;
 
-        public String getRepresentThumbnailPath() {
-            return representThumbnailPath;
-        }
+            public String getEventId() {
+                return eventId;
+            }
 
-        public void setRepresentThumbnailPath(String representThumbnailPath) {
-            this.representThumbnailPath = representThumbnailPath;
-        }
+            public void setEventId(String eventId) {
+                this.eventId = eventId;
+            }
 
-        public String getCreatedAt() {
-            return createdAt;
-        }
+            public String getTitle() {
+                return title;
+            }
 
-        public void setCreatedAt(String createdAt) {
-            this.createdAt = createdAt;
-        }
+            public void setTitle(String title) {
+                this.title = title;
+            }
 
+            public String getContents() {
+                return contents;
+            }
+
+            public void setContents(String contents) {
+                this.contents = contents;
+            }
+
+            public String getEventBeginDate() {
+                return eventBeginDate;
+            }
+
+            public void setEventBeginDate(String eventBeginDate) {
+                this.eventBeginDate = eventBeginDate;
+            }
+
+            public String getEventEndDate() {
+                return eventEndDate;
+            }
+
+            public void setEventEndDate(String eventEndDate) {
+                this.eventEndDate = eventEndDate;
+            }
+
+            public String getRepresentThumbnailPath() {
+                return representThumbnailPath;
+            }
+
+            public void setRepresentThumbnailPath(String representThumbnailPath) {
+                this.representThumbnailPath = representThumbnailPath;
+            }
+
+            public String getCreatedAt() {
+                return createdAt;
+            }
+
+            public void setCreatedAt(String createdAt) {
+                this.createdAt = createdAt;
+            }
+
+            public String getShareUrl() {
+                return shareUrl;
+            }
+
+            public void setShareUrl(String shareUrl) {
+                this.shareUrl = shareUrl;
+            }
+
+            public List<EventButton> getEventButtons() {
+                return eventButtons;
+            }
+
+            public void setEventButtons(List<EventButton> eventButtons) {
+                this.eventButtons = eventButtons;
+            }
+            public class EventButton {
+
+                @SerializedName("eventId")
+                @Expose
+                private String eventId;
+                @SerializedName("seq")
+                @Expose
+                private Integer seq;
+                @SerializedName("btnTitle")
+                @Expose
+                private String btnTitle;
+                @SerializedName("btnType")
+                @Expose
+                private String btnType;
+                @SerializedName("btnEndpoint")
+                @Expose
+                private String btnEndpoint;
+                @SerializedName("btnEndpointAuth")
+                @Expose
+                private String btnEndpointAuth;
+                @SerializedName("createdAt")
+                @Expose
+                private String createdAt;
+
+                public String getEventId() {
+                    return eventId;
+                }
+
+                public void setEventId(String eventId) {
+                    this.eventId = eventId;
+                }
+
+                public Integer getSeq() {
+                    return seq;
+                }
+
+                public void setSeq(Integer seq) {
+                    this.seq = seq;
+                }
+
+                public String getBtnTitle() {
+                    return btnTitle;
+                }
+
+                public void setBtnTitle(String btnTitle) {
+                    this.btnTitle = btnTitle;
+                }
+
+                public String getBtnType() {
+                    return btnType;
+                }
+
+                public void setBtnType(String btnType) {
+                    this.btnType = btnType;
+                }
+
+                public String getBtnEndpoint() {
+                    return btnEndpoint;
+                }
+
+                public void setBtnEndpoint(String btnEndpoint) {
+                    this.btnEndpoint = btnEndpoint;
+                }
+
+                public String getBtnEndpointAuth() {
+                    return btnEndpointAuth;
+                }
+
+                public void setBtnEndpointAuth(String btnEndpointAuth) {
+                    this.btnEndpointAuth = btnEndpointAuth;
+                }
+
+                public String getCreatedAt() {
+                    return createdAt;
+                }
+
+                public void setCreatedAt(String createdAt) {
+                    this.createdAt = createdAt;
+                }
+
+            }
+        }
     }
+
+
+
 }

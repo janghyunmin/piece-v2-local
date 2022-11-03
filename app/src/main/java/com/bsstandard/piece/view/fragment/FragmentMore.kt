@@ -92,7 +92,7 @@ class FragmentMore : Fragment() {
 
 
         // 내정보 API - jhm 2022/09/03
-        getUserViewModel = ViewModelProvider(this).get(GetUserViewModel::class.java)
+        getUserViewModel = ViewModelProvider(this)[GetUserViewModel::class.java]
         getUserViewModel!!.getUserData()
 
         binding.userName.text = PrefsHelper.read("name", "") + " 님"

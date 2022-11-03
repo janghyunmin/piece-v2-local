@@ -37,17 +37,17 @@ class EventViewModel(application: Application) : AndroidViewModel(application) {
     @SuppressLint("StaticFieldLeak")
     private val context = getApplication<Application>().applicationContext
     var eventAdapter = EventAdapter(this, context)
-    private val eventList: ArrayList<EventDTO.Datum> = arrayListOf()
+    private val eventList: ArrayList<EventDTO.Data.Event> = arrayListOf()
 
     @SuppressLint("CheckResult", "NotifyDataSetChanged")
     fun getEvent() {
         repo.getEvents().subscribe(
             { EventDTO ->
-                LogUtil.logE("이벤트 갯수 : " + EventDTO.data.size)
+                LogUtil.logE("이벤트 갯수 : " + EventDTO.data.events.size)
 
                 eventList.clear()
-                for (i in ArrayList(EventDTO.data).indices) {
-                    eventList.add(EventDTO.data[i])
+                for (i in ArrayList(EventDTO.data.events).indices) {
+                    eventList.add(EventDTO.data.events[i])
                     eventAdapter.notifyDataSetChanged()
                 }
             }, { throwable ->
@@ -61,7 +61,7 @@ class EventViewModel(application: Application) : AndroidViewModel(application) {
         recyclerView.layoutManager = LinearLayoutManager(getApplication())
     }
 
-    fun getEventItem(): List<EventDTO.Datum> {
+    fun getEventItem(): List<EventDTO.Data.Event> {
         return eventList;
     }
 }

@@ -68,6 +68,7 @@ class PurchaseDetailActivity :
 
     // 구매 취소시 - jhm 2022/10/25
     val response: RetrofitService? = ApiModule.provideRetrofit().create(RetrofitService::class.java)
+
     // 구매 확정 요청 ViewModel - jhm 2022/10/25
     private val pcvm by viewModels<PurchaseConfirmViewModel>() // 사용자 포트폴리오 구매 확정 처리 - jhm 2022/10/25
 
@@ -77,7 +78,8 @@ class PurchaseDetailActivity :
     val accessToken: String = PrefsHelper.read("accessToken", "")
     val deviceId: String = PrefsHelper.read("deviceId", "")
     val memberId: String = PrefsHelper.read("memberId", "")
-
+    var isCoupon: String = ""
+    var isConfirm: String = ""
 
     var purchaseAt: String = ""
     var purchasePieceVolume: String = ""
@@ -119,259 +121,266 @@ class PurchaseDetailActivity :
             setNaviBarIconColor(true) // 네비게이션 true : 검정색
             setNaviBarBgColor("#ffffff") // 네비게이션 배경색
 
-
             pvm =
                 ViewModelProvider(this@PurchaseDetailActivity)[PortfolioDetailViewModel::class.java]
             purchaseViewModel =
                 ViewModelProvider(this@PurchaseDetailActivity)[PurchaseViewModel::class.java]
             purchaseViewModel.getPurchaseList(accessToken, deviceId, memberId)
-
-
             purchaseConfirmVm = pcvm
 
-            postponeEnterTransition()
+            // 바텀 버튼 분기 - jhm 2022/10/25
+            // isCoupon , isConfirm 분기 - jhm 2022/10/25
+            isCoupon = args.isCoupon
+            isConfirm = args.isConfirm
+
+            LogUtil.logE("isCoupon : $isCoupon")
+            LogUtil.logE("isConfirm : $isConfirm")
+        }
+
+        postponeEnterTransition()
+        purchaseAt = args.purchaseAt
+        LogUtil.logE("넘겨받은 purchaseAt : $purchaseAt")
+        val localDate = purchaseAt
+        val year = localDate.substring(0, 4)
+        val month = localDate.substring(5, 7)
+        val day = localDate.substring(8, 10)
+
+        val newDate = "$year.$month.$day"
+        binding.date.text = newDate
+
+        purchasePieceVolume = args.purchasePieceVolume
+        LogUtil.logE("넘겨받은 purchasePieceVolume : $purchasePieceVolume")
+        binding.volume.text = "$purchasePieceVolume PIECE"
+
+        purchaseTotalAmount = args.purchaseTotalAmount
+        LogUtil.logE("넘겨받은 purchaseTotalAmount : $purchaseTotalAmount")
+
+        purchaseId = args.purchaseId
+        LogUtil.logE("넘겨받은 purchaseId : $purchaseId")
 
 
-            purchaseAt = args.purchaseAt
-            LogUtil.logE("넘겨받은 purchaseAt : $purchaseAt")
-            val localDate = purchaseAt
-            val year = localDate.substring(0, 4)
-            val month = localDate.substring(5, 7)
-            val day = localDate.substring(8, 10)
+        portfolioId = args.portfolioId
+        LogUtil.logE("넘겨받은 portfolioId : $portfolioId")
 
-            val newDate = "$year.$month.$day"
-            binding.date.text = newDate
-
-            purchasePieceVolume = args.purchasePieceVolume
-            LogUtil.logE("넘겨받은 purchasePieceVolume : $purchasePieceVolume")
-            binding.volume.text = "$purchasePieceVolume PIECE"
-
-            purchaseTotalAmount = args.purchaseTotalAmount
-            LogUtil.logE("넘겨받은 purchaseTotalAmount : $purchaseTotalAmount")
-
-            purchaseId = args.purchaseId
-            LogUtil.logE("넘겨받은 purchaseId : $purchaseId")
+        portfolioImagePath = args.portfolioImagePath
+        LogUtil.logE("넘겨받은 portfolioImagePath $portfolioImagePath")
 
 
-            portfolioId = args.portfolioId
-            LogUtil.logE("넘겨받은 portfolioId : $portfolioId")
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 
-            portfolioImagePath = args.portfolioImagePath
-            LogUtil.logE("넘겨받은 portfolioImagePath $portfolioImagePath")
-
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-
-                var requestOptions = RequestOptions()
-                requestOptions = requestOptions
-                    .transforms(CenterCrop(), RoundedCorners(20))
-
-
-
-                Glide.with(this@PurchaseDetailActivity)
-                    .load(portfolioImagePath)
-                    .transition(DrawableTransitionOptions.withCrossFade(2000))
-                    .listener(object : RequestListener<Drawable> {
-                        override fun onLoadFailed(
-                            e: GlideException?,
-                            model: Any?,
-                            target: Target<Drawable>?,
-                            isFirstResource: Boolean
-                        ): Boolean {
-                            startPostponedEnterTransition()
-                            return false
-                        }
-
-                        override fun onResourceReady(
-                            resource: Drawable?,
-                            model: Any?,
-                            target: Target<Drawable>?,
-                            dataSource: DataSource?,
-                            isFirstResource: Boolean,
-                        ): Boolean {
-                            startPostponedEnterTransition()
-                            return false
-                        }
-                    })
-
-                    .apply(requestOptions)
-                    .into(binding.portfolioImg)
-            }
-
-
-            // 구매 일자 - jhm 2022/10/12
-            binding.purchaseDate.text = newDate
-
-            // 조각 수 - jhm 2022/10/12
-            binding.purchaseCount.text = "$purchasePieceVolume 피스"
-
-            // 총 구매 금액 - jhm 2022/10/12
-            binding.purchaseBuy.text = "$purchaseTotalAmount 원"
-
-            // 소유주 - jhm 2022/10/12
-            binding.purchaseProprietor.text = PrefsHelper.read("name", "")
-
-
-            pvm.getPortfolioDetail(portfolioId)
-            pvm.detailResponse.observe(this@PurchaseDetailActivity, Observer {
-
-
-                // 포트폴리오 제목 - jhm 2022/10/13
-                binding.infoTitle.text = it.data.title
-                pvm.viewInitVertical(binding.productsRv) // 포트폴리오 구성 - jhm 2022/08/22
-
-                // 포트폴리오 소유증서 제목 - jhm 2022/10/13
-                binding.document.text = it.data.title
-
-                // 총 판매 금액 - jhm 2022/08/19
-                val amount = it.data.recruitmentAmount
-                val toLongAmount: Long = amount.toLong()
-                LogUtil.logE("toLong " + ConvertMoney().getNumKorString(toLongAmount))
-                binding.allAmount.text = ConvertMoney().getNumKorString(toLongAmount) + "만원"
-
-
-                // 구매 가능 금액 - jhm 2022/08/22
-                val maxAmount = it.data.maxPurchaseAmount
-                val toLongMaxAmout: Long = maxAmount.toLong()
-                binding.purchaseAmount.text =
-                    "최소 " + it.data.minPurchaseAmount + "원 ~ 최대 " + ConvertMoney().getNumKorString(
-                        toLongMaxAmout
-                    ) + "만 원"
-                var pieceAmount =
-                    StringDiv(it.data.recruitmentAmount.toInt(), it.data.totalPieceVolume.toInt())
-                var min = StringDiv(it.data.minPurchaseAmount.toInt(), pieceAmount)
-                var max = StringDiv(it.data.maxPurchaseAmount.toInt(), pieceAmount)
-                binding.purchaseAmountCount.text = "최소 " + min + "피스 ~ 최대 " + max + "피스"
+            var requestOptions = RequestOptions()
+            requestOptions = requestOptions
+                .transforms(CenterCrop(), RoundedCorners(20))
 
 
 
-                pieceVolume = it.data.totalPieceVolume
-                recruitmentAmount = it.data.recruitmentAmount
+            Glide.with(this@PurchaseDetailActivity)
+                .load(portfolioImagePath)
+                .transition(DrawableTransitionOptions.withCrossFade(2000))
+                .listener(object : RequestListener<Drawable> {
+                    override fun onLoadFailed(
+                        e: GlideException?,
+                        model: Any?,
+                        target: Target<Drawable>?,
+                        isFirstResource: Boolean
+                    ): Boolean {
+                        startPostponedEnterTransition()
+                        return false
+                    }
 
-
-                documentList.clear()
-                for (i in 0 until it.data!!.products.size) {
-                    // 포트폴리오 증빙 자료 - jhm 2022/10/13
-                    LogUtil.logE("타이틀 : " + it.data.products[i].title)
-                    documentList.add(
-                        it.data.products[i]
-                    )
-
-                    LogUtil.logE("cj  " + documentList[i].title)
-                }
-
-                // 판매 정보 - 운용 기간 - jhm 2022/08/19
-                val operDate = DateBetweenEndAndStart(
-                    it.data.recruitmentBeginDate,
-                    it.data.dividendsExpecatationDate
-                )
-                var yearFormat = ""
-                if (operDate < 365.toString()) {
-                    yearFormat = operDate + "일"
-                    LogUtil.logE("yearFormat $yearFormat")
-
-                } else if (operDate >= 365.toString()) {
-                    yearFormat = "1년"
-                }
-                // 운용기간 - jhm 2022/08/22
-                binding.operDateDetail.text = "$yearFormat (조기 분배 가능)"
-
-
-                // 포트폴리오 구성 - jhm 2022/08/25
-                val adapter = PortfolioDetailCompositionAdapter(pvm, context = applicationContext)
-                binding.compositionRv.adapter = adapter
-                binding.compositionRv.layoutManager =
-                    LinearLayoutManager(application, RecyclerView.HORIZONTAL, false)
-
-                adapter.setItemClickListener(object :
-                    PortfolioDetailCompositionAdapter.OnItemClickListener {
-                    @SuppressLint("NotifyDataSetChanged")
-                    override fun onClick(v: View, position: Int) {
-                        LogUtil.logE("position $position")
-
-
-                        adapter.notifyDataSetChanged()
+                    override fun onResourceReady(
+                        resource: Drawable?,
+                        model: Any?,
+                        target: Target<Drawable>?,
+                        dataSource: DataSource?,
+                        isFirstResource: Boolean,
+                    ): Boolean {
+                        startPostponedEnterTransition()
+                        return false
                     }
                 })
 
-
-                // 증빙 자료 구성 - jhm 2022/10/12
-                val docuAdapter = PurchaseItemCompositionAdapter(pvm, context = applicationContext)
-                binding.documentRv.adapter = docuAdapter
-                binding.documentRv.layoutManager =
-                    LinearLayoutManager(application, RecyclerView.HORIZONTAL, false)
-
-                docuAdapter.setOnItemClickListener(object :
-                    PurchaseItemCompositionAdapter.OnItemClickListener {
-                    override fun onItemClick(v: View, documentImagePath: String) {
-                        LogUtil.logE("증빙구성 이미지 OnClick.. $documentImagePath")
-                        ImageDialogManager.getDialog(
-                            this@PurchaseDetailActivity, documentImagePath,
-                            object : ImageCloseListener {
-                                override fun onClickCancelButton() {
-                                    LogUtil.logE("이미지 닫기 OnClick..")
-                                }
-                            }
-                        )
-
-                    }
-                })
-
-
-                // 포트폴리오 마감 시간 - jhm 2022/10/25
-                recruitmentEndDate = getStartFormatDate(it.data.recruitmentEndDate.toString())
-                LogUtil.logE("마감 시간 : $recruitmentEndDate")
-
-            })
-
-
-            // 소유증서 OnClick - jhm 2022/10/13
-            binding.itemInfoLayout2.setOnClickListener {
-                LogUtil.logE("소유증서 OnClick..")
-
-                val intent = Intent(mContext, DeedActivity::class.java)
-                // 포트폴리오 제목 - jhm 2022/10/14
-                intent.putExtra(
-                    "title",
-                    binding.infoTitle.text.toString()
-                )
-
-                intent.putExtra("size", documentList.size)
-                LogUtil.logE("첫번쨰 사이즈 : ${documentList.size}")
-                for (i in 0 until documentList.size) {
-                    intent.putExtra("subTitle$i", documentList[i].title) // 증빙자료 제목 - jhm 2022/10/14
-                    LogUtil.logE("test : " + documentList[i].title)
-                }
-
-                intent.putExtra(
-                    "purchasePieceVolume",
-                    purchasePieceVolume
-                )
-
-                // 구매 조각 수 - jhm 2022/10/14
-                intent.putExtra("purchaseTotalAmount", purchaseTotalAmount)// 구매 금액 - jhm 2022/10/14
-                intent.putExtra("pieceVolume", pieceVolume)// 총 조각 수 - jhm 2022/10/14
-                intent.putExtra("recruitmentAmount", recruitmentAmount)// 총 조각 수 - jhm 2022/10/14
-                intent.putExtra("purchaseAt", purchaseAt)// 구매 일자 - jhm 2022/10/14
-                overridePendingTransition(
-                    android.R.anim.fade_in,
-                    android.R.anim.fade_out
-                );
-                startActivity(intent)
-            }
-
-
-
+                .apply(requestOptions)
+                .into(binding.portfolioImg)
         }
 
 
-        // 바텀 버튼 분기 - jhm 2022/10/25
-        // isCoupon , isConfirm 분기 - jhm 2022/10/25
-        val isCoupon = args.isCoupon
-        val isConfirm = args.isConfirm
+        // 구매 일자 - jhm 2022/10/12
+        binding.purchaseDate.text = newDate
 
-        LogUtil.logE("isCoupon : $isCoupon")
-        LogUtil.logE("isConfirm : $isConfirm")
+        // 조각 수 - jhm 2022/10/12
+        binding.purchaseCount.text = "$purchasePieceVolume 피스"
+
+        // 총 구매 금액 - jhm 2022/10/12
+        binding.purchaseBuy.text = "$purchaseTotalAmount 원"
+
+        // 소유주 - jhm 2022/10/12
+        binding.purchaseProprietor.text = PrefsHelper.read("name", "")
+
+
+        pvm.getPortfolioDetail(portfolioId)
+        pvm.detailResponse.observe(this@PurchaseDetailActivity, Observer {
+
+
+            // 포트폴리오 제목 - jhm 2022/10/13
+            binding.infoTitle.text = it.data.title
+            pvm.viewInitVertical(binding.productsRv) // 포트폴리오 구성 - jhm 2022/08/22
+
+            // 포트폴리오 소유증서 제목 - jhm 2022/10/13
+            binding.document.text = it.data.title
+
+            // 총 판매 금액 - jhm 2022/08/19
+            val amount = it.data.recruitmentAmount
+            val toLongAmount: Long = amount.toLong()
+            LogUtil.logE("toLong " + ConvertMoney().getNumKorString(toLongAmount))
+            binding.allAmount.text = ConvertMoney().getNumKorString(toLongAmount) + "만원"
+
+
+            // 구매 가능 금액 - jhm 2022/08/22
+            val maxAmount = it.data.maxPurchaseAmount
+            val toLongMaxAmout: Long = maxAmount.toLong()
+            binding.purchaseAmount.text =
+                "최소 " + it.data.minPurchaseAmount + "원 ~ 최대 " + ConvertMoney().getNumKorString(
+                    toLongMaxAmout
+                ) + "만 원"
+            var pieceAmount =
+                StringDiv(
+                    it.data.recruitmentAmount.toInt(),
+                    it.data.totalPieceVolume.toInt()
+                )
+            var min = StringDiv(it.data.minPurchaseAmount.toInt(), pieceAmount)
+            var max = StringDiv(it.data.maxPurchaseAmount.toInt(), pieceAmount)
+            binding.purchaseAmountCount.text = "최소 " + min + "피스 ~ 최대 " + max + "피스"
+
+
+
+            pieceVolume = it.data.totalPieceVolume
+            recruitmentAmount = it.data.recruitmentAmount
+
+
+            documentList.clear()
+            for (i in 0 until it.data!!.products.size) {
+                // 포트폴리오 증빙 자료 - jhm 2022/10/13
+                LogUtil.logE("타이틀 : " + it.data.products[i].title)
+                documentList.add(
+                    it.data.products[i]
+                )
+
+                LogUtil.logE("cj  " + documentList[i].title)
+            }
+
+            // 판매 정보 - 운용 기간 - jhm 2022/08/19
+            val operDate = DateBetweenEndAndStart(
+                it.data.recruitmentBeginDate,
+                it.data.dividendsExpecatationDate
+            )
+            var yearFormat = ""
+            if (operDate < 365.toString()) {
+                yearFormat = operDate + "일"
+                LogUtil.logE("yearFormat $yearFormat")
+
+            } else if (operDate >= 365.toString()) {
+                yearFormat = "1년"
+            }
+            // 운용기간 - jhm 2022/08/22
+            binding.operDateDetail.text = "$yearFormat (조기 분배 가능)"
+
+
+            // 포트폴리오 구성 - jhm 2022/08/25
+            val adapter =
+                PortfolioDetailCompositionAdapter(pvm, context = applicationContext)
+            binding.compositionRv.adapter = adapter
+            binding.compositionRv.layoutManager =
+                LinearLayoutManager(application, RecyclerView.HORIZONTAL, false)
+
+            adapter.setItemClickListener(object :
+                PortfolioDetailCompositionAdapter.OnItemClickListener {
+                @SuppressLint("NotifyDataSetChanged")
+                override fun onClick(v: View, position: Int) {
+                    LogUtil.logE("position $position")
+
+
+                    adapter.notifyDataSetChanged()
+                }
+            })
+
+
+            // 증빙 자료 구성 - jhm 2022/10/12
+            val docuAdapter =
+                PurchaseItemCompositionAdapter(pvm, context = applicationContext)
+            binding.documentRv.adapter = docuAdapter
+            binding.documentRv.layoutManager =
+                LinearLayoutManager(application, RecyclerView.HORIZONTAL, false)
+
+            docuAdapter.setOnItemClickListener(object :
+                PurchaseItemCompositionAdapter.OnItemClickListener {
+                override fun onItemClick(v: View, documentImagePath: String) {
+                    LogUtil.logE("증빙구성 이미지 OnClick.. $documentImagePath")
+                    ImageDialogManager.getDialog(
+                        this@PurchaseDetailActivity, documentImagePath,
+                        object : ImageCloseListener {
+                            override fun onClickCancelButton() {
+                                LogUtil.logE("이미지 닫기 OnClick..")
+                            }
+                        }
+                    )
+
+                }
+            })
+
+
+            // 포트폴리오 마감 시간 - jhm 2022/10/25
+            recruitmentEndDate = getStartFormatDate(it.data.recruitmentEndDate.toString())
+            LogUtil.logE("마감 시간 : $recruitmentEndDate")
+
+        })
+
+
+        // 소유증서 OnClick - jhm 2022/10/13
+        binding.itemInfoLayout2.setOnClickListener {
+            LogUtil.logE("소유증서 OnClick..")
+
+            val intent = Intent(mContext, DeedActivity::class.java)
+            // 포트폴리오 제목 - jhm 2022/10/14
+            intent.putExtra(
+                "title",
+                binding.infoTitle.text.toString()
+            )
+            intent.putExtra("purchaseId", purchaseId)
+
+            intent.putExtra("size", documentList.size)
+            LogUtil.logE("첫번쨰 사이즈 : ${documentList.size}")
+            for (i in 0 until documentList.size) {
+                intent.putExtra(
+                    "subTitle$i",
+                    documentList[i].title
+                ) // 증빙자료 제목 - jhm 2022/10/14
+                LogUtil.logE("test : " + documentList[i].title)
+            }
+
+            intent.putExtra(
+                "purchasePieceVolume",
+                purchasePieceVolume
+            )
+
+            // 구매 조각 수 - jhm 2022/10/14
+            intent.putExtra(
+                "purchaseTotalAmount",
+                purchaseTotalAmount
+            )// 구매 금액 - jhm 2022/10/14
+            intent.putExtra("pieceVolume", pieceVolume)// 총 조각 수 - jhm 2022/10/14
+            intent.putExtra(
+                "recruitmentAmount",
+                recruitmentAmount
+            )// 총 조각 수 - jhm 2022/10/14
+            intent.putExtra("purchaseAt", purchaseAt)// 구매 일자 - jhm 2022/10/14
+            overridePendingTransition(
+                android.R.anim.fade_in,
+                android.R.anim.fade_out
+            );
+            startActivity(intent)
+        }
+
 
         val now = System.currentTimeMillis()
         val simpleDateFormat = SimpleDateFormat("yyyy.MM.dd", Locale.KOREAN).format(now)
@@ -396,7 +405,7 @@ class PurchaseDetailActivity :
 
         // 쿠폰으로 발급받은 조각이 아니거나 또는 구매 확정 버튼을 안눌렀을 경우 구매 취소 가능하게 처리 - jhm 2022/10/25
         if (btnChk || isConfirm == "N") {
-            if(isCoupon == "Y") {
+            if (isCoupon == "Y") {
                 binding.portfolioBtn.text = "포트폴리오 보러가기"
                 binding.cancleBtn.visibility = View.GONE
 
@@ -405,7 +414,10 @@ class PurchaseDetailActivity :
 
                     val intent = Intent(mContext, PortfolioDetailActivity::class.java)
                     intent.putExtra("portfolioId", portfolioId)// 포트폴리오 Id
-                    intent.putExtra("portfolioImagePath", portfolioImagePath)// 포트폴리오 image 경로
+                    intent.putExtra(
+                        "portfolioImagePath",
+                        portfolioImagePath
+                    )// 포트폴리오 image 경로
                     overridePendingTransition(
                         android.R.anim.fade_in,
                         android.R.anim.fade_out
@@ -423,80 +435,108 @@ class PurchaseDetailActivity :
 
 
                 // 구매 확정 btn Listener
-                val customDialogListener: CustomDialogListener = object : CustomDialogListener {
-                    override fun onCancelButtonClicked() {
-                        // 닫기 버튼 누른 후 로직 - jhm 2022/07/04
-                        LogUtil.logE("cancel btn")
-                    }
+                val customDialogListener: CustomDialogListener =
+                    object : CustomDialogListener {
+                        override fun onCancelButtonClicked() {
+                            // 닫기 버튼 누른 후 로직 - jhm 2022/07/04
+                            LogUtil.logE("cancel btn")
+                        }
 
-                    override fun onOkButtonClicked() {
-                        // 구매 확정  - jhm 2022/10/25
-                        LogUtil.logE("구매 확정 API Call")
-                        pcvm.putPurchaseConfirm(purchaseId,portfolioId,"Y")
-                        pcvm.putPurchaseConfirmResponse.observe(this@PurchaseDetailActivity, Observer {
-                            LogUtil.logE("구매 확정 요청 Observer.. " + it.message)
+                        override fun onOkButtonClicked() {
+                            // 구매 확정  - jhm 2022/10/25
+                            LogUtil.logE("구매 확정 API Call")
+                            pcvm.putPurchaseConfirm(purchaseId, portfolioId, "Y")
+                            pcvm.putPurchaseConfirmResponse.observe(
+                                this@PurchaseDetailActivity,
+                                Observer {
+                                    LogUtil.logE("구매 확정 요청 Observer.. " + it.message)
 
-                            pvm.getPortfolioDetail(portfolioId)
-                        })
-                        DialogManager.openDalog(mContext,"구매가 확정되었어요.","좋은 소식으로 또 만나요!",this@PurchaseDetailActivity)
+                                    pvm.getPortfolioDetail(portfolioId)
+                                })
+                            DialogManager.openDalog(
+                                mContext,
+                                "구매가 확정되었어요.",
+                                "좋은 소식으로 또 만나요!",
+                                "확인",
+                                this@PurchaseDetailActivity
+                            )
+                        }
                     }
-                }
 
                 // 구매 취소 btn Listener
-                val portfolioCancleBtnListener: CustomDialogListener = object : CustomDialogListener {
-                    override fun onCancelButtonClicked() {
-                        // 닫기 - jhm 2022/07/04
-                        LogUtil.logE("아니요")
-                    }
+                val portfolioCancleBtnListener: CustomDialogListener =
+                    object : CustomDialogListener {
+                        override fun onCancelButtonClicked() {
+                            // 닫기 - jhm 2022/07/04
+                            LogUtil.logE("아니요")
+                        }
 
-                    override fun onOkButtonClicked() {
-                        // 구매 취소  - jhm 2022/10/25
-                        LogUtil.logE("구매취소 API Call..")
+                        override fun onOkButtonClicked() {
+                            // 구매 취소  - jhm 2022/10/25
+                            LogUtil.logE("구매취소 API Call..")
 
-                        // 구매 취소시 필요 Model - jhm 2022/09/20
-                        val purchaseRmModel = PurchaseRmModel(purchaseId)
+                            // 구매 취소시 필요 Model - jhm 2022/09/20
+                            val purchaseRmModel = PurchaseRmModel(purchaseId)
 
 
-                        response?.removePurchase(
-                            "Bearer $accessToken",
-                            deviceId = deviceId,
-                            memberId = memberId,
-                            purchaseRmModel
-                        )?.enqueue(object : retrofit2.Callback<BaseDTO> {
-                            @SuppressLint("NotifyDataSetChanged")
-                            override fun onResponse(
-                                call: Call<BaseDTO>,
-                                response: Response<BaseDTO>
-                            ) {
-                                try {
-                                    if(response.code() == 200) {
-                                        LogUtil.logE("포트폴리오 구매 취소 성공")
-                                        DialogManager.openDalog(mContext,"구매 취소 완료","${binding.infoTitle.text} \n $purchasePieceVolume PIECE가 구매 취소되었어요.",this@PurchaseDetailActivity)
-                                    } else {
-                                        LogUtil.logE("포트폴리오 구매 취소 실패")
-                                        finish()
+                            response?.removePurchase(
+                                "Bearer $accessToken",
+                                deviceId = deviceId,
+                                memberId = memberId,
+                                purchaseRmModel
+                            )?.enqueue(object : retrofit2.Callback<BaseDTO> {
+                                @SuppressLint("NotifyDataSetChanged")
+                                override fun onResponse(
+                                    call: Call<BaseDTO>,
+                                    response: Response<BaseDTO>
+                                ) {
+                                    try {
+                                        if (response.code() == 200) {
+                                            LogUtil.logE("포트폴리오 구매 취소 성공")
+                                            DialogManager.openDalog(
+                                                mContext,
+                                                "구매 취소 완료",
+                                                "${binding.infoTitle.text} \n $purchasePieceVolume PIECE가 구매 취소되었어요.",
+                                                "확인",
+                                                this@PurchaseDetailActivity
+                                            )
+                                        } else {
+                                            LogUtil.logE("포트폴리오 구매 취소 실패")
+                                            finish()
+                                        }
+                                    } catch (ex: Exception) {
+                                        ex.printStackTrace()
+                                        LogUtil.logE("구매 취소 실패.." + ex.printStackTrace())
                                     }
-                                }catch (ex: Exception) {
-                                    ex.printStackTrace()
-                                    LogUtil.logE("구매 취소 실패.." + ex.printStackTrace())
                                 }
-                            }
 
-                            override fun onFailure(call: Call<BaseDTO>, t: Throwable) {
-                                LogUtil.logE("구매 취소 API 실패.." + t.message )
-                            }
-                        })
+                                override fun onFailure(call: Call<BaseDTO>, t: Throwable) {
+                                    LogUtil.logE("구매 취소 API 실패.." + t.message)
+                                }
+                            })
+                        }
                     }
-                }
 
                 binding.portfolioBtn.setOnClickListener {
                     LogUtil.logE("구매 확정 버튼 OnClick..")
-                    DialogManager.openTwoBtnDialog(mContext, "구매를 확정할까요?", "구매 확정 후에는 되돌릴 수 없습니다.",customDialogListener,"구매 확정")
+                    DialogManager.openTwoBtnDialog(
+                        mContext,
+                        "구매를 확정할까요?",
+                        "구매 확정 후에는 되돌릴 수 없습니다.",
+                        customDialogListener,
+                        "구매 확정"
+                    )
                 }
 
                 binding.cancleBtn.setOnClickListener {
                     LogUtil.logE("구매 취소 OnClick..")
-                    DialogManager.openTwoBtnNagativeDialog(mContext,"구매 취소","정말로 구매를 취소할까요?",portfolioCancleBtnListener,"구매 취소")
+                    DialogManager.openTwoBtnNagativeDialog(
+                        mContext,
+                        "구매 취소",
+                        "정말로 구매를 취소할까요?",
+                        portfolioCancleBtnListener,
+                        "구매 취소"
+                    )
                 }
             }
         } else {

@@ -61,20 +61,26 @@ class BookMarkViewModel(application: Application) : AndroidViewModel(application
                 memberId = memberId
             )
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ BookMarkDTO ->
-                bookmarkList.clear()
-                LogUtil.logE("북마크 갯수 : " + BookMarkDTO.data.size)
+                .subscribe({
+                        BookMarkDTO ->
+                    try {
+                        bookmarkList.clear()
+                        LogUtil.logE("북마크 갯수 : " + BookMarkDTO.data.size)
 
-                for(i in 0 until BookMarkDTO.data.size) {
-                   bookmarkList.add(BookMarkDTO.data[i])
-                    _liveData.value = bookmarkList
-                    _liveData.postValue(bookmarkList)
-                }
-                LogUtil.logE("list size : " + bookmarkList.size)
-                bookMarkAdapter.notifyDataSetChanged()
+                        for(i in 0 until BookMarkDTO.data.size) {
+                            bookmarkList.add(BookMarkDTO.data[i])
+                            _liveData.value = bookmarkList
+                            _liveData.postValue(bookmarkList)
+                        }
+                        LogUtil.logE("list size : " + bookmarkList.size)
+                        bookMarkAdapter.notifyDataSetChanged()
 
-
+                    } catch (ex: Exception) {
+                        ex.printStackTrace()
+                        LogUtil.logE("북마크 Error ! ${ex.message}")
+                    }
             }, { throwable ->
+                    throwable.printStackTrace()
                 LogUtil.logE("회원 북마크 리스트 GET List Error ! " + throwable.message)
             })
         }

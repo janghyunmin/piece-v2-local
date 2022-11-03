@@ -23,12 +23,12 @@ public class JoinModel {
     private String di;
     private String gender;
     private String isFido;
-    private DeviceInfoModel deviceInfo = null;
-    private NotificationInfoModel notificationInfo = null;
-    private ArrayList<ConsentModel> consents = null;
+    private DevieInfo deviceInfo = null;
+    private NotificationInfo notificationInfo = null;
+    private ArrayList<Consents> consents = null;
 
     public JoinModel(String name, String pinNumber, String cellPhoneNo, String birthDay, String ci, String di, String gender,
-                     String isFido, DeviceInfoModel deviceInfo, NotificationInfoModel notificationInfo, ArrayList<ConsentModel> consents){
+                     String isFido, DevieInfo deviceInfo, NotificationInfo notificationInfo, ArrayList<Consents> consents){
         this.name = name;
         this.pinNumber = pinNumber;
         this.cellPhoneNo = cellPhoneNo;
@@ -148,27 +148,27 @@ public class JoinModel {
     }
 
 
-    public DeviceInfoModel getDeviceInfo() {
+    public DevieInfo getDeviceInfo() {
         return deviceInfo;
     }
 
-    public void setDeviceInfo(DeviceInfoModel deviceInfo) {
+    public void setDeviceInfo(DevieInfo deviceInfo) {
         this.deviceInfo = deviceInfo;
     }
 
-    public NotificationInfoModel getNotificationInfo() {
+    public NotificationInfo getNotificationInfo() {
         return notificationInfo;
     }
 
-    public void setNotificationInfo(NotificationInfoModel notificationInfo) {
+    public void setNotificationInfo(NotificationInfo notificationInfo) {
         this.notificationInfo = notificationInfo;
     }
 
-    public ArrayList<ConsentModel> getConsents() {
+    public ArrayList<Consents> getConsents() {
         return consents;
     }
 
-    public void setConsents(ArrayList<ConsentModel> consents) {
+    public void setConsents(ArrayList<Consents> consents) {
         this.consents = consents;
     }
 }

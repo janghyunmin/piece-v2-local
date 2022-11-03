@@ -21,8 +21,8 @@ import com.bsstandard.piece.retrofit.RetrofitService
 class MagazineDetailRepository(application: Application) {
     val response = ApiModule.provideRetrofit().create(RetrofitService::class.java)
 
-    suspend fun getMagazineDetails(magazineId: String) : MagazineDetailDTO {
-        return response.getMagazineDetail(magazineId)
+    suspend fun getNoMemberMagazineDetail(magazineId: String) : MagazineDetailDTO {
+        return response.getNoMemberMagazineDetail(magazineId)
     }
 
     // singleton pattern - jhm 2022/08/30

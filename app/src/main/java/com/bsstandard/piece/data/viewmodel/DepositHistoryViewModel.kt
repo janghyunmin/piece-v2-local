@@ -24,6 +24,10 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
 import dagger.hilt.android.lifecycle.HiltViewModel
+import java.time.DayOfWeek
+import java.time.LocalDate
+import java.time.format.TextStyle
+import java.util.*
 
 /**
  *packageName    : com.bsstandard.piece.data.viewmodel
@@ -66,11 +70,13 @@ class DepositHistoryViewModel(application: Application) : AndroidViewModel(appli
     ) {
         repo.getDepositHistory(accessToken, deviceId, memberId, changeReason,length).subscribe(
             { DepositHistoryDTO ->
-                LogUtil.logE("회원 거래 내역 조회 갯수 : " + DepositHistoryDTO.data.result.size)
+                LogUtil.logE("회원 거래 내역 조회 갯수 : " + DepositHistoryDTO.data.totalCount)
+
 
                 hitoryList.clear()
                 for (i in ArrayList(DepositHistoryDTO.data.result).indices) {
                     hitoryList.add(DepositHistoryDTO.data.result[i])
+
                     depositHistoryAdapter.notifyDataSetChanged()
                 }
             }, { throwable ->
@@ -150,14 +156,34 @@ object BindingDepositHistoryAdapter {
     @SuppressLint("SetTextI18n")
     @RequiresApi(Build.VERSION_CODES.O)
     @BindingAdapter(
-        "app:createdAt"
+        "app:createdAt",
+        "app:changeReasonDetail"
     )
     @JvmStatic
     fun loadDate(
         textView: TextView,
-        createdAt: String
+        createdAt: String,
+        changeReasonDetail: String?
     ) {
-        textView.text = createdAt
+
+        val year = createdAt.substring(0, 4)
+        val month = createdAt.substring(5, 7)
+        val day = createdAt.substring(8, 10)
+        val hour = createdAt.substring(11, 13)
+        val minute = createdAt.substring(14, 16)
+        val date: LocalDate = LocalDate.of(year.toInt(), month.toInt(), day.toInt())
+        val dayOfWeek: DayOfWeek = date.dayOfWeek
+        val dayFormat = dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.KOREA)
+        val newDate = month + "월" + day + "일"
+
+        val detail = changeReasonDetail
+
+        if(detail == null){
+            textView.text = newDate
+        } else {
+            textView.text = "$newDate | $detail"
+        }
+
     }
 
     @SuppressLint("SetTextI18n", "ResourceAsColor")
@@ -200,4 +226,6 @@ object BindingDepositHistoryAdapter {
         return Uri.parse("android.resource://" + R::class.java.getPackage().getName() + "/" + resId)
             .toString()
     }
+
+
 }

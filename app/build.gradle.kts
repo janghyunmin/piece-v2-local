@@ -117,6 +117,7 @@ dependencies {
 
     implementation("com.github.NaikSoftware:StompProtocolAndroid:1.6.6")
     implementation ("com.beust:klaxon:5.5")
+    implementation ("androidx.work:work-runtime-ktx:2.7.0")
 
     /** { Test } - jhm 2022/04/22 **/
     testImplementation(Test.JUNIT)

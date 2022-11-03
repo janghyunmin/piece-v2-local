@@ -1,6 +1,7 @@
 package com.bsstandard.piece.view.question
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
@@ -13,7 +14,9 @@ import com.bsstandard.piece.base.BaseActivity
 import com.bsstandard.piece.data.viewmodel.BoardViewModel
 import com.bsstandard.piece.databinding.ActivityQuestionBinding
 import com.bsstandard.piece.view.adapter.question.QuestionAdapter
+import com.bsstandard.piece.view.common.NetworkActivity
 import com.bsstandard.piece.widget.utils.LogUtil
+import com.bsstandard.piece.widget.utils.NetworkConnection
 import com.google.android.material.tabs.TabLayout
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -43,72 +46,79 @@ class QuestionActivity : BaseActivity<ActivityQuestionBinding>(R.layout.activity
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        vm = ViewModelProvider(this@QuestionActivity)[BoardViewModel::class.java]
 
-        binding.questionVm = vm
-        binding.lifecycleOwner = this@QuestionActivity
+        binding.apply {
+            vm = ViewModelProvider(this@QuestionActivity)[BoardViewModel::class.java]
 
-        // UI Setting 최종 - jhm 2022/09/14
-        setStatusBarIconColor(true) // 상태바 아이콘 true : 검정색
-        setStatusBarBgColor("#ffffff") // 상태바 배경색상 설정
-        setNaviBarIconColor(true) // 네비게이션 true : 검정색
-        setNaviBarBgColor("#ffffff") // 네비게이션 배경색
+            binding.questionVm = vm
+            binding.lifecycleOwner = this@QuestionActivity
 
+            // UI Setting 최종 - jhm 2022/09/14
+            setStatusBarIconColor(true) // 상태바 아이콘 true : 검정색
+            setStatusBarBgColor("#ffffff") // 상태바 배경색상 설정
+            setNaviBarIconColor(true) // 네비게이션 true : 검정색
+            setNaviBarBgColor("#ffffff") // 네비게이션 배경색
+        }
 
+        val networkConnection = NetworkConnection(applicationContext)
+        networkConnection.observe(this) { isConnected -> // 인터넷 연결되어있음 - jhm 2022/11/02
+            if (isConnected) {
 
-        // 전체 자주묻는 질문 List  - jhm 2022/09/23
-        viewInit()
+                // 전체 자주묻는 질문 List  - jhm 2022/09/23
+                viewInit()
 
+                binding.tabs.addTab(binding.tabs.newTab().setText("전체"))
+                binding.tabs.addTab(binding.tabs.newTab().setText("회원"))
+                binding.tabs.addTab(binding.tabs.newTab().setText("구매"))
+                binding.tabs.addTab(binding.tabs.newTab().setText("분배"))
+                binding.tabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+                    override fun onTabReselected(tab: TabLayout.Tab?) {
+                        LogUtil.logE("탭 재선택..")
+                    }
 
+                    override fun onTabSelected(tab: TabLayout.Tab?) {
+                        LogUtil.logE("탭 선택 : + ${tab?.contentDescription}")
+                        when (tab?.contentDescription) {
+                            "전체" -> {
+                                vm.getQuestion("", "BRT03", 31, 1)
+                                LogUtil.logE("전체 탭 선택")
+                            }
+                            "회원" -> {
+                                vm.getQuestion("BRT0301", "BRT03", 10, 1)
+                                LogUtil.logE("회원 탭 선택")
+                            }
+                            "구매" -> {
+                                vm.getQuestion("BRT0302", "BRT03", 10, 1)
+                                LogUtil.logE("구매 탭 선택")
+                            }
+                            "분배" -> {
+                                vm.getQuestion("BRT0303", "BRT03", 10, 1)
+                                LogUtil.logE("분배 탭 선택")
+                            }
+                        }
+                    }
 
-
-
-
-        binding.tabs.addTab(binding.tabs.newTab().setText("전체"))
-        binding.tabs.addTab(binding.tabs.newTab().setText("회원"))
-        binding.tabs.addTab(binding.tabs.newTab().setText("구매"))
-        binding.tabs.addTab(binding.tabs.newTab().setText("분배"))
-        binding.tabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-            override fun onTabReselected(tab: TabLayout.Tab?) {
-                LogUtil.logE("탭 재선택..")
+                    override fun onTabUnselected(tab: TabLayout.Tab?) {
+                        LogUtil.logE("탭 선택 안함 + $tab")
+                    }
+                })
+            } else {
+                val intent = Intent(applicationContext, NetworkActivity::class.java)
+                startActivity(intent)
             }
+        }
 
-            override fun onTabSelected(tab: TabLayout.Tab?) {
-                LogUtil.logE("탭 선택 : + ${tab?.contentDescription}")
-                when(tab?.contentDescription) {
-                    "전체" -> {
-                        vm.getQuestion("","BRT03" , 31 , 1)
-                        LogUtil.logE("전체 탭 선택")
-                    }
-                    "회원" -> {
-                        vm.getQuestion("BRT0301","BRT03" ,10 , 1)
-                        LogUtil.logE("회원 탭 선택")
-                    }
-                    "구매" -> {
-                        vm.getQuestion("BRT0302","BRT03" ,10 , 1)
-                        LogUtil.logE("구매 탭 선택")
-                    }
-                    "분배" -> {
-                        vm.getQuestion("BRT0303","BRT03" ,10 , 1)
-                        LogUtil.logE("분배 탭 선택")
-                    }
-                }
-            }
 
-            override fun onTabUnselected(tab: TabLayout.Tab?) {
-                LogUtil.logE("탭 선택 안함 + $tab")
-            }
-        })
     }
 
     // 자주 묻는 질문 adapter viewInit - jhm 2022/09/28
     private fun viewInit() {
-        vm.viewInit(binding.questionRv,"자주 묻는 질문")
-        vm.getQuestion("","BRT03" , 31 , 1)
+        vm.viewInit(binding.questionRv, "자주 묻는 질문")
+        vm.getQuestion("", "BRT03", 31, 1)
 
         vm.questionItemList.observe(this@QuestionActivity, Observer {
             LogUtil.logE("item count : " + vm.getQuestionItem().size)
-            vm.viewInit(binding.questionRv,"자주 묻는 질문")
+            vm.viewInit(binding.questionRv, "자주 묻는 질문")
         })
 
         vm.questionAdapter.setOnItemClickListener(object : QuestionAdapter.OnItemClickListener {

@@ -25,13 +25,15 @@ import com.bsstandard.piece.data.datasource.local.room.AppDatabase
 import com.bsstandard.piece.data.datasource.shared.PrefsHelper
 import com.bsstandard.piece.data.viewmodel.GetUserViewModel
 import com.bsstandard.piece.databinding.ActivityAccessBinding
+import com.bsstandard.piece.view.common.NetworkActivity
 import com.bsstandard.piece.view.deleteMember.DeleteMemberActivity
 import com.bsstandard.piece.view.intro.IntroActivity
 import com.bsstandard.piece.view.passcode.PassCodeActivity
-import com.bsstandard.piece.widget.utils.CommonTwoTypeDialog
 import com.bsstandard.piece.widget.utils.CustomDialogListener
+import com.bsstandard.piece.widget.utils.DialogManager
 import com.bsstandard.piece.widget.utils.DialogManager.openAuthDialog
 import com.bsstandard.piece.widget.utils.LogUtil
+import com.bsstandard.piece.widget.utils.NetworkConnection
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.concurrent.Executor
 
@@ -55,19 +57,12 @@ class CertificationActivity : BaseActivity<ActivityAccessBinding>(R.layout.activ
     }
 
     val mContext: Context = this@CertificationActivity
-
-    // 생체인증 등록시 필요한 Dialog - jhm 2022/09/15
-    // 로그아웃시 필요한 Dialog - jhm 2022/09/19
-    private var commonTwoTypeModal: CommonTwoTypeDialog? = null
-
-
     private var status: Int? = null
 
     private lateinit var executor: Executor
     private lateinit var biometricPrompt: BiometricPrompt
     private lateinit var promptInfo: BiometricPrompt.PromptInfo
     private var isFido: String? = PrefsHelper.read("isFido", "N");
-    //private var isFido:String = ""
 
 
     private val mv by viewModels<GetUserViewModel>()
@@ -79,9 +74,7 @@ class CertificationActivity : BaseActivity<ActivityAccessBinding>(R.layout.activ
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-
         binding.apply {
-
             binding.lifecycleOwner = this@CertificationActivity
 
             // UI Setting 최종 - jhm 2022/09/14
@@ -90,10 +83,8 @@ class CertificationActivity : BaseActivity<ActivityAccessBinding>(R.layout.activ
             setNaviBarIconColor(true) // 네비게이션 true : 검정색
             setNaviBarBgColor("#ffffff") // 네비게이션 배경색
 
-
             // 내정보 API - jhm 2022/09/03
             memberVm = mv
-
 
             // 생체인증 시작시 판별 - jhm 2022/09/16
             status = BiometricManager.from(mContext).canAuthenticate()
@@ -106,135 +97,157 @@ class CertificationActivity : BaseActivity<ActivityAccessBinding>(R.layout.activ
                 isChecked()
                 LogUtil.logE("사용 불가능")
             }
-
-
         }
 
-        executor = ContextCompat.getMainExecutor(mContext)
-        biometricPrompt = BiometricPrompt(this, executor,
-            object : BiometricPrompt.AuthenticationCallback() {
-                override fun onAuthenticationError(
-                    errorCode: Int,
-                    errString: CharSequence
-                ) {
-                    super.onAuthenticationError(errorCode, errString)
-                    PreferenceUtil(context = mContext).setString("isFido", "N")
-                    LogUtil.logE("error : $errString")
-                }
 
-                override fun onAuthenticationSucceeded(
-                    result: BiometricPrompt.AuthenticationResult
-                ) {
-                    super.onAuthenticationSucceeded(result)
-                    PreferenceUtil(context = mContext).setString("isFido", "Y")
-                    LogUtil.logE("success : $result")
-                }
+        val networkConnection = NetworkConnection(applicationContext)
+        networkConnection.observe(this) { isConnected -> // 인터넷 연결되어있음 - jhm 2022/11/02
+            if (isConnected) {
+                executor = ContextCompat.getMainExecutor(mContext)
+                biometricPrompt = BiometricPrompt(this, executor,
+                    object : BiometricPrompt.AuthenticationCallback() {
+                        override fun onAuthenticationError(
+                            errorCode: Int,
+                            errString: CharSequence
+                        ) {
+                            super.onAuthenticationError(errorCode, errString)
+                            PreferenceUtil(context = mContext).setString("isFido", "N")
+                            LogUtil.logE("error : $errString")
+                        }
 
-                override fun onAuthenticationFailed() {
-                    super.onAuthenticationFailed()
-                    PreferenceUtil(context = mContext).setString("isFido", "N")
-                    LogUtil.logE("failed..")
-                }
-            })
+                        override fun onAuthenticationSucceeded(
+                            result: BiometricPrompt.AuthenticationResult
+                        ) {
+                            super.onAuthenticationSucceeded(result)
+                            PreferenceUtil(context = mContext).setString("isFido", "Y")
+                            LogUtil.logE("success : $result")
+                        }
 
-        promptInfo = BiometricPrompt.PromptInfo.Builder()
-            .setTitle("Biometric login for my app")
-            .setSubtitle("Log in using your biometric credential")
-            .setNegativeButtonText("Use account password")
-            .build()
+                        override fun onAuthenticationFailed() {
+                            super.onAuthenticationFailed()
+                            PreferenceUtil(context = mContext).setString("isFido", "N")
+                            LogUtil.logE("failed..")
+                        }
+                    })
+
+                promptInfo = BiometricPrompt.PromptInfo.Builder()
+                    .setTitle("Biometric login for my app")
+                    .setSubtitle("Log in using your biometric credential")
+                    .setNegativeButtonText("Use account password")
+                    .build()
 
 
-        binding.switchBtn.isChecked = PreferenceUtil(context = mContext).getString("isFido","N") != "N"
+                binding.switchBtn.isChecked =
+                    PreferenceUtil(context = mContext).getString("isFido", "N") != "N"
 
-        binding.switchBtn.setOnClickListener {
-            LogUtil.logE("등록시 OnClick..")
-            if(binding.switchBtn.isChecked) {
-                // 실패시 비밀번호 재설정 - jhm 2022/07/05
-                val customDialogListener: CustomDialogListener = object : CustomDialogListener {
-                    override fun onCancelButtonClicked() {
-                        // 닫기 버튼 누른 후 로직 - jhm 2022/07/04
-                        LogUtil.logE("닫기 OnClick..")
-                        binding.switchBtn.isChecked = false
-                        PreferenceUtil(context = mContext).setString("isFido", "N")
+                binding.switchBtn.setOnClickListener {
+                    LogUtil.logE("등록시 OnClick..")
+                    if (binding.switchBtn.isChecked) {
+                        // 실패시 비밀번호 재설정 - jhm 2022/07/05
+                        val customDialogListener: CustomDialogListener =
+                            object : CustomDialogListener {
+                                override fun onCancelButtonClicked() {
+                                    // 닫기 버튼 누른 후 로직 - jhm 2022/07/04
+                                    LogUtil.logE("닫기 OnClick..")
+                                    binding.switchBtn.isChecked = false
+                                    PreferenceUtil(context = mContext).setString("isFido", "N")
+                                }
+
+                                @RequiresApi(Build.VERSION_CODES.R)
+                                override fun onOkButtonClicked() {
+                                    LogUtil.logE("생체인증 등록 OnClick..")
+                                    binding.switchBtn.isChecked = true
+                                    PreferenceUtil(context = mContext).setString("isFido", "Y")
+                                    authenticateToEncrypt()
+                                }
+                            }
+                        openAuthDialog(
+                            mContext,
+                            "생체인증 등록이 필요해요",
+                            "생체인증 등록을 진행해 주세요.",
+                            customDialogListener,
+                            "생체인증 등록",
+                            binding.switchBtn.isChecked
+                        )
+                    } else {
+                        LogUtil.logE("해제시 OnClick..")
+                        // 실패시 비밀번호 재설정 - jhm 2022/07/05
+                        val customDialogListener: CustomDialogListener =
+                            object : CustomDialogListener {
+                                override fun onCancelButtonClicked() {
+                                    // 닫기 버튼 누른 후 로직 - jhm 2022/07/04
+                                    LogUtil.logE("생체인증 해제 확인 OnClick..")
+                                    binding.switchBtn.isChecked = false
+                                    PreferenceUtil(context = mContext).setString("isFido", "N")
+                                }
+
+                                override fun onOkButtonClicked() {
+                                    LogUtil.logE("생체인증 해제 취소 OnClick..")
+                                    binding.switchBtn.isChecked = true
+                                    PreferenceUtil(context = mContext).setString("isFido", "Y")
+                                }
+                            }
+                        openAuthDialog(
+                            mContext,
+                            "생체인증 해제",
+                            "생체인증을 사용하지 않도록 설정할까요?",
+                            customDialogListener,
+                            "생체인증 해제",
+                            binding.switchBtn.isChecked
+                        )
                     }
-
-                    @RequiresApi(Build.VERSION_CODES.R)
-                    override fun onOkButtonClicked() {
-                        LogUtil.logE("생체인증 등록 OnClick..")
-                        binding.switchBtn.isChecked = true
-                        PreferenceUtil(context = mContext).setString("isFido", "Y")
-                        authenticateToEncrypt()
-                    }
                 }
-                openAuthDialog(mContext, "생체인증 등록이 필요해요", "생체인증 등록을 진행해 주세요.", customDialogListener,"생체인증 등록",binding.switchBtn.isChecked)
+
+                // 간편 비밀번호 변경 layout Onclick - jhm 2022/09/16
+                binding.passwordLayout.setOnClickListener {
+                    val intent = Intent(this, PassCodeActivity::class.java)
+                    intent.putExtra("Step", "3")
+                    startActivity(intent)
+                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                }
+
+
+                binding.logoutLayout.setOnClickListener {
+                    val customDialogListener: CustomDialogListener =
+                        object : CustomDialogListener {
+                            @RequiresApi(Build.VERSION_CODES.R)
+                            override fun onOkButtonClicked() {
+                                LogUtil.logE("로그아웃 OnClick..")
+                                PrefsHelper.removeKey(mContext, "memberId");
+
+                                val intent = Intent(mContext, IntroActivity::class.java)
+                                Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                overridePendingTransition(
+                                    android.R.anim.fade_in,
+                                    android.R.anim.fade_out
+                                )
+                                startActivity(intent)
+                                finishAffinity() // 이전 앱 화면 모두 제거 및 앱스택 제거 - jhm 2022/08/31
+                            }
+
+                            override fun onCancelButtonClicked() {
+                                LogUtil.logE("취소 OnClick..")
+                            }
+                        }
+
+                    DialogManager.openTwoBtnDialog(
+                        mContext,
+                        "로그아웃",
+                        "일부메뉴는 이용하지 못할 수 도 있어요.\n그래도 로그아웃 할까요?",
+                        customDialogListener,
+                        "로그아웃"
+                    )
+                }
+
+                binding.withdrawLayout.setOnClickListener {
+                    val intent = Intent(this, DeleteMemberActivity::class.java)
+                    startActivity(intent)
+                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                }
+            } else {
+                val intent = Intent(applicationContext, NetworkActivity::class.java)
+                startActivity(intent)
             }
-            else {
-                LogUtil.logE("해제시 OnClick..")
-                // 실패시 비밀번호 재설정 - jhm 2022/07/05
-                val customDialogListener: CustomDialogListener = object : CustomDialogListener {
-                    override fun onCancelButtonClicked() {
-                        // 닫기 버튼 누른 후 로직 - jhm 2022/07/04
-                        LogUtil.logE("생체인증 해제 확인 OnClick..")
-                        binding.switchBtn.isChecked = false
-                        PreferenceUtil(context = mContext).setString("isFido", "N")
-                    }
-
-                    override fun onOkButtonClicked() {
-                        LogUtil.logE("생체인증 해제 취소 OnClick..")
-                        binding.switchBtn.isChecked = true
-                        PreferenceUtil(context = mContext).setString("isFido", "Y")
-                    }
-                }
-                openAuthDialog(mContext, "생체인증 해제", "생체인증을 사용하지 않도록 설정할까요?", customDialogListener,"생체인증 해제",binding.switchBtn.isChecked)
-            }
-        }
-
-        // 간편 비밀번호 변경 layout Onclick - jhm 2022/09/16
-        binding.passwordLayout.setOnClickListener {
-            val intent = Intent(this, PassCodeActivity::class.java)
-            intent.putExtra("Step", "3")
-            startActivity(intent)
-            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-        }
-
-
-        binding.logoutLayout.setOnClickListener {
-            val customDialogListener: CustomDialogListener =
-                object : CustomDialogListener {
-                    @RequiresApi(Build.VERSION_CODES.R)
-                    override fun onOkButtonClicked() {
-                        LogUtil.logE("로그아웃 OnClick..")
-                        PrefsHelper.removeKey(mContext, "memberId");
-                        commonTwoTypeModal?.dismiss()
-
-                        val intent = Intent(mContext, IntroActivity::class.java)
-                        Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
-                        startActivity(intent)
-                        finishAffinity() // 이전 앱 화면 모두 제거 및 앱스택 제거 - jhm 2022/08/31
-                    }
-
-                    override fun onCancelButtonClicked() {
-                        LogUtil.logE("취소 OnClick..")
-                        commonTwoTypeModal?.dismiss()
-                    }
-                }
-
-            commonTwoTypeModal = CommonTwoTypeDialog(
-                context = mContext,
-                "logout",
-                customDialogListener,
-                "",
-                "",
-                ""
-            )
-            commonTwoTypeModal?.show()
-        }
-
-        binding.withdrawLayout.setOnClickListener {
-            val intent = Intent(this, DeleteMemberActivity::class.java)
-            startActivity(intent)
-            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         }
     }
 

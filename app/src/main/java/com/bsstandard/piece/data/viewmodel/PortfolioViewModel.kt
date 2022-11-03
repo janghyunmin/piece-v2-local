@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bsstandard.piece.R
 import com.bsstandard.piece.data.dto.PortfolioDTO
 import com.bsstandard.piece.data.repository.PortfolioRepository
+import com.bsstandard.piece.retrofit.WebSocketListener
 import com.bsstandard.piece.view.adapter.portfolio.PortfolioAdapter
 import com.bsstandard.piece.widget.utils.DateConverter
 import com.bsstandard.piece.widget.utils.LogUtil
@@ -50,6 +51,7 @@ class PortfolioViewModel(application: Application) : AndroidViewModel(applicatio
     private val portfolioList: ArrayList<PortfolioDTO.Data.Portfolio> = arrayListOf()
     var n = 1
 
+    val listener: WebSocketListener = WebSocketListener()
 
     @SuppressLint("CheckResult", "NotifyDataSetChanged")
     fun getPortfolio(length: Int) {
@@ -60,10 +62,11 @@ class PortfolioViewModel(application: Application) : AndroidViewModel(applicatio
                 portfolioList.clear()
                 for (i in ArrayList(PortfolioDTO.data.portfolios).indices) {
                     portfolioList.add(PortfolioDTO.data.portfolios[i])
-
-                    LogUtil.logE("포트폴리오 아이디 및 상태값 : " + portfolioList.get(i).portfolioId + portfolioList.get(i).recruitmentState )
-                    portfolioAdapter.notifyDataSetChanged()
+                    LogUtil.logE("포트폴리오 아이디 및 상태값 : " + portfolioList[i].portfolioId + "\n"+portfolioList[i].recruitmentState )
                 }
+
+                portfolioAdapter.notifyDataSetChanged()
+
 
             }, { throwable -> LogUtil.logE("포트폴리오 GET List Error!" + throwable.message) }
         )
@@ -80,6 +83,7 @@ class PortfolioViewModel(application: Application) : AndroidViewModel(applicatio
 }
 
 object BindingAdapter {
+    @RequiresApi(Build.VERSION_CODES.O)
     @BindingAdapter("app:imageUrl")
     @JvmStatic
     fun loadImg(imageView: ImageView, url: String) {
@@ -92,57 +96,63 @@ object BindingAdapter {
             .into(imageView)
     }
 
-    @BindingAdapter("app:recruitmentState")
-    @JvmStatic
-    fun loadState(imageView: ImageView, status: String) {
-        val status = status
-        var statusImgPath: String = ""
-
-//        LogUtil.logE("포트폴리오 상태값 : $status")
-
-//        if(status == "PRS0102") {
-//           statusImgPath = getURLForResource(R.drawable.prs0102) // 판매중 - jhm 2022/07/17
+//    @RequiresApi(Build.VERSION_CODES.O)
+//    @BindingAdapter("app:recruitmentState")
+//    @JvmStatic
+//    fun loadState(imageView: ImageView, status: String) {
+//        val status = status
+//        var statusImgPath: String = ""
+//
+//        LogUtil.logE("status $status")
+//        // 오픈예정 - jhm 2022/07/17
+//        if(status == "PRS0101") {
+//            statusImgPath = getURLForResource(R.drawable.prs0101)
+//            LogUtil.logE("PRS0101 주소 : $statusImgPath")
 //        }
-        when (status) {
-            "PRS0101" -> {
-                statusImgPath =
-                    getURLForResource(R.drawable.prs0101)
-            }
-            // 오픈예정 - jhm 2022/07/17
-            "PRS0102" -> {
-                statusImgPath =
-                    getURLForResource(R.drawable.prs0102)
-            }
-            // 판매중 - jhm 2022/07/17
-            "PRS0103" -> {
-                statusImgPath =
-                    getURLForResource(R.drawable.prs0103)
-            }
-            // 조각 완판 - jhm 2022/07/17
-            "PRS0104" -> {
-                LogUtil.logE("매각 대기")
-            }
-            "PRS0105" -> {
-                LogUtil.logE("매각 진행")
-            }
-            "PRS0106" -> statusImgPath =
-                getURLForResource(R.drawable.prs0106) // 매각 완료 - jhm 2022/07/17
-            "PRS0107" -> LogUtil.logE("정산중")
-            "PRS0108" -> LogUtil.logE("분배완료")
-            "PRS0109" -> statusImgPath =
-                getURLForResource(R.drawable.prs0109) // 일시 중지 - jhm 2022/07/17
-            "PRS0110" -> statusImgPath =
-                getURLForResource(R.drawable.prs0110) // 기한 만료 - jhm 2022/07/17
-            "PRS0111" -> statusImgPath =
-                getURLForResource(R.drawable.prs0111) // 수익 분배 - jhm 2022/07/17
-        }
-
-
-        Glide.with(imageView.context)
-            .load(statusImgPath)
-            .transition(DrawableTransitionOptions.withCrossFade())
-            .into(imageView)
-    }
+//
+//        // 판매중 - jhm 2022/07/17
+//        else if(status == "PRS0102") {
+//            statusImgPath = getURLForResource(R.drawable.prs0102)
+//        }
+//
+//        // 조각 완판 - jhm 2022/07/17
+//        else if(status == "PRS0103") {
+//            statusImgPath = getURLForResource(R.drawable.prs0103)
+//
+//            LogUtil.logE("PRS0103 주소 : $statusImgPath")
+//        }
+//
+//        else if(status == "PRS0104") {
+//            LogUtil.logE("매각 대기")
+//        }
+//        else if(status == "PRS0105") {
+//            LogUtil.logE("매각 진행")
+//        }
+//        else if(status == "PRS0106") {
+//            statusImgPath = getURLForResource(R.drawable.prs0106) // 매각 완료 - jhm 2022/07/17
+//        }
+//        else if(status == "PRS0107") {
+//            LogUtil.logE("정산중")
+//        }
+//        else if(status == "PRS0108") {
+//            LogUtil.logE("분배완료")
+//        }
+//        else if(status == "PRS0109") {
+//            statusImgPath = getURLForResource(R.drawable.prs0109) // 일시 중지 - jhm 2022/07/17
+//        }
+//        else if(status == "PRS0110") {
+//            statusImgPath = getURLForResource(R.drawable.prs0110) // 기한 만료 - jhm 2022/07/17
+//        }
+//        else if(status == "PRS0111") {
+//            statusImgPath = getURLForResource(R.drawable.prs0111) // 수익 분배 - jhm 2022/07/17
+//        }
+//
+//        LogUtil.logE("statusImgPath : $statusImgPath")
+//        Glide.with(imageView.context)
+//            .load(statusImgPath)
+//            .transition(DrawableTransitionOptions.withCrossFade())
+//            .into(imageView)
+//    }
 
     @SuppressLint("SetTextI18n")
     @RequiresApi(Build.VERSION_CODES.O)
@@ -209,7 +219,7 @@ object BindingAdapter {
 
     // 포트폴리오 조회시 상태값에대한 이미지를 불러오는 로직 (ex: 오픈예정 , 판매중 , 조각완판 등.. ) - jhm 2022/07/18
     private fun getURLForResource(resId: Int): String {
-        return Uri.parse("android.resource://" + R::class.java.getPackage().getName() + "/" + resId)
+        return Uri.parse("android.resource://" + R::class.java.getPackage().name + "/" + resId)
             .toString()
     }
 

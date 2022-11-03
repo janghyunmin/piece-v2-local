@@ -13,8 +13,9 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.bsstandard.piece.R;
-import com.bsstandard.piece.data.datamodel.dmodel.SmsAuthModel;
+import com.bsstandard.piece.data.datamodel.dmodel.sms.CallSmsAuthModel;
 import com.bsstandard.piece.data.datamodel.dmodel.consent.ConsentList;
+import com.bsstandard.piece.data.datamodel.dmodel.sms.CallSmsVerification;
 import com.bsstandard.piece.data.dto.SmsVerificationDTO;
 import com.bsstandard.piece.data.viewmodel.CallSmsAuthViewModel;
 import com.bsstandard.piece.data.viewmodel.SmsViewModel;
@@ -64,7 +65,7 @@ public class BottomSheetSmsDialog extends BottomSheetDialogFragment {
     private SmsViewModel smsViewModel;
     private CallSmsAuthViewModel callSmsAuthViewModel;
     private VerifyViewModel verifyViewModel;
-    private SmsAuthModel smsAuthModel;
+    private CallSmsVerification callSmsVerification;
     public String txSeqNo;
     public String name;
     public String birthday;
@@ -165,7 +166,22 @@ public class BottomSheetSmsDialog extends BottomSheetDialogFragment {
             public void onClick(View v) {
                 countDownTimer.onFinish();
                 countDownTimer();
-                callSmsAuthViewModel.postCallSmsAuthData(smsAuthModel);
+                // 인증번호 요청시 모델 - jhm 2022/06/22
+                CallSmsAuthModel callSmsAuthModel = new CallSmsAuthModel(
+                        name,
+                        birthday,
+                        sexCd,
+                        ntvFrnrCd,
+                        telComcd,
+                        telNo,
+                        "Y",
+                        "Y",
+                        "Y",
+                        "Y"
+                );
+
+
+                callSmsAuthViewModel.postCallSmsAuthData(callSmsAuthModel);
             }
         });
 
@@ -203,10 +219,10 @@ public class BottomSheetSmsDialog extends BottomSheetDialogFragment {
             smsDialogBinding.confirmBtn.setSelected(true);
 
             // 인증번호 요청시 모델 - jhm 2022/06/22
-            smsAuthModel = new SmsAuthModel(
-                    txSeqNo, name, birthday, sexCd, ntvFrnrCd, telComcd, telNo,
-                    "Y", "Y", "Y", "Y",
-                    verifyNum
+            callSmsVerification = new CallSmsVerification(
+                    txSeqNo,
+                    telNo,
+                    smsDialogBinding.smsNumber.getText().toString()
             );
 
             passCodeData = new Bundle();
@@ -224,7 +240,7 @@ public class BottomSheetSmsDialog extends BottomSheetDialogFragment {
                 public void onClick(View v) {
                     LogUtil.logE("onclick..");
                     // 인증번호 검증 요청을 한다. - jhm 2022/06/24
-                    verifyViewModel.postCallVerifyData(smsAuthModel);
+                    verifyViewModel.postCallVerifyData(callSmsVerification);
 
                     // 인증번호 검증 리턴 데이터를 받는다 - jhm 2022/06/24
                     Gson gson = new Gson();

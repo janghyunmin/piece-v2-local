@@ -17,8 +17,8 @@ import com.bsstandard.piece.data.dto.MemberDeleteDTO
 import com.bsstandard.piece.databinding.ActivityDeletememberDetailBinding
 import com.bsstandard.piece.di.hilt.ApiModule
 import com.bsstandard.piece.retrofit.RetrofitService
-import com.bsstandard.piece.widget.utils.CommonTwoTypeDialog
 import com.bsstandard.piece.widget.utils.CustomDialogListener
+import com.bsstandard.piece.widget.utils.DialogManager
 import com.bsstandard.piece.widget.utils.LogUtil
 import dagger.hilt.android.AndroidEntryPoint
 import retrofit2.Call
@@ -51,8 +51,6 @@ class DeleteMemberDetailActivity :
     private var withdrawalReasonCode: String? = ""
     private var withdrawalReasonText: String? = ""
 
-    // 탈퇴 불가시 필요한 Dialog - jhm 2022/09/20
-    private var commonTwoTypeModal: CommonTwoTypeDialog? = null
 
     companion object {
         const val TAG: String = "DeleteMemberDetailActivity"
@@ -120,7 +118,6 @@ class DeleteMemberDetailActivity :
 
                     override fun onCancelButtonClicked() {
                         LogUtil.logE("취소 OnClick..")
-                        commonTwoTypeModal?.dismiss()
                     }
                 }
 
@@ -144,7 +141,6 @@ class DeleteMemberDetailActivity :
                                 LogUtil.logE(
                                     "member delete call success.." + response.body()?.toString()
                                 )
-                                commonTwoTypeModal?.dismiss()
                                 try {
                                     if (!response.body().toString().isEmpty()) {
                                         if (response.isSuccessful) {
@@ -169,15 +165,14 @@ class DeleteMemberDetailActivity :
                                                         "Error Code : ${response.code()} + \n " +
                                                                 "Error Message : ${response.body()?.message}"
                                                     )
-                                                    commonTwoTypeModal = CommonTwoTypeDialog(
-                                                        context = mContext,
-                                                        "member_delete_n",
-                                                        customDialogListener,
-                                                        "",
+
+                                                    DialogManager.openTwoBtnDialog(
+                                                        mContext,
                                                         "탈퇴 불가",
-                                                        response.body()?.message
+                                                        response.body()?.message.toString(),
+                                                        customDialogListener,
+                                                        "탈퇴 불가"
                                                     )
-                                                    commonTwoTypeModal?.show()
 
                                                 }
                                                 // 서버 에러 - jhm 2022/09/21
@@ -212,23 +207,19 @@ class DeleteMemberDetailActivity :
 
                     override fun onCancelButtonClicked() {
                         LogUtil.logE("취소 OnClick..")
-                        commonTwoTypeModal?.dismiss()
-
                     }
                 }
 
             // 하단 탈퇴 버튼 OnClick - jhm 2022/09/20
             binding.confirmBtn.setOnClickListener {
                 if (checked) {
-                    commonTwoTypeModal = CommonTwoTypeDialog(
-                        context = mContext,
-                        "member_delete_real",
-                        customDeleteDialogListener,
-                        "",
+                    DialogManager.openTwoBtnNagativeDialog(
+                        mContext,
                         "정말로 탈퇴하시겠습니까?",
-                        "회원 탈퇴시 90일간 재가입이 불가능해요."
+                        "회원 탈퇴시 90일간 재가입이 불가능해요",
+                        customDeleteDialogListener,
+                        "회원 탈퇴"
                     )
-                    commonTwoTypeModal?.show()
                 }
                 else {
                     LogUtil.logE("체크 완료해주세요..")

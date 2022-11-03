@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
 import android.os.Build
@@ -15,10 +16,10 @@ import com.bsstandard.piece.R
 import com.bsstandard.piece.base.BaseActivity
 import com.bsstandard.piece.data.datasource.shared.PrefsHelper
 import com.bsstandard.piece.databinding.ActivityVirtualSuccessBinding
-import com.bsstandard.piece.widget.utils.CustomDialog
-import com.bsstandard.piece.widget.utils.CustomDialogListener
-import com.bsstandard.piece.widget.utils.CustomDialogPassCodeListener
+import com.bsstandard.piece.view.common.NetworkActivity
+import com.bsstandard.piece.widget.utils.DialogManager
 import com.bsstandard.piece.widget.utils.LogUtil
+import com.bsstandard.piece.widget.utils.NetworkConnection
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
@@ -44,7 +45,6 @@ import java.time.format.DateTimeFormatter
 class VirtualSuccessActivity :
     BaseActivity<ActivityVirtualSuccessBinding>(R.layout.activity_virtual_success) {
     val mContext: Context = this@VirtualSuccessActivity
-    var customDialog: CustomDialog? = null
 
 
     companion object {
@@ -67,85 +67,76 @@ class VirtualSuccessActivity :
 
         }
 
-        Glide.with(mContext).load(R.raw.deposit_charged_lopping).into(binding.chargeGif)
+        val networkConnection = NetworkConnection(applicationContext)
+        networkConnection.observe(this) { isConnected -> // 인터넷 연결되어있음 - jhm 2022/11/02
+            if (isConnected) {
+                Glide.with(mContext).load(R.raw.deposit_charged_lopping).into(binding.chargeGif)
 
 
-        var intent = intent
-        var chargeMoney = intent.getStringExtra("chargeMoney").toString()
-        LogUtil.logE("넘겨받은 충전할 금액 값 : $chargeMoney")
+                var intent = intent
+                var chargeMoney = intent.getStringExtra("chargeMoney").toString()
+                LogUtil.logE("넘겨받은 충전할 금액 값 : $chargeMoney")
 
 
-        binding.chargeMoney.text = chargeMoney
+                binding.chargeMoney.text = chargeMoney
 
 
-        var bankIconPath = getURLForResource(R.drawable.bank89)
-        var requestOptions = RequestOptions()
-        requestOptions = requestOptions.transforms(CenterCrop(), RoundedCorners(30))
-        Glide.with(mContext)
-            .load(bankIconPath)
-            .apply(requestOptions)
-            .transition(DrawableTransitionOptions.withCrossFade())
-            .into(binding.bankIcon)
+                var bankIconPath = getURLForResource(R.drawable.bank89)
+                var requestOptions = RequestOptions()
+                requestOptions = requestOptions.transforms(CenterCrop(), RoundedCorners(30))
+                Glide.with(mContext)
+                    .load(bankIconPath)
+                    .apply(requestOptions)
+                    .transition(DrawableTransitionOptions.withCrossFade())
+                    .into(binding.bankIcon)
 
-        binding.userName.text = PrefsHelper.read("name", "") + "님의 가상계좌에요."
-        binding.accountNumber.text = "케이뱅크 " + PrefsHelper.read("cellPhoneNo", "").toString()
-
-
-        // 현재 시간 출력 - jhm 2022/10/06
-        var currentTime = LocalDateTime.now()
-        currentTime.plusDays(1)
-
-        // 입금 완료시간 - jhm 2022/10/06
-        var formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd / HH시 mm분")
-        currentTime.format(formatter)
-        LogUtil.logE("currentTime : ${currentTime.format(formatter)}")
-        binding.time.text = currentTime.format(formatter)
+                binding.userName.text = PrefsHelper.read("name", "") + "님의 가상계좌에요."
+                binding.accountNumber.text =
+                    "케이뱅크 " + PrefsHelper.read("cellPhoneNo", "").toString()
 
 
-        // 계좌번호 복사하기 - jhm 2022/10/06
-        val clipboard: ClipboardManager = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
-        val clip =
-            ClipData.newPlainText("accountNo", PrefsHelper.read("cellPhoneNo", "").toString())
+                // 현재 시간 출력 - jhm 2022/10/06
+                var currentTime = LocalDateTime.now()
+                currentTime.plusDays(1)
 
-        binding.copyText.setOnClickListener {
-            clipboard.setPrimaryClip(clip)
-            LogUtil.logE("가상계좌 번호 복사 완료")
-        }
+                // 입금 완료시간 - jhm 2022/10/06
+                var formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd / HH시 mm분")
+                currentTime.format(formatter)
+                LogUtil.logE("currentTime : ${currentTime.format(formatter)}")
+                binding.time.text = currentTime.format(formatter)
 
 
-        binding.confirmBtn.setOnClickListener {
-            // 입금하였는지 Dialog show - jhm 2022/10/06
+                // 계좌번호 복사하기 - jhm 2022/10/06
+                val clipboard: ClipboardManager =
+                    getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
+                val clip =
+                    ClipData.newPlainText(
+                        "accountNo",
+                        PrefsHelper.read("cellPhoneNo", "").toString()
+                    )
 
-            val customDialogListener: CustomDialogListener =
-                object : CustomDialogListener {
-                    @RequiresApi(Build.VERSION_CODES.R)
-                    override fun onOkButtonClicked() {
-                        LogUtil.logE("입금 하셨나요? 네 알겠습니다 OnClick..")
-                        customDialog?.dismiss()
-                        finish()
-                    }
-
-                    override fun onCancelButtonClicked() {
-                        LogUtil.logE("취소 OnClick..")
-                    }
-                }
-            val customNoListener: CustomDialogPassCodeListener =
-                object : CustomDialogPassCodeListener {
-                    @RequiresApi(Build.VERSION_CODES.R)
-                    override fun onCancleButtonClicked() {
-                        TODO("Not yet implemented")
-                    }
-
-                    override fun onRetryPassCodeButtonClicked() {
-                        TODO("Not yet implemented")
-                    }
+                binding.copyText.setOnClickListener {
+                    clipboard.setPrimaryClip(clip)
+                    LogUtil.logE("가상계좌 번호 복사 완료")
                 }
 
-            customDialog =
-                CustomDialog(mContext, "charge_confirm", customDialogListener, customNoListener)
-            customDialog!!.show()
 
+                binding.confirmBtn.setOnClickListener {
+                    // 입금하였는지 Dialog show - jhm 2022/10/06
 
+                    DialogManager.openDalog(
+                        mContext,
+                        "입금 하셨나요?",
+                        "유효기간내 입금을 완료해 주세요.",
+                        "네, 알겠습니다.",
+                        this@VirtualSuccessActivity
+                    )
+
+                }
+            } else {
+                val intent = Intent(applicationContext, NetworkActivity::class.java)
+                startActivity(intent)
+            }
         }
     }
 

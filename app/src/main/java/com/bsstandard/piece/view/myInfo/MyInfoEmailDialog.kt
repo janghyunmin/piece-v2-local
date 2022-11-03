@@ -15,7 +15,8 @@ import com.bsstandard.piece.data.dto.ConsentDTO
 import com.bsstandard.piece.data.viewmodel.ConsentViewModel
 import com.bsstandard.piece.data.viewmodel.MemberPutViewModel
 import com.bsstandard.piece.databinding.SlideBottomEmailBinding
-import com.bsstandard.piece.widget.utils.*
+import com.bsstandard.piece.widget.utils.DialogManager
+import com.bsstandard.piece.widget.utils.LogUtil
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 /**
@@ -43,8 +44,6 @@ class MyInfoEmailDialog(context: Context) : BottomSheetDialogFragment() {
     private var consentViewModel: ConsentViewModel? = null
     private var memberModifyModel: MemberModifyModel? = null
 
-    // 주소변경 완료 후 Dialog - jhm 2022/09/07
-    var customDialog: CustomDialog? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -188,26 +187,7 @@ class MyInfoEmailDialog(context: Context) : BottomSheetDialogFragment() {
 
                                 dismiss()
 
-                                val customDialogListener: CustomDialogListener =
-                                    object : CustomDialogListener {
-                                        override fun onCancelButtonClicked() {}
-                                        override fun onOkButtonClicked() {
-                                            LogUtil.logE("이메일 변경 완료")
-                                            customDialog!!.dismiss()
-                                        }
-                                    }
-                                val customDialogPassCodeListener: CustomDialogPassCodeListener =
-                                    object : CustomDialogPassCodeListener {
-                                        override fun onCancleButtonClicked() {}
-                                        override fun onRetryPassCodeButtonClicked() {}
-                                    }
-                                customDialog = CustomDialog(
-                                    requireContext(),
-                                    Division.DIALOG_EMAIL_CONFIRM,
-                                    customDialogListener,
-                                    customDialogPassCodeListener
-                                )
-                                customDialog!!.show()
+                                DialogManager.openNotGoDalog(requireContext(),"이메일 등록 완료","이메일이 성공적으로 등록되었어요")
                             })
 
                     } else {

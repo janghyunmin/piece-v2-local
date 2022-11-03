@@ -19,10 +19,12 @@ import com.bsstandard.piece.data.viewmodel.DepositBalanceViewModel
 import com.bsstandard.piece.data.viewmodel.DepositHistoryViewModel
 import com.bsstandard.piece.databinding.ActivityMydepositBinding
 import com.bsstandard.piece.view.bank.BankSelectActivity
+import com.bsstandard.piece.view.common.NetworkActivity
 import com.bsstandard.piece.view.withdrawal.WithdrawalActivity
-import com.bsstandard.piece.widget.utils.CommonTwoTypeDialog
 import com.bsstandard.piece.widget.utils.CustomDialogListener
+import com.bsstandard.piece.widget.utils.DialogManager
 import com.bsstandard.piece.widget.utils.LogUtil
+import com.bsstandard.piece.widget.utils.NetworkConnection
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.DecimalFormat
 
@@ -46,14 +48,11 @@ class MyDepositActivity : BaseActivity<ActivityMydepositBinding>(R.layout.activi
     private lateinit var dvm: DepositBalanceViewModel // 출금 가능 금액 ViewModel - jhm 2022/09/29
     private lateinit var dhvm: DepositHistoryViewModel // 회원 거래 내역 목록 조회 ViewModel  - jhm 2022/09/29
     private lateinit var mvm: AccountViewModel // 회원 계좌 여부 조회 - jhm 2022/09/30
-    
+
     val mContext: Context = this@MyDepositActivity
     val accessToken: String = PrefsHelper.read("accessToken", "")
     val deviceId: String = PrefsHelper.read("deviceId", "")
     val memberId: String = PrefsHelper.read("memberId", "")
-
-    // 등록된 계좌가 없을때 Dialog - jhm 2022/09/20
-    @Volatile private var commonTwoTypeModal: CommonTwoTypeDialog? = null
 
 
     @SuppressLint("SetTextI18n")
@@ -78,32 +77,101 @@ class MyDepositActivity : BaseActivity<ActivityMydepositBinding>(R.layout.activi
         setNaviBarIconColor(true) // 네비게이션 true : 검정색
         setNaviBarBgColor("#ffffff") // 네비게이션 배경색
 
-        // 출금 가능 금액 - jhm 2022/09/30
-        dvm.getDepositBalance(accessToken, deviceId, memberId)
-        val decimal = DecimalFormat("#,###")
-        var depositText : String = ""
+        val networkConnection = NetworkConnection(applicationContext)
+        networkConnection.observe(this) { isConnected -> // 인터넷 연결되어있음 - jhm 2022/11/02
+            if (isConnected) {
+                // 출금 가능 금액 - jhm 2022/09/30
+                dvm.getDepositBalance(accessToken, deviceId, memberId)
+                val decimal = DecimalFormat("#,###")
+                var depositText: String = ""
 
-        dvm.depoResponse.observe(this@MyDepositActivity, Observer {
-            //binding.deposit.text =  decimal.format(it.data.depositBalance.toString()) + " 원"
-            depositText = decimal.format(it.data.depositBalance)
-            binding.deposit.text = "$depositText 원"
-        })
-
-
-        // 회원 거래 내역 목록 조회 요청 - jhm 2022/09/29
-        // changeReason : ""-전체 , "MDR02"-조각 거래 내역, "MDR01"-예치금 입출금 내역 - jhm 2022/09/29
-        dhvm.getDepositHistory(accessToken, deviceId, memberId, "", 100)
-        dhvm.viewInit(binding.depositHistoryRv)
+                dvm.depoResponse.observe(this@MyDepositActivity, Observer {
+                    //binding.deposit.text =  decimal.format(it.data.depositBalance.toString()) + " 원"
+                    depositText = decimal.format(it.data.depositBalance)
+                    binding.deposit.text = "$depositText 원"
+                })
 
 
-        // 출금 신청하기 버튼 클릭시 등록된 계좌 Dialog Setting - jhm 2022/09/20
-        val customDialogListener: CustomDialogListener =
-            object : CustomDialogListener {
-                @RequiresApi(Build.VERSION_CODES.R)
-                override fun onOkButtonClicked() {
-                    LogUtil.logE("계좌 등록하기 OnClick..")
+                // 회원 거래 내역 목록 조회 요청 - jhm 2022/09/29
+                // changeReason : ""-전체 , "MDR02"-조각 거래 내역, "MDR01"-예치금 입출금 내역 - jhm 2022/09/29
+                dhvm.getDepositHistory(accessToken, deviceId, memberId, "", 100)
+                dhvm.viewInit(binding.depositHistoryRv)
 
-                    val intent = Intent(mContext, BankSelectActivity::class.java)
+
+                // 출금 신청하기 버튼 클릭시 등록된 계좌 Dialog Setting - jhm 2022/09/20
+                val customDialogListener: CustomDialogListener =
+                    object : CustomDialogListener {
+                        @RequiresApi(Build.VERSION_CODES.R)
+                        override fun onOkButtonClicked() {
+                            LogUtil.logE("계좌 등록하기 OnClick..")
+
+                            val intent = Intent(mContext, BankSelectActivity::class.java)
+                            overridePendingTransition(
+                                android.R.anim.fade_in,
+                                android.R.anim.fade_out
+                            );
+                            startActivity(intent)
+
+                        }
+
+                        override fun onCancelButtonClicked() {
+                            LogUtil.logE("뒤로 OnClick..")
+                        }
+                    }
+
+
+                // 출금 신청하기 - jhm 2022/09/30
+                binding.withdrawBtn.setOnClickListener {
+                    LogUtil.logE("출금 신청하기 OnClick..")
+
+                    // 등록된 계좌가 있는지 판별 - jhm 2022/09/30
+                    mvm.getAccount(accessToken, deviceId, memberId)
+                    mvm.accountResponse.observe(this@MyDepositActivity, Observer {
+                        LogUtil.logE("회원 계좌 조회 : " + it.data)
+
+                        try {
+                            // 등록된 계좌가 없다면 계좌 등록으로 이동 - jhm 2022/09/30
+                            if (it.data == null) {
+                                PrefsHelper.write("bankChk", "N")
+
+                                DialogManager.openTwoBtnDialog(
+                                    mContext,
+                                    "등록된 계좌가 없어요",
+                                    "지금 계좌를 등록할까요?",
+                                    customDialogListener,
+                                    "등록된 계좌"
+                                )
+                            } else {
+                                LogUtil.logE("등록된 계좌가 있음. 내 계좌로 출금 처리 진행")
+                                LogUtil.logE("계좌 정보 : " + it.data.bankCode + "\n" + it.data.accountNo + "\n" + it.data.bankName)
+
+                                PrefsHelper.write("bankChk", "Y")
+                                PrefsHelper.write("bankCode", it.data.bankCode)
+                                PrefsHelper.write("bankName", it.data.bankName)
+                            }
+                        } catch (e: Exception) {
+                            LogUtil.logE("계좌 조회 Exception : ${e.printStackTrace()}")
+                        }
+                    })
+
+                    // 등록된 계좌가 있다면 - jhm 2022/10/03
+                    if (PrefsHelper.read("bankChk", "N").equals("Y")) {
+                        LogUtil.logE("등록된 계좌 있음")
+                        val intent = Intent(mContext, WithdrawalActivity::class.java)
+                        overridePendingTransition(
+                            android.R.anim.fade_in,
+                            android.R.anim.fade_out
+                        );
+                        startActivity(intent)
+
+                    }
+                }
+
+
+                // 예치금 충전하기  - jhm 2022/10/05
+                binding.chargeBtn.setOnClickListener {
+                    LogUtil.logE("예치금 충전하기 OnClick..")
+                    val intent = Intent(mContext, DepositChargeActivity::class.java)
                     overridePendingTransition(
                         android.R.anim.fade_in,
                         android.R.anim.fade_out
@@ -112,85 +180,19 @@ class MyDepositActivity : BaseActivity<ActivityMydepositBinding>(R.layout.activi
 
                 }
 
-                override fun onCancelButtonClicked() {
-                    LogUtil.logE("뒤로 OnClick..")
-                    commonTwoTypeModal?.dismiss()
-                    commonTwoTypeModal?.cancel()
+
+                // 하단 Select Box - jhm 2022/09/30
+                val depositDialog = DepositDialog(mContext, "", this)
+                binding.selectorLayout.setOnClickListener {
+                    LogUtil.logE("Select Box OnClick..")
+                    depositDialog.show(supportFragmentManager, "")
                 }
-            }
 
-
-        // 출금 신청하기 - jhm 2022/09/30
-        binding.withdrawBtn.setOnClickListener {
-            LogUtil.logE("출금 신청하기 OnClick..")
-
-            // 등록된 계좌가 있는지 판별 - jhm 2022/09/30
-            mvm.getAccount(accessToken, deviceId, memberId)
-            mvm.accountResponse.observe(this@MyDepositActivity , Observer {
-                LogUtil.logE("회원 계좌 조회 : " + it.data)
-
-                try {
-                    // 등록된 계좌가 없다면 계좌 등록으로 이동 - jhm 2022/09/30
-                    if(it.data == null) {
-                        commonTwoTypeModal = CommonTwoTypeDialog(
-                            context = mContext,
-                            "account_chk",
-                            customDialogListener,
-                            "",
-                            "등록된 계좌가 없어요",
-                            "지금 계좌를 등록할까요?"
-                        )
-                        commonTwoTypeModal?.show()
-                        PrefsHelper.write("bankChk","N")
-                    } else {
-                        LogUtil.logE("등록된 계좌가 있음. 내 계좌로 출금 처리 진행")
-                        LogUtil.logE("계좌 정보 : " + it.data.bankCode + "\n" + it.data.accountNo + "\n" + it.data.bankName)
-
-                        PrefsHelper.write("bankChk","Y")
-                        PrefsHelper.write("bankCode",it.data.bankCode)
-                        PrefsHelper.write("bankName",it.data.bankName)
-                    }
-                } catch(e: Exception){
-                    LogUtil.logE("계좌 조회 Exception : ${e.printStackTrace()}")
-                }
-            })
-
-            // 등록된 계좌가 있다면 - jhm 2022/10/03
-            if(PrefsHelper.read("bankChk","N").equals("Y")) {
-                LogUtil.logE("등록된 계좌 있음")
-                val intent = Intent(mContext, WithdrawalActivity::class.java)
-                overridePendingTransition(
-                    android.R.anim.fade_in,
-                    android.R.anim.fade_out
-                );
+            } else {
+                val intent = Intent(applicationContext, NetworkActivity::class.java)
                 startActivity(intent)
-
             }
         }
-
-
-        // 예치금 충전하기  - jhm 2022/10/05
-        binding.chargeBtn.setOnClickListener {
-            LogUtil.logE("예치금 충전하기 OnClick..")
-            val intent = Intent(mContext, DepositChargeActivity::class.java)
-            overridePendingTransition(
-                android.R.anim.fade_in,
-                android.R.anim.fade_out
-            );
-            startActivity(intent)
-
-        }
-
-
-        // 하단 Select Box - jhm 2022/09/30
-        val depositDialog = DepositDialog(mContext, "", this)
-        binding.selectorLayout.setOnClickListener {
-            LogUtil.logE("Select Box OnClick..")
-            depositDialog.show(supportFragmentManager, "")
-        }
-
-
-
     }
 
     override fun changeText(str: String?) {
@@ -198,15 +200,15 @@ class MyDepositActivity : BaseActivity<ActivityMydepositBinding>(R.layout.activi
         when (str) {
             "전체" -> {
                 binding.selected.text = str
-                dhvm.getDepositHistory(accessToken, deviceId, memberId, "",100)
+                dhvm.getDepositHistory(accessToken, deviceId, memberId, "", 100)
             }
             "조각 거래 내역" -> {
                 binding.selected.text = str
-                dhvm.getDepositHistory(accessToken, deviceId, memberId, "MDR02",100)
+                dhvm.getDepositHistory(accessToken, deviceId, memberId, "MDR02", 100)
             }
             "예치금 입출금 내역" -> {
                 binding.selected.text = str
-                dhvm.getDepositHistory(accessToken, deviceId, memberId, "MDR01",100)
+                dhvm.getDepositHistory(accessToken, deviceId, memberId, "MDR01", 100)
             }
         }
     }

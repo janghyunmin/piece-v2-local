@@ -251,6 +251,7 @@ public class VirtualSmsDialog extends BottomSheetDialogFragment {
                                         intent.putExtra("chargeMoney", chargeMoney);
                                         startActivity(intent);
                                         dismiss();
+                                        getActivity().finish();
 
                                     }
                                     // 검증 실패시 재전송 - jhm 2022/10/06

@@ -24,9 +24,11 @@ import com.bsstandard.piece.data.viewmodel.ConsentViewModel
 import com.bsstandard.piece.data.viewmodel.MemberPutViewModel
 import com.bsstandard.piece.databinding.ActivityConsentMoreBinding
 import com.bsstandard.piece.view.adapter.consent.ConsentAdapter
+import com.bsstandard.piece.view.common.NetworkActivity
 import com.bsstandard.piece.view.webview.ConsentDetailWebView
 import com.bsstandard.piece.widget.utils.Division
 import com.bsstandard.piece.widget.utils.LogUtil
+import com.bsstandard.piece.widget.utils.NetworkConnection
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.disposables.Disposable
 import java.util.*
@@ -44,26 +46,28 @@ import java.util.*
  */
 
 @AndroidEntryPoint
-class MoreConsentActivity : BaseActivity<ActivityConsentMoreBinding>(R.layout.activity_consent_more){
+class MoreConsentActivity :
+    BaseActivity<ActivityConsentMoreBinding>(R.layout.activity_consent_more) {
     private val consentViewModel by viewModels<ConsentViewModel>() // consentViewModel - jhm 2022/09/21
     private val context: Context = this@MoreConsentActivity
     private var disposable: Disposable? = null
 
     private var consentAdapter: ConsentAdapter? = null
     private var layoutManager: RecyclerView.LayoutManager? = null
-    private var consentList: ArrayList<ConsentList?>? = ArrayList() // 약관 adapter 연결 List - jhm 2022/09/22
+    private var consentList: ArrayList<ConsentList?>? =
+        ArrayList() // 약관 adapter 연결 List - jhm 2022/09/22
     private var consents = ArrayList<UpdateConsentList>() // 정보 변경 요청시 모델 List - jhm 2022/09/22
-    private var marketingContent : String = ""
+    private var marketingContent: String = ""
 
     private var memberModifyModel: MemberModifyModel? = null // 회원 정보 변경시 필요 모델 - jhm 2022/09/21
     private val memberPutViewModel by viewModels<MemberPutViewModel>() // 회원 정보 변경 - jhm 2022/09/21
+
     // 초기 알림 설정 상태값 변수 - jhm 2022/09/21
     private var assetNotification: String? = PrefsHelper.read("assetNotification", "N")
     private var portfolioNotification: String? = PrefsHelper.read("portfolioNotification", "N")
     private var marketingSms: String? = PrefsHelper.read("marketingSms", "N")
     private var marketingApp: String? = PrefsHelper.read("marketingApp", "N")
-    private var marketingAgree: String? = PrefsHelper.read("CON0907","N")
-
+    private var marketingAgree: String? = PrefsHelper.read("CON0907", "N")
 
 
     companion object {
@@ -74,65 +78,74 @@ class MoreConsentActivity : BaseActivity<ActivityConsentMoreBinding>(R.layout.ac
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // UI Setting 최종 - jhm 2022/09/14
-        setStatusBarIconColor(true) // 상태바 아이콘 true : 검정색
-        setStatusBarBgColor("#ffffff") // 상태바 배경색상 설정
-        setNaviBarIconColor(true) // 네비게이션 true : 검정색
-        setNaviBarBgColor("#ffffff") // 네비게이션 배경색
-
         binding.apply {
             binding.lifecycleOwner = this@MoreConsentActivity
 
+            // UI Setting 최종 - jhm 2022/09/14
+            setStatusBarIconColor(true) // 상태바 아이콘 true : 검정색
+            setStatusBarBgColor("#ffffff") // 상태바 배경색상 설정
+            setNaviBarIconColor(true) // 네비게이션 true : 검정색
+            setNaviBarBgColor("#ffffff") // 네비게이션 배경색
+
             mvConsent = consentViewModel
-            consentViewModel.getConsentData("SIGN").observe(this@MoreConsentActivity, Observer {
-                consentList?.clear()
+            // 회원 정보 변경 ViewModel - jhm 2022/09/21
+            mvPut = memberPutViewModel
+        }
+
+        val networkConnection = NetworkConnection(applicationContext)
+        networkConnection.observe(this) { isConnected -> // 인터넷 연결되어있음 - jhm 2022/11/02
+            if (isConnected) {
+                consentViewModel.getConsentData("SIGN").observe(this@MoreConsentActivity, Observer {
+                    consentList?.clear()
 
 
-                for (index in it.data.indices) {
-                    consentList!!.add(
-                        ConsentList(
-                            true,
-                            it.data[index].consentCode,
-                            it.data[index].consentGroup,
-                            it.data[index].consentTitle,
-                            it.data[index].consentContents,
-                            it.data[index].isMandatory,
-                            it.data[index].displayOrder,
-                            it.data[index].createdAt,
-                            "Y",
-                            Division.MORE_CONSENT
+                    for (index in it.data.indices) {
+                        consentList!!.add(
+                            ConsentList(
+                                true,
+                                it.data[index].consentCode,
+                                it.data[index].consentGroup,
+                                it.data[index].consentTitle,
+                                it.data[index].consentContents,
+                                it.data[index].isMandatory,
+                                it.data[index].displayOrder,
+                                it.data[index].createdAt,
+                                "Y",
+                                Division.MORE_CONSENT
+                            )
                         )
-                    )
+                    }
+                    binding.marketingAgree.text =
+                        "[선택] " + consentList?.get(7)?.consentTitle.toString() // 마케팅 활용 및 광고 수신 동의 - jhm 2022/09/22
+                    marketingContent =
+                        consentList?.get(7)?.consentContents.toString() // 마케팅 활용 및 광고 수신 동의 - jhm 2022/09/22
+                    consentList!!.removeAt(consentList!!.size - 1)
+
+                    // 약관 목록 UI - jhm 2022/09/22
+                    ConsentUI()
+                    consents.clear()
+                })
+
+                binding.marketingAppSwitch.setOnCheckedChangeListener { _, isChecked ->
+                    if (isChecked) {
+                        PrefsHelper.write("CON0907", "Y")
+                        marketingAgree = "Y"
+                    } else {
+                        PrefsHelper.write("CON0907", "N")
+                        marketingAgree = "N"
+                    }
+                    isChecked()
+                    putAgreement()
                 }
-                binding.marketingAgree.text = "[선택] "+ consentList?.get(7)?.consentTitle.toString() // 마케팅 활용 및 광고 수신 동의 - jhm 2022/09/22
-                marketingContent = consentList?.get(7)?.consentContents.toString() // 마케팅 활용 및 광고 수신 동의 - jhm 2022/09/22
-                consentList!!.removeAt(consentList!!.size - 1)
 
-                // 약관 목록 UI - jhm 2022/09/22
-                ConsentUI()
-
-                // 회원 정보 변경 ViewModel - jhm 2022/09/21
-                mvPut = memberPutViewModel
-                consents.clear()
-
-            })
-        }
-
-
-        binding.marketingAppSwitch.setOnCheckedChangeListener { _, isChecked ->
-            if(isChecked) {
-                PrefsHelper.write("CON0907","Y")
-                marketingAgree = "Y"
+                isChecked()
             } else {
-                PrefsHelper.write("CON0907","N")
-                marketingAgree = "N"
+                val intent = Intent(applicationContext, NetworkActivity::class.java)
+                startActivity(intent)
             }
-            isChecked()
-            putAgreement()
-
         }
 
-        isChecked()
+
     }
 
 
@@ -190,7 +203,7 @@ class MoreConsentActivity : BaseActivity<ActivityConsentMoreBinding>(R.layout.ac
 
 
         val notification = NotificationModel(
-            PrefsHelper.read("memberId",""),
+            PrefsHelper.read("memberId", ""),
             assetNotification,
             portfolioNotification,
             marketingSms,
@@ -230,7 +243,7 @@ class MoreConsentActivity : BaseActivity<ActivityConsentMoreBinding>(R.layout.ac
 
     // 마케팅 활용 및 광고 수신 동의 Check 여부 - jhm 2022/09/22
     private fun isChecked() {
-        if(marketingAgree.equals("Y")) {
+        if (marketingAgree.equals("Y")) {
             LogUtil.logE("마케팅 활용 및 광고 수신 동의 true")
             binding.marketingAppSwitch.isChecked = true
         } else {
@@ -238,11 +251,8 @@ class MoreConsentActivity : BaseActivity<ActivityConsentMoreBinding>(R.layout.ac
             binding.marketingAppSwitch.isChecked = false
         }
     }
-    
-    
-    
-    
-    
+
+
     // 메모리 누수 방지를 위해 자원 해제 - jhm 2022/08/08
     override fun onDestroy() {
         super.onDestroy()

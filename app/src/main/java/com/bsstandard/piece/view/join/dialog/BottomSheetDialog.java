@@ -20,9 +20,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bsstandard.piece.R;
-import com.bsstandard.piece.data.datamodel.dmodel.SmsAuthModel;
 import com.bsstandard.piece.data.datamodel.dmodel.consent.ConsentList;
-import com.bsstandard.piece.data.datasource.shared.PrefsHelper;
+import com.bsstandard.piece.data.datamodel.dmodel.sms.CallSmsAuthModel;
 import com.bsstandard.piece.data.dto.CallSmsAuthDTO;
 import com.bsstandard.piece.data.viewmodel.CallSmsAuthViewModel;
 import com.bsstandard.piece.data.viewmodel.ConsentDetailViewModel;
@@ -300,16 +299,21 @@ public class BottomSheetDialog extends BottomSheetDialogFragment implements View
                     telComcd = getArguments().getString("telComCd");
                     telNo = getArguments().getString("telNo");
 
-                    PrefsHelper.write("name",name);
-
                     // 인증번호 요청시 모델 - jhm 2022/06/22
-                    SmsAuthModel smsAuthModel = new SmsAuthModel(
-                            txSeqNo,name,birthday,sexCd,ntvFrnrCd,telComcd,telNo,
-                            "Y","Y","Y","Y",
-                            ""
+                    CallSmsAuthModel callSmsAuthModel = new CallSmsAuthModel(
+                            name,
+                            birthday,
+                            sexCd,
+                            ntvFrnrCd,
+                            telComcd,
+                            telNo,
+                            "Y",
+                            "Y",
+                            "Y",
+                            "Y"
                     );
                     // 인증번호 요청을 한다. - jhm 2022/06/22
-                    callSmsAuthViewModel.postCallSmsAuthData(smsAuthModel);
+                    callSmsAuthViewModel.postCallSmsAuthData(callSmsAuthModel);
 
                     // 인증번호 요청 후 데이터를 받아온다. - jhm 2022/06/22
                     callSmsAuthViewModel.callSmsAuthData.observe(getViewLifecycleOwner(), new Observer<CallSmsAuthDTO>() {

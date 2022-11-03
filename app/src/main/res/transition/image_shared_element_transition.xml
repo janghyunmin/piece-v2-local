@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <transitionSet
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:duration="375"
+    android:duration="1000"
     android:interpolator="@android:interpolator/fast_out_slow_in"
     android:transitionOrdering="together">
-    <changeClipBounds/>
-    <changeTransform/>
-    <changeBounds/>
+    <changeBounds/> <!-- 위치나 크기를 변경하는 애니메이션 -->
+    <changeTransform/>  <!-- 배열과 회전을 변경하는 애니메이션 -->
+<!--    <changeClipBounds/>  &lt;!&ndash; 지정된 영역을 변경하는 애니메이션&ndash;&gt;-->
+    <changeImageTransform/> <!-- 이미지 크기 및 배율을 변경하는 애니메이션 -->
 </transitionSet>

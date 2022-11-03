@@ -6,7 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
-import com.bsstandard.piece.data.datamodel.dmodel.SmsAuthModel;
+import com.bsstandard.piece.data.datamodel.dmodel.sms.CallSmsAuthModel;
 import com.bsstandard.piece.data.dto.CallSmsAuthDTO;
 import com.bsstandard.piece.data.repository.CallSmsAuthRepository;
 
@@ -30,15 +30,15 @@ public class CallSmsAuthViewModel extends AndroidViewModel {
         super(application);
         callSmsAuthRepository = new CallSmsAuthRepository(application);
     }
-    public MutableLiveData<CallSmsAuthDTO> postCallSmsAuthData(SmsAuthModel smsAuthModel){
+    public MutableLiveData<CallSmsAuthDTO> postCallSmsAuthData(CallSmsAuthModel callSmsAuthModel){
         if(callSmsAuthData == null){
             callSmsAuthData = new MutableLiveData<>();
-            callSmsAuthData = loadSmsData(smsAuthModel);
+            callSmsAuthData = loadSmsData(callSmsAuthModel);
         }
         return callSmsAuthData;
     }
-    public MutableLiveData<CallSmsAuthDTO> loadSmsData(SmsAuthModel smsAuthModel){
-        return callSmsAuthRepository.getCallSmsAuthData(smsAuthModel);
+    public MutableLiveData<CallSmsAuthDTO> loadSmsData(CallSmsAuthModel callSmsAuthModel){
+        return callSmsAuthRepository.getCallSmsAuthData(callSmsAuthModel);
     }
 
     public MutableLiveData<CallSmsAuthDTO> getSmsAuthData(){

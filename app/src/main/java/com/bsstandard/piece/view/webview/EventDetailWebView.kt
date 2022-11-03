@@ -116,6 +116,7 @@ class EventDetailWebView :
                 // 공유하기 - jhm 2022/09/11
                 binding.shareImg.setOnClickListener {
                     val eventId = eventId
+                    val shareUrl = vm.detailResponse.value?.data?.shareUrl
                     val eventTitle = vm.detailResponse.value?.data?.title
 
                     //공유 가능한 앱들을 실행하는 Action값으로 intent생성
@@ -123,17 +124,11 @@ class EventDetailWebView :
 
                         action = Intent.ACTION_SEND
 
-//                        // 이미지 uri
-//                        val uri: Uri =
-//                            Uri.parse(vm.detailResponse.value?.data?.representThumbnailPath)
-
-                        putExtra(Intent.EXTRA_TEXT, eventId)
-                        putExtra(Intent.EXTRA_TEXT, eventTitle)
+                        putExtra(Intent.EXTRA_SUBJECT, eventTitle)
+                        putExtra(Intent.EXTRA_TEXT, shareUrl)
 //                        putExtra(Intent.EXTRA_STREAM, uri)
 
                         type = "text/plain" //type은 image, text, video등이 존재
-//                        type = ("image/*")
-
 
                     }
                     val shareIntent = Intent.createChooser(sendIntent, null)

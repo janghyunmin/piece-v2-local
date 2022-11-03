@@ -37,10 +37,14 @@ class BookMarkAdapter(viewModel: BookMarkViewModel, val context: Context) :
 
     override fun onBindViewHolder(holder: BookMarkAdapter.ViewHolder, position: Int) {
         holder.bind(bookMarkViewModel, position , listener)
+
+        if(bookMarkViewModel.getBookMarkItem()[position].isFavorite == "Y") {
+            holder.binding.bookmark.isSelected = true
+        }
     }
 
     interface OnItemClickListener {
-        fun onItemClick(v: View, tag:String, magazineId: String, magazineImagePath: String, isFavorite: String, smallTitle: String, position: Int)
+        fun onItemClick(v: View, tag:String, magazineId: String, magazineImagePath: String, isFavorite: Boolean, smallTitle: String, position: Int)
     }
     private var listener: OnItemClickListener? = null
 
@@ -65,7 +69,7 @@ class BookMarkAdapter(viewModel: BookMarkViewModel, val context: Context) :
                             "webView",
                             bookMarkViewModel.getBookMarkItem()[pos].magazineId,
                             bookMarkViewModel.getBookMarkItem()[pos].representThumbnailPath,
-                            "",
+                            binding.bookmark.isSelected,
                             bookMarkViewModel.getBookMarkItem()[pos].smallTitle,
                             pos
                         )
@@ -77,7 +81,7 @@ class BookMarkAdapter(viewModel: BookMarkViewModel, val context: Context) :
             binding.bookmark.setOnClickListener {
                 // member/bookmark 에서 isFavorite 컬럼 추가로 내려달라고 요청하고 작업 진행.. - jhm 2022/08/31
                 // 북마크 클릭시 로그인 판별 - jhm 2022/08/30
-                if (!PrefsHelper.read("isJoin", "").equals("true")) {
+                if (PrefsHelper.read("memberId", "").equals("")) {
                     val intent = Intent(context, LoginChkActivity::class.java)
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                     context.startActivity(intent)
@@ -89,7 +93,7 @@ class BookMarkAdapter(viewModel: BookMarkViewModel, val context: Context) :
                             "bookMark",
                             bookMarkViewModel.getBookMarkItem()[pos].magazineId,
                             bookMarkViewModel.getBookMarkItem()[pos].representThumbnailPath,
-                            "",
+                            binding.bookmark.isSelected,
                             bookMarkViewModel.getBookMarkItem()[pos].smallTitle,
                             pos
                         )

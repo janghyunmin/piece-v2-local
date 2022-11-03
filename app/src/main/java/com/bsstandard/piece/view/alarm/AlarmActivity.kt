@@ -2,6 +2,7 @@ package com.bsstandard.piece.view.alarm
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
@@ -16,7 +17,9 @@ import com.bsstandard.piece.data.datasource.shared.PrefsHelper
 import com.bsstandard.piece.data.viewmodel.AlarmViewModel
 import com.bsstandard.piece.data.viewmodel.PutAlarmViewModel
 import com.bsstandard.piece.databinding.ActivityAlarmBinding
+import com.bsstandard.piece.view.common.NetworkActivity
 import com.bsstandard.piece.widget.utils.LogUtil
+import com.bsstandard.piece.widget.utils.NetworkConnection
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -47,117 +50,136 @@ class AlarmActivity : BaseActivity<ActivityAlarmBinding>(R.layout.activity_alarm
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        avm = ViewModelProvider(this@AlarmActivity)[AlarmViewModel::class.java]
-        
-        binding.alarmViewModel = avm
-        binding.lifecycleOwner = this@AlarmActivity
+        binding.apply {
+            avm = ViewModelProvider(this@AlarmActivity)[AlarmViewModel::class.java]
 
-        binding.apply { 
+            binding.alarmViewModel = avm
+            binding.lifecycleOwner = this@AlarmActivity
+
             // 사용자 알림 읽음 처리 ViewModel Binding - jhm 2022/10/17
             putAlarmViewModel = pvm
+
+
+            // UI Setting 최종 - jhm 2022/09/14
+            setStatusBarIconColor(true) // 상태바 아이콘 true : 검정색
+            setStatusBarBgColor("#ffffff") // 상태바 배경색상 설정
+            setNaviBarIconColor(true) // 네비게이션 true : 검정색
+            setNaviBarBgColor("#ffffff") // 네비게이션 배경색
         }
 
 
-        // UI Setting 최종 - jhm 2022/09/14
-        setStatusBarIconColor(true) // 상태바 아이콘 true : 검정색
-        setStatusBarBgColor("#ffffff") // 상태바 배경색상 설정
-        setNaviBarIconColor(true) // 네비게이션 true : 검정색
-        setNaviBarBgColor("#ffffff") // 네비게이션 배경색
+        val networkConnection = NetworkConnection(applicationContext)
+        networkConnection.observe(this) { isConnected -> // 인터넷 연결되어있음 - jhm 2022/11/02
+            if (isConnected) {
+                pvm.putAlaram()
+                pvm.putAlarmResponse.observe(this@AlarmActivity, Observer {
+                    LogUtil.logE("알림 읽음처리 상태값 : " + it.message)
+                    avm.getAlarmList(
+                        accessToken = "Bearer $accessToken",
+                        deviceId = deviceId,
+                        memberId = memberId,
+                        100,
+                        "NTT01"
+                    )
+                })
 
-
-        pvm.putAlaram()
-        pvm.putAlarmResponse.observe(this@AlarmActivity , Observer {
-            LogUtil.logE("알림 읽음처리 상태값 : " + it.message)
-
-        })
-        
-        // 알림 및 혜택 목록 조회 요청 - jhm 2022/10/16
-        avm.getAlarmList(accessToken = "Bearer $accessToken",
-            deviceId = deviceId,
-            memberId = memberId,
-            100,
-            "NTT01")
-
-
-
-        if(avm.alarmResponse.value?.data?.totalCount == 0) {
-            binding.noticeLayout.visibility = View.VISIBLE
-            binding.eventLayout.visibility = View.GONE
-            binding.scrollLayout.visibility = View.GONE
-        } else {
-            binding.noticeLayout.visibility = View.GONE
-            binding.eventLayout.visibility = View.GONE
-            binding.scrollLayout.visibility = View.VISIBLE
-            avm.viewInit(binding.alarmRv)
-        }
-
-
-        // 알림 / 혜택 OnClick tab 기능 - jhm 2022/10/16
-        binding.noticeTitle.setOnClickListener {
-            LogUtil.logE("알림 탭 OnClick..")
-
-            binding.benefitTitle.setTextColor(mContext.getColor(R.color.c_dadce3))
-            binding.noticeTitle.setTextColor(mContext.getColor(R.color.c_131313))
-
-            avm.getAlarmList(accessToken = "Bearer $accessToken",
-                deviceId = deviceId,
-                memberId = memberId,
-                100,
-                "NTT01")
-
-
-            if(avm.alarmResponse.value?.data?.totalCount == 0) {
-                binding.noticeLayout.visibility = View.VISIBLE
-                binding.eventLayout.visibility = View.GONE
-                binding.scrollLayout.visibility = View.GONE
-            } else {
-                binding.noticeLayout.visibility = View.GONE
-                binding.eventLayout.visibility = View.GONE
-                binding.scrollLayout.visibility = View.VISIBLE
-                avm.viewInit(binding.alarmRv)
-            }
-        }
-
-
-
-        binding.benefitTitle.setOnClickListener {
-            LogUtil.logE("혜택 탭 OnClick..")
-            binding.benefitTitle.setTextColor(mContext.getColor(R.color.c_131313))
-            binding.noticeTitle.setTextColor(mContext.getColor(R.color.c_dadce3))
-
-
-
-            GlobalScope.launch {
-                avm.getAlarmList(accessToken = "Bearer $accessToken",
+                // 알림 및 혜택 목록 조회 요청 - jhm 2022/10/16
+                avm.getAlarmList(
+                    accessToken = "Bearer $accessToken",
                     deviceId = deviceId,
                     memberId = memberId,
                     100,
-                    "NTT02")
+                    "NTT01"
+                )
+
+                if (avm.alarmResponse.value?.data?.totalCount == 0) {
+                    binding.noticeLayout.visibility = View.VISIBLE
+                    binding.eventLayout.visibility = View.GONE
+                    binding.scrollLayout.visibility = View.GONE
+                } else {
+                    binding.noticeLayout.visibility = View.GONE
+                    binding.eventLayout.visibility = View.GONE
+                    binding.scrollLayout.visibility = View.VISIBLE
+                    avm.viewInit(binding.alarmRv)
+                }
 
 
-                this@AlarmActivity.runOnUiThread {
+                // 알림 / 혜택 OnClick tab 기능 - jhm 2022/10/16
+                binding.noticeTitle.setOnClickListener {
+                    LogUtil.logE("알림 탭 OnClick..")
 
-                    if(avm.alarmResponse.value?.data?.alarms == null) {
-                        LogUtil.logE("여기 타닝?")
-                        binding.noticeLayout.visibility = View.GONE
-                        binding.eventLayout.visibility = View.VISIBLE
+                    binding.benefitTitle.setTextColor(mContext.getColor(R.color.c_dadce3))
+                    binding.noticeTitle.setTextColor(mContext.getColor(R.color.c_131313))
+
+                    avm.getAlarmList(
+                        accessToken = "Bearer $accessToken",
+                        deviceId = deviceId,
+                        memberId = memberId,
+                        100,
+                        "NTT01"
+                    )
+
+
+                    if (avm.alarmResponse.value?.data?.totalCount == 0) {
+                        binding.noticeLayout.visibility = View.VISIBLE
+                        binding.eventLayout.visibility = View.GONE
                         binding.scrollLayout.visibility = View.GONE
                     } else {
-                        LogUtil.logE("여기타닝?2")
                         binding.noticeLayout.visibility = View.GONE
                         binding.eventLayout.visibility = View.GONE
                         binding.scrollLayout.visibility = View.VISIBLE
                         avm.viewInit(binding.alarmRv)
                     }
-
                 }
+
+
+
+                binding.benefitTitle.setOnClickListener {
+                    LogUtil.logE("혜택 탭 OnClick..")
+                    binding.benefitTitle.setTextColor(mContext.getColor(R.color.c_131313))
+                    binding.noticeTitle.setTextColor(mContext.getColor(R.color.c_dadce3))
+
+
+
+                    GlobalScope.launch {
+                        avm.getAlarmList(
+                            accessToken = "Bearer $accessToken",
+                            deviceId = deviceId,
+                            memberId = memberId,
+                            100,
+                            "NTT02"
+                        )
+
+                        this@AlarmActivity.runOnUiThread {
+
+                            if (avm.alarmResponse.value?.data?.alarms == null) {
+                                LogUtil.logE("여기 타닝?")
+                                binding.noticeLayout.visibility = View.GONE
+                                binding.eventLayout.visibility = View.VISIBLE
+                                binding.scrollLayout.visibility = View.GONE
+                            } else {
+                                LogUtil.logE("여기타닝?2")
+                                binding.noticeLayout.visibility = View.GONE
+                                binding.eventLayout.visibility = View.GONE
+                                binding.scrollLayout.visibility = View.VISIBLE
+                                avm.viewInit(binding.alarmRv)
+                            }
+
+                        }
+                    }
+                }
+
+                binding.closeBtn.setOnClickListener {
+                    LogUtil.logE("화면 닫기 OnClick..")
+                    finish()
+                }
+
+            } else {
+                val intent = Intent(applicationContext, NetworkActivity::class.java)
+                startActivity(intent)
             }
         }
 
-        binding.closeBtn.setOnClickListener {
-            LogUtil.logE("화면 닫기 OnClick..")
-            finish()
-        }
 
     }
 

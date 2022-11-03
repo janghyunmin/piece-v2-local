@@ -20,7 +20,7 @@ import io.reactivex.schedulers.Schedulers
  * 2022/09/10        piecejhm       최초 생성
  */
 class BoardRepository(application: Application) {
-    val response = ApiModule.provideRetrofit().create(RetrofitService::class.java)
+    val response: RetrofitService = ApiModule.provideRetrofit().create(RetrofitService::class.java)
 
     // 공지사항 List - jhm 2022/09/23
     // 자주 묻는 질문 List - jhm 2022/09/23

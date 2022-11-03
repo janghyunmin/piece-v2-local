@@ -3,6 +3,7 @@ package com.bsstandard.piece.view.main
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
@@ -22,14 +23,14 @@ import com.bsstandard.piece.data.datasource.shared.PrefsHelper
 import com.bsstandard.piece.data.viewmodel.GetUserViewModel
 import com.bsstandard.piece.databinding.ActivityMainBinding
 import com.bsstandard.piece.view.common.LoginChkActivity
+import com.bsstandard.piece.view.common.NetworkActivity
 import com.bsstandard.piece.view.fragment.navigation.KeepStateNavigator
 import com.bsstandard.piece.view.main.dialog.EventSheet
 import com.bsstandard.piece.widget.utils.LogUtil
+import com.bsstandard.piece.widget.utils.NetworkConnection
 import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import java.util.*
 
 /**
@@ -52,17 +53,25 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
     private lateinit var navController: NavController
     val manager = supportFragmentManager
     var mContext: Context = this@MainActivity
+    var strSDFormatDay: String = ""
 
-    @SuppressLint("NewApi")
+
+
+    @SuppressLint("NewApi", "SimpleDateFormat")
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         LogUtil.logE("Main onCreate..")
 
+//        getStatusBarHeight(mContext)
+//        binding.pLayout.setPadding(0,getStatusBarHeight(mContext),0,0)
+
+
+        supportActionBar?.hide()
+
         binding.apply {
             lifecycleOwner = this@MainActivity
             main = mainViewModel
-
             // 내정보 API - jhm 2022/09/03
 //            memberVm = mv
 //            mv.getUserData()
@@ -71,7 +80,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
             // UI Setting 최종 - jhm 2022/09/14
             setStatusBarIconColor(true) // 상태바 아이콘 true : 검정색
             setStatusBarBgColor("#ffffff") // 상태바 배경색상 설정
-            setNaviBarIconColor(true) // 네비게이션 true : 검정색
+            setNaviBarIconColor(false) // 네비게이션 true : 검정색
             setNaviBarBgColor("#ffffff") // 네비게이션 배경색
 
             LogUtil.logE("accessToken Main : " + PrefsHelper.read("accessToken", ""));
@@ -83,23 +92,39 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
             initNavController()
 
 
-//            client = OkHttpClient()
-//
-//            val request: Request = Request.Builder()
-//                .url("ws://192.168.0.39:10000/portfolio")
-//                .build()
-//            val listener: WebSocketListener = WebSocketListener()
-//
-//            client.newWebSocket(request, listener)
-//            client.dispatcher().executorService().shutdown()
-
-
-            
-            //toDayShow() // 메인 이벤트 바텀 시트 - jhm 2022/08/31
         }
 
-        initFirebase()
-        updateResult()
+        val networkConnection = NetworkConnection(applicationContext)
+        networkConnection.observe(this) { isConnected -> // 인터넷 연결되어있음 - jhm 2022/11/02
+            if (isConnected) {
+
+                val CurrentTime = System.currentTimeMillis() // 현재 시간을 msec 단위로 얻음
+                val TodayDate = Date(CurrentTime) // 현재 시간 Date 변수에 저장
+                val SDFormat = SimpleDateFormat("dd")
+                strSDFormatDay = SDFormat.format(TodayDate) // 'dd' 형태로 포맷 변경
+
+                LogUtil.logE("strSDFormatDay $strSDFormatDay")
+
+
+                // 오늘하루 안보기 이벤트 날짜 비교 - jhm 2022/10/28
+                if(strSDFormatDay.toInt().minus(PrefsHelper.read("Day","0").toInt()) != 0) {
+                    val eventSheet = EventSheet()
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        eventSheet.show(supportFragmentManager, eventSheet.tag)
+                    }, 500)
+                }
+
+                initFirebase()
+                updateResult()
+
+            } else {
+                val intent = Intent(applicationContext, NetworkActivity::class.java)
+                startActivity(intent)
+            }
+        }
+
+
+
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -128,59 +153,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
     }
 
 
-    // 오늘은 보지 않기 눌렀는지 chk - jhm 2022/07/08
-    @RequiresApi(Build.VERSION_CODES.O)
-    fun toDayShow() {
-        val eventSheet = EventSheet()
-
-        val toDayChk = PrefsHelper.read("toDayChk", "false")
-        if (toDayChk.equals("true")) {
-            toDayChk()
-            println("오늘은 보지않기 눌러서 오늘 못봄..")
-        } else {
-            Handler(Looper.getMainLooper()).postDelayed({
-                eventSheet.show(supportFragmentManager, eventSheet.tag)
-            }, 500)
-        }
-    }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    fun toDayChk() {
-        // 자정시간 - jhm 2022/07/07
-        val calendar = Calendar.getInstance()
-        calendar.timeInMillis = System.currentTimeMillis()
-        calendar.set(Calendar.HOUR_OF_DAY, 0)
-        calendar.set(Calendar.MINUTE, 0)
-        calendar.set(Calendar.SECOND, 0)
-
-        val dateFormat = SimpleDateFormat("yyyy년 MM월 dd일 HH시", Locale("ko", "KR"))
-        val midNight = dateFormat.format(Date(calendar.timeInMillis))
-        println("midNight : $midNight")
-
-        val current = LocalDateTime.now()
-        val formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시")
-        val today = current.format(formatter)
-        println("today : $today")
-
-        val compare = today.compareTo(midNight)
-        println("compare : $compare")
-
-        when {
-            compare > 0 -> {
-                println("after")
-                PrefsHelper.write("toDayChk", "false")
-            }
-            compare < 0 -> {
-                println("before")
-                PrefsHelper.write("toDayChk", "true")
-            }
-//            else -> {
-//                println("equals")
-//                PrefsHelper.write("toDayChk", "false")
-//            }
-        }
-    }
-
     // BottomNavigation + Controller - jhm 2022/07/24
     // bottomNavigation fragment 재사용 방지 로직 추가 - jhm 2022/07/24
     private fun initNavController() {
@@ -195,8 +167,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
             navHostFragment.childFragmentManager,
             binding.navMainFragment.id
         )
-
-        LogUtil.logE("id : " + binding.navMainFragment.id)
 
         navController.navigatorProvider += navigator
         // set navigation graph
@@ -236,7 +206,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
             }
             R.id.FragmentWallet -> {
                 LogUtil.logE("wallet..")
-                if (!PrefsHelper.read("isJoin", "").equals("true")) {
+                if (PrefsHelper.read("memberId", "").equals("")) {
                     val intent = Intent(this@MainActivity, LoginChkActivity::class.java)
                     startActivity(intent)
                 } else {
@@ -247,7 +217,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
             }
             R.id.FragmentMore -> {
                 LogUtil.logE("more..")
-                if (!PrefsHelper.read("isJoin", "").equals("true")) {
+                if (PrefsHelper.read("memberId", "").equals("")) {
                     val intent = Intent(this@MainActivity, LoginChkActivity::class.java)
                     startActivity(intent)
                 } else {
@@ -361,5 +331,40 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
     }
     /** Util end **/
 
+
+    // statusbar height 추가
+    open fun getStatusBarHeight(context: Context): Int {
+        val screenSizeType = context.resources.configuration.screenLayout and
+                Configuration.SCREENLAYOUT_SIZE_MASK
+        var statusbar = 0
+        if (screenSizeType != Configuration.SCREENLAYOUT_SIZE_XLARGE) {
+            val resourceId =
+                context.resources.getIdentifier("status_bar_height", "dimen", "android")
+            if (resourceId > 0) {
+                statusbar = context.resources.getDimensionPixelSize(resourceId)
+            }
+        }
+        return statusbar
+    }
+
+    // statusbar height 추가
+    fun getStatusBarHeightKt(context: Context): Int {
+        val resourceId = context.resources.getIdentifier("status_bar_height", "dimen", "android")
+
+        return if (resourceId > 0) {
+            context.resources.getDimensionPixelSize(resourceId)
+        } else {
+            0
+        }
+    }
+
+    fun getNaviBarHeight(context: Context): Int {
+        val resourceId: Int = context.resources.getIdentifier("navigation_bar_height", "dimen", "android")
+        return if (resourceId > 0) {
+            context.resources.getDimensionPixelSize(resourceId)
+        } else {
+            0
+        }
+    }
 
 }

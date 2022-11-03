@@ -18,8 +18,10 @@ import com.bsstandard.piece.data.datasource.shared.PrefsHelper
 import com.bsstandard.piece.data.viewmodel.AccountViewModel
 import com.bsstandard.piece.data.viewmodel.DepositBalanceViewModel
 import com.bsstandard.piece.databinding.ActivityMyaccountWithdrawBinding
+import com.bsstandard.piece.view.common.NetworkActivity
 import com.bsstandard.piece.view.deposit.Listener
 import com.bsstandard.piece.widget.utils.LogUtil
+import com.bsstandard.piece.widget.utils.NetworkConnection
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
@@ -42,7 +44,8 @@ import java.text.DecimalFormat
 
 @AndroidEntryPoint
 class WithdrawalActivity :
-    BaseActivity<ActivityMyaccountWithdrawBinding>(R.layout.activity_myaccount_withdraw) , Listener, Observer<String>{
+    BaseActivity<ActivityMyaccountWithdrawBinding>(R.layout.activity_myaccount_withdraw), Listener,
+    Observer<String> {
     private lateinit var dvm: DepositBalanceViewModel // 출금 가능 금액 ViewModel - jhm 2022/09/29
     private lateinit var mavm: AccountViewModel // 회원 계좌 정보 조회 ViewModel - jhm 2022/10/04
     val mContext: Context = this@WithdrawalActivity
@@ -88,276 +91,283 @@ class WithdrawalActivity :
         binding.memberAccountVm = mavm
         binding.numberPad = nvm
 
-        // 출금 가능 금액 - jhm 2022/09/30
-        dvm.getDepositBalance(accessToken, deviceId, memberId)
+        val networkConnection = NetworkConnection(applicationContext)
+        networkConnection.observe(this) { isConnected -> // 인터넷 연결되어있음 - jhm 2022/11/02
+            if (isConnected) {
+                // 출금 가능 금액 - jhm 2022/09/30
+                dvm.getDepositBalance(accessToken, deviceId, memberId)
 
 
-        dvm.depoResponse.observe(this@WithdrawalActivity, Observer {
-            //binding.deposit.text =  decimal.format(it.data.depositBalance.toString()) + " 원"
-            val decimal = DecimalFormat("#,###")
-            var depositText: String = ""
-            depositText = decimal.format(it.data.depositBalance)
-            binding.depositNumber.text = "$depositText 원"
-        })
+                dvm.depoResponse.observe(this@WithdrawalActivity, Observer {
+                    //binding.deposit.text =  decimal.format(it.data.depositBalance.toString()) + " 원"
+                    val decimal = DecimalFormat("#,###")
+                    var depositText: String = ""
+                    depositText = decimal.format(it.data.depositBalance)
+                    binding.depositNumber.text = "$depositText 원"
+                })
 
 
-        // 계좌 정보 - jhm 2022/10/04
-        mavm.getAccount(accessToken, deviceId, memberId)
-        mavm.accountResponse.observe(this@WithdrawalActivity, Observer {
-            try {
-                LogUtil.logE("bankCode : ${it.data.bankCode}" )
-                var statusIcon: String = ""
-                when (it.data.bankCode) {
-                    "001" -> {
-                        LogUtil.logE("한국 은행")
-                    }
-                    "002" -> {
-                        LogUtil.logE("KDB 산업은행")
-                        statusIcon = getURLForResource(R.drawable.bank02)
-                    }
-                    "003" -> {
-                        LogUtil.logE("기업은행")
-                        statusIcon = getURLForResource(R.drawable.bank03)
-                    }
-                    "004" -> {
-                        LogUtil.logE("국민은행")
-                        statusIcon = getURLForResource(R.drawable.bank04)
-                    }
-                    "005" -> {
-                        LogUtil.logE("KEB 하나은행")
-                        statusIcon = getURLForResource(R.drawable.bank05)
-                    }
-                    "007" -> {
-                        LogUtil.logE("수협은행")
-                        statusIcon = getURLForResource(R.drawable.bank07)
-                    }
-                    "008" -> {
-                        LogUtil.logE("수출입 은행")
-                    }
-                    "011" -> {
-                        LogUtil.logE("NH농협은행")
-                        statusIcon = getURLForResource(R.drawable.bank11)
-                    }
+                // 계좌 정보 - jhm 2022/10/04
+                mavm.getAccount(accessToken, deviceId, memberId)
+                mavm.accountResponse.observe(this@WithdrawalActivity, Observer {
+                    try {
+                        LogUtil.logE("bankCode : ${it.data.bankCode}")
+                        var statusIcon: String = ""
+                        when (it.data.bankCode) {
+                            "001" -> {
+                                LogUtil.logE("한국 은행")
+                            }
+                            "002" -> {
+                                LogUtil.logE("KDB 산업은행")
+                                statusIcon = getURLForResource(R.drawable.bank02)
+                            }
+                            "003" -> {
+                                LogUtil.logE("기업은행")
+                                statusIcon = getURLForResource(R.drawable.bank03)
+                            }
+                            "004" -> {
+                                LogUtil.logE("국민은행")
+                                statusIcon = getURLForResource(R.drawable.bank04)
+                            }
+                            "005" -> {
+                                LogUtil.logE("KEB 하나은행")
+                                statusIcon = getURLForResource(R.drawable.bank05)
+                            }
+                            "007" -> {
+                                LogUtil.logE("수협은행")
+                                statusIcon = getURLForResource(R.drawable.bank07)
+                            }
+                            "008" -> {
+                                LogUtil.logE("수출입 은행")
+                            }
+                            "011" -> {
+                                LogUtil.logE("NH농협은행")
+                                statusIcon = getURLForResource(R.drawable.bank11)
+                            }
 //                    "012" -> {
 //                        LogUtil.logE("지역 농축협")
 //                    }
-                    "020" -> {
-                        LogUtil.logE("우리은행")
-                        statusIcon = getURLForResource(R.drawable.bank20)
+                            "020" -> {
+                                LogUtil.logE("우리은행")
+                                statusIcon = getURLForResource(R.drawable.bank20)
+                            }
+                            "023" -> {
+                                LogUtil.logE("SC제일은행")
+                                statusIcon = getURLForResource(R.drawable.bank23)
+                            }
+                            "026" -> {
+                                LogUtil.logE("신한은행")
+                                statusIcon = getURLForResource(R.drawable.bank26)
+                            }
+                            "027" -> {
+                                LogUtil.logE("한국씨티은행")
+                                statusIcon = getURLForResource(R.drawable.bank27)
+                            }
+                            "031" -> {
+                                LogUtil.logE("대구은행")
+                                statusIcon = getURLForResource(R.drawable.bank31)
+                            }
+                            "032" -> {
+                                LogUtil.logE("부산은행")
+                                statusIcon = getURLForResource(R.drawable.bank32)
+                            }
+                            "034" -> {
+                                LogUtil.logE("광주은행")
+                                statusIcon = getURLForResource(R.drawable.bank34)
+                            }
+                            "035" -> {
+                                LogUtil.logE("제주은행")
+                                statusIcon = getURLForResource(R.drawable.bank35)
+                            }
+                            "037" -> {
+                                LogUtil.logE("전북은행")
+                                statusIcon = getURLForResource(R.drawable.bank37)
+                            }
+                            "039" -> {
+                                LogUtil.logE("경남은행")
+                                statusIcon = getURLForResource(R.drawable.bank39)
+                            }
+                            "045" -> {
+                                LogUtil.logE("새마을 금고")
+                                statusIcon = getURLForResource(R.drawable.bank45)
+                            }
+                            "047" -> {
+                                LogUtil.logE("신협")
+                                statusIcon = getURLForResource(R.drawable.bank47)
+                            }
+                            "064" -> {
+                                LogUtil.logE("산림조합중앙회")
+                                statusIcon = getURLForResource(R.drawable.bank64)
+                            }
+                            "071" -> {
+                                LogUtil.logE("우체국")
+                                statusIcon = getURLForResource(R.drawable.bank71)
+                            }
+                            "089" -> {
+                                LogUtil.logE("케이뱅크")
+                                statusIcon = getURLForResource(R.drawable.bank89)
+                            }
+                            "090" -> {
+                                LogUtil.logE("카카오 뱅크")
+                                statusIcon = getURLForResource(R.drawable.bank90)
+                            }
+                            "092" -> {
+                                LogUtil.logE("토스뱅크")
+                                statusIcon = getURLForResource(R.drawable.bank92)
+                            }
+                        }
+                        var requestOptions = RequestOptions()
+                        requestOptions = requestOptions.transforms(CenterCrop(), RoundedCorners(30))
+                        Glide.with(mContext)
+                            .load(statusIcon)
+                            .apply(requestOptions)
+                            .transition(DrawableTransitionOptions.withCrossFade())
+                            .into(binding.bankIcon)
+
+                        binding.accountNumber.text = it.data.bankName + " " + it.data.accountNo
+
+                        binding.number.text = ""
+                        binding.number.hint = "얼마를 보낼까요?"
+                        binding.confirmBtn.isSelected = false
+
+
+                    } catch (e: Exception) {
+                        LogUtil.logE("회원 계좌 정보 조회 Error ! ${e.printStackTrace()}")
                     }
-                    "023" -> {
-                        LogUtil.logE("SC제일은행")
-                        statusIcon = getURLForResource(R.drawable.bank23)
+                })
+
+
+                val decimal = DecimalFormat("#,###")
+                var depositText: String = ""
+                liveText.observe(this@WithdrawalActivity, Observer {
+                    if (it.isNotEmpty()) {
+
+                        depositText = decimal.format(it.toInt())
+                        binding.number.text = "$depositText 원"
+
+                    } else {
+
+                        sb.setLength(0) // string builder 초기화 - jhm 2022/10/21
+                        money = "" // 입력값 초기화 - jhm 2022/10/21
+                        binding.number.text = ""
+                        binding.number.hint = "얼마를 보낼까요?"
+                        binding.confirmBtn.isSelected = false
                     }
-                    "026" -> {
-                        LogUtil.logE("신한은행")
-                        statusIcon = getURLForResource(R.drawable.bank26)
+                })
+
+
+                /**
+                 * 1~9 키패드 OnClick
+                 * **/
+                binding.code1.setOnClickListener {
+                    if (sb.toString().length < 10) {
+                        money = sb.append("1").toString()
+                        liveText.value = money
+                        binding.confirmBtn.isSelected = true
                     }
-                    "027" -> {
-                        LogUtil.logE("한국씨티은행")
-                        statusIcon = getURLForResource(R.drawable.bank27)
-                    }
-                    "031" -> {
-                        LogUtil.logE("대구은행")
-                        statusIcon = getURLForResource(R.drawable.bank31)
-                    }
-                    "032" -> {
-                        LogUtil.logE("부산은행")
-                        statusIcon = getURLForResource(R.drawable.bank32)
-                    }
-                    "034" -> {
-                        LogUtil.logE("광주은행")
-                        statusIcon = getURLForResource(R.drawable.bank34)
-                    }
-                    "035" -> {
-                        LogUtil.logE("제주은행")
-                        statusIcon = getURLForResource(R.drawable.bank35)
-                    }
-                    "037" -> {
-                        LogUtil.logE("전북은행")
-                        statusIcon = getURLForResource(R.drawable.bank37)
-                    }
-                    "039" -> {
-                        LogUtil.logE("경남은행")
-                        statusIcon = getURLForResource(R.drawable.bank39)
-                    }
-                    "045" -> {
-                        LogUtil.logE("새마을 금고")
-                        statusIcon = getURLForResource(R.drawable.bank45)
-                    }
-                    "047" -> {
-                        LogUtil.logE("신협")
-                        statusIcon = getURLForResource(R.drawable.bank47)
-                    }
-                    "064" -> {
-                        LogUtil.logE("산림조합중앙회")
-                        statusIcon = getURLForResource(R.drawable.bank64)
-                    }
-                    "071" -> {
-                        LogUtil.logE("우체국")
-                        statusIcon = getURLForResource(R.drawable.bank71)
-                    }
-                    "089" -> {
-                        LogUtil.logE("케이뱅크")
-                        statusIcon = getURLForResource(R.drawable.bank89)
-                    }
-                    "090" -> {
-                        LogUtil.logE("카카오 뱅크")
-                        statusIcon = getURLForResource(R.drawable.bank90)
-                    }
-                    "092" -> {
-                        LogUtil.logE("토스뱅크")
-                        statusIcon = getURLForResource(R.drawable.bank92)
+
+                }
+                binding.code2.setOnClickListener {
+                    if (sb.toString().length < 10) {
+                        money = sb.append("2").toString()
+                        liveText.value = money
+                        binding.confirmBtn.isSelected = true
                     }
                 }
-                var requestOptions = RequestOptions()
-                requestOptions = requestOptions.transforms(CenterCrop(), RoundedCorners(30))
-                Glide.with(mContext)
-                    .load(statusIcon)
-                    .apply(requestOptions)
-                    .transition(DrawableTransitionOptions.withCrossFade())
-                    .into(binding.bankIcon)
+                binding.code3.setOnClickListener {
+                    if (sb.toString().length < 10) {
+                        money = sb.append("3").toString()
+                        liveText.value = money
+                        binding.confirmBtn.isSelected = true
+                    }
+                }
+                binding.code4.setOnClickListener {
+                    if (sb.toString().length < 10) {
+                        money = sb.append("4").toString()
+                        liveText.value = money
+                        binding.confirmBtn.isSelected = true
+                    }
+                }
+                binding.code5.setOnClickListener {
+                    if (sb.toString().length < 10) {
+                        money = sb.append("5").toString()
+                        liveText.value = money
+                        binding.confirmBtn.isSelected = true
+                    }
+                }
+                binding.code6.setOnClickListener {
+                    if (sb.toString().length < 10) {
+                        money = sb.append("6").toString()
+                        liveText.value = money
+                        binding.confirmBtn.isSelected = true
+                    }
+                }
+                binding.code7.setOnClickListener {
+                    if (sb.toString().length < 10) {
+                        money = sb.append("7").toString()
+                        liveText.value = money
+                        binding.confirmBtn.isSelected = true
+                    }
+                }
+                binding.code8.setOnClickListener {
+                    if (sb.toString().length < 10) {
+                        money = sb.append("8").toString()
+                        liveText.value = money
+                        binding.confirmBtn.isSelected = true
+                    }
+                }
+                binding.code9.setOnClickListener {
+                    if (sb.toString().length < 10) {
+                        money = sb.append("9").toString()
+                        liveText.value = money
+                        binding.confirmBtn.isSelected = true
+                    }
+                }
+                binding.code0.setOnClickListener {
+                    if (sb.toString().length < 10) {
+                        if (sb.substring(0, money.length).equals("0")) {
+                            binding.confirmBtn.isSelected = false
+                        } else {
+                            money = sb.append("0").toString()
+                            liveText.value = money
+                            binding.confirmBtn.isSelected = true
+                        }
+                    }
+                }
 
-                binding.accountNumber.text = it.data.bankName + " " + it.data.accountNo
+                // 1자리씩 삭제 - jhm 2022/10/21
+                binding.clear.setOnClickListener {
+                    removeNumber()
+                }
 
-                binding.number.text = ""
-                binding.number.hint = "얼마를 보낼까요?"
-                binding.confirmBtn.isSelected = false
-
-
-            } catch (e: Exception) {
-                LogUtil.logE("회원 계좌 정보 조회 Error ! ${e.printStackTrace()}")
-            }
-        })
-
-
-        val decimal = DecimalFormat("#,###")
-        var depositText: String = ""
-        liveText.observe(this@WithdrawalActivity, Observer {
-            if (it.isNotEmpty()) {
-
-                depositText = decimal.format(it.toInt())
-                binding.number.text = "$depositText 원"
-
-            } else {
-
-                sb.setLength(0) // string builder 초기화 - jhm 2022/10/21
-                money = "" // 입력값 초기화 - jhm 2022/10/21
-                binding.number.text = ""
-                binding.number.hint = "얼마를 보낼까요?"
-                binding.confirmBtn.isSelected = false
-            }
-        })
-
-
-        /**
-         * 1~9 키패드 OnClick
-         * **/
-        binding.code1.setOnClickListener {
-            if (sb.toString().length < 10) {
-                money = sb.append("1").toString()
-                liveText.value = money
-                binding.confirmBtn.isSelected = true
-            }
-
-        }
-        binding.code2.setOnClickListener {
-            if (sb.toString().length < 10) {
-                money = sb.append("2").toString()
-                liveText.value = money
-                binding.confirmBtn.isSelected = true
-            }
-        }
-        binding.code3.setOnClickListener {
-            if (sb.toString().length < 10) {
-                money = sb.append("3").toString()
-                liveText.value = money
-                binding.confirmBtn.isSelected = true
-            }
-        }
-        binding.code4.setOnClickListener {
-            if (sb.toString().length < 10) {
-                money = sb.append("4").toString()
-                liveText.value = money
-                binding.confirmBtn.isSelected = true
-            }
-        }
-        binding.code5.setOnClickListener {
-            if (sb.toString().length < 10) {
-                money = sb.append("5").toString()
-                liveText.value = money
-                binding.confirmBtn.isSelected = true
-            }
-        }
-        binding.code6.setOnClickListener {
-            if (sb.toString().length < 10) {
-                money = sb.append("6").toString()
-                liveText.value = money
-                binding.confirmBtn.isSelected = true
-            }
-        }
-        binding.code7.setOnClickListener {
-            if (sb.toString().length < 10) {
-                money = sb.append("7").toString()
-                liveText.value = money
-                binding.confirmBtn.isSelected = true
-            }
-        }
-        binding.code8.setOnClickListener {
-            if (sb.toString().length < 10) {
-                money = sb.append("8").toString()
-                liveText.value = money
-                binding.confirmBtn.isSelected = true
-            }
-        }
-        binding.code9.setOnClickListener {
-            if (sb.toString().length < 10) {
-                money = sb.append("9").toString()
-                liveText.value = money
-                binding.confirmBtn.isSelected = true
-            }
-        }
-        binding.code0.setOnClickListener {
-            if (sb.toString().length < 10) {
-                if(sb.substring(0,money.length).equals("0")) {
+                // 초기화 버튼 - jhm 2022/10/21
+                binding.clearText.setOnClickListener {
+                    sb.setLength(0) // string builder 초기화 - jhm 2022/10/21
+                    binding.number.text = ""
+                    binding.number.hint = "얼마를 보낼까요?"
                     binding.confirmBtn.isSelected = false
-                } else {
-                    money = sb.append("0").toString()
-                    liveText.value = money
-                    binding.confirmBtn.isSelected = true
                 }
-            }
-        }
 
-
-
-
-
-        // 1자리씩 삭제 - jhm 2022/10/21
-        binding.clear.setOnClickListener {
-            removeNumber()
-        }
-
-        // 초기화 버튼 - jhm 2022/10/21
-        binding.clearText.setOnClickListener {
-            sb.setLength(0) // string builder 초기화 - jhm 2022/10/21
-            binding.number.text = ""
-            binding.number.hint = "얼마를 보낼까요?"
-            binding.confirmBtn.isSelected = false
-        }
-
-        // 확인 버튼 - jhm 2022/10/04
-        binding.confirmBtn.setOnClickListener {
-            if (binding.confirmBtn.isSelected) {
-                LogUtil.logE("출금 확인 버튼 OnClick..")
-                val intent = Intent(mContext, WithdrawalNextActivity::class.java)
-                intent.putExtra("withdrawRequestAmount", binding.number.text.toString())
-                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                // 확인 버튼 - jhm 2022/10/04
+                binding.confirmBtn.setOnClickListener {
+                    if (binding.confirmBtn.isSelected) {
+                        LogUtil.logE("출금 확인 버튼 OnClick..")
+                        val intent = Intent(mContext, WithdrawalNextActivity::class.java)
+                        intent.putExtra("withdrawRequestAmount", binding.number.text.toString())
+                        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                        startActivity(intent)
+                        finish()
+                    }
+                }
+            } else {
+                val intent = Intent(applicationContext, NetworkActivity::class.java)
                 startActivity(intent)
-                finish()
             }
         }
+
+
     }
+
     // 마지막 입력값 제거 - jhm 2022/10/21
     fun removeLastNchars(str: String, n: Int): String {
         LogUtil.logE("str length : " + str.length)
@@ -368,7 +378,7 @@ class WithdrawalActivity :
     @SuppressLint("SetTextI18n")
     private fun removeNumber() {
         if (money.isNotEmpty()) {
-            if(money.substring(0,0) == "0") {
+            if (money.substring(0, 0) == "0") {
                 LogUtil.logE("앞에 0먼저 오면 반응 x")
             } else {
                 money = sb.substring(0, money.length - 1).toString()

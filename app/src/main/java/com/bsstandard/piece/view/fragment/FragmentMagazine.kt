@@ -36,7 +36,6 @@ import io.reactivex.disposables.Disposable
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import kotlin.collections.set
 
 /**
  *packageName    : com.bsstandard.piece.view.fragment
@@ -65,7 +64,6 @@ class FragmentMagazine : Fragment() {
     val deviceId: String = PrefsHelper.read("deviceId", "")
     val memberId: String = PrefsHelper.read("memberId", "")
     var memberMap = HashMap<String, String>()
-    val isJoin: String = PrefsHelper.read("isJoin", "");
 
 
     companion object {
@@ -94,6 +92,7 @@ class FragmentMagazine : Fragment() {
     ): View? {
         _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_magazine, container, false)
 
+        // 상단 시계바 투명처리 - jhm 2022/10/27
         requireActivity().setStatusBarTransparent()
 
         vm = ViewModelProvider(this)[MagazineViewModel::class.java]
@@ -102,37 +101,19 @@ class FragmentMagazine : Fragment() {
 
         bvm = ViewModelProvider(this)[BookMarkViewModel::class.java]
         binding.bookmarkVM = bvm
-
-
         binding.lifecycleOwner = viewLifecycleOwner
-
-        // 회원 북마크 조회 - jhm 2022/09/01
-        bvm.getBookMark(accessToken, deviceId, memberId)
-
-
-//        val nameObserver: Observer<ArrayList<BookMarkDTO.Datum>> =
-//            Observer { newName -> // Update the UI, in this case, a TextView.
-//                LogUtil.logE("newName : $newName")
-//            }
-//        bvm.liveData.observe(viewLifecycleOwner,nameObserver)
 
 
         // 비회원으로 매거진 들어왔을때 - jhm 2022/08/30
-        if (isJoin != "true") {
+        if (PrefsHelper.read("memberId","").equals("")) {
             vm.getNoMemberMagazine("") // 타입 = 전체는 공백 - jhm 2022/08/30
+            binding.allBookmarkCount.text = "0"
         } else {
-            memberMap["accessToken"] = "Bearer $accessToken"
-            memberMap["deviceId"] = deviceId
-            memberMap["memberId"] = memberId
-
-            LogUtil.logE(memberMap["accessToken"])
-            LogUtil.logE(memberMap["deviceId"])
-            LogUtil.logE(memberMap["memberId"])
-
             // 매거진 (라운지) 전체 리스트 뷰모델 참조 - jhm 2022/08/31
             vm.getMagazine("")
 
-
+            // 회원 북마크 조회 - jhm 2022/09/01
+            bvm.getBookMark(accessToken, deviceId, memberId)
         }
 
         binding.tabs.setBackgroundColor(Color.parseColor("#FFFFFF"))
@@ -152,7 +133,7 @@ class FragmentMagazine : Fragment() {
                     LogUtil.logE("tab 선택" + tab.contentDescription)
                     when (tab.contentDescription) {
                         "전체" -> {
-                            if (isJoin != "true") {
+                            if (PrefsHelper.read("memberId","").equals("")) {
                                 vm.getNoMemberMagazine("")
                             } else {
                                 vm.getMagazine("")
@@ -160,35 +141,35 @@ class FragmentMagazine : Fragment() {
 
                         }
                         "포트폴리오" -> {
-                            if (isJoin != "true") {
+                            if (PrefsHelper.read("memberId","").equals("")) {
                                 vm.getNoMemberMagazine("MZT0201")
                             } else {
                                 vm.getMagazine("MZT0201")
                             }
                         }
                         "핀테크 트렌드" -> {
-                            if (isJoin != "true") {
+                            if (PrefsHelper.read("memberId","").equals("")) {
                                 vm.getNoMemberMagazine("MZT0101")
                             } else {
                                 vm.getMagazine("MZT0101")
                             }
                         }
                         "핫 플레이스" -> {
-                            if (isJoin != "true") {
+                            if (PrefsHelper.read("memberId","").equals("")) {
                                 vm.getNoMemberMagazine("MZT0102")
                             } else {
                                 vm.getMagazine("MZT0102")
                             }
                         }
                         "쿨 피플" -> {
-                            if (isJoin != "true") {
+                            if (PrefsHelper.read("memberId","").equals("")) {
                                 vm.getNoMemberMagazine("MZT0103")
                             } else {
                                 vm.getMagazine("MZT0103")
                             }
                         }
                         "잘알못 칼럼" -> {
-                            if (isJoin != "true") {
+                            if (PrefsHelper.read("memberId","").equals("")) {
                                 vm.getNoMemberMagazine("MZT0104")
                             } else {
                                 vm.getMagazine("MZT0104")
@@ -218,20 +199,23 @@ class FragmentMagazine : Fragment() {
                 context?.startActivity(intent)
             }
         }
+        vm.isFavorite.observe(viewLifecycleOwner, Observer {
+
+        })
         vm.magazineAdapter.setOnItemClickListener(object : MagazineAdapter.OnItemClickListener {
             override fun onItemClick(
                 v: View,
                 tag: String,
                 magazineId: String,
                 magazineImagePath: String,
-                isFavorite: String,
+                isFavorite: Boolean,
                 smallTitle: String,
                 pos: Int
             ) {
-                LogUtil.logE("view : ${v.isSelected}")
-                LogUtil.logE("tag : $tag")
-                LogUtil.logE("magazineId $magazineId")
-                LogUtil.logE("magazineThumnail ImagePath $magazineImagePath")
+                LogUtil.logE("view : $isFavorite")
+//                LogUtil.logE("tag : $tag")
+//                LogUtil.logE("magazineId $magazineId")
+//                LogUtil.logE("magazineThumnail ImagePath $magazineImagePath")
 
                 when (tag) {
                     "webView" -> {
@@ -256,22 +240,8 @@ class FragmentMagazine : Fragment() {
                         val memberBookmarkRemoveModel =
                             MemberBookmarkRemoveModel(memberId, magazineId)
 
-//                        LogUtil.logE("memberBookmarkRegModel : ${memberBookmarkRegModel.memberId}")
-//                        LogUtil.logE("memberBookmarkRegModel : ${memberBookmarkRegModel.magazineId}")
-//                        LogUtil.logE("v.isSelected : ${v.isSelected}")
-//                        LogUtil.logE("isFavorite : $isFavorite")
-
-                        // 북마크 클릭 후 y , n 조회 후 y 일때
-                        // y = 이미 선택(북마크) 처리된 애이고
-                        // n = 아직 선택(북마크) 처리 안된 애
-                        // v.isSelected == false
-
-
-//                        v.isSelected = !v.isSelected
-
-
-                        // - jhm 2022/08/29
-                        if (isFavorite == "N") {
+                        // 북마크 저장 - jhm 2022/08/29
+                        if (isFavorite) {
                             LogUtil.logE("isFavorite success : $isFavorite")
                             //bvm.getBookMark()
                             response?.updateBookMark(
@@ -292,25 +262,21 @@ class FragmentMagazine : Fragment() {
                                                 LogUtil.logE("bookmark status : " + response.body()?.status)
                                                 LogUtil.logE("post smallTitle : $smallTitle")
 
-//                                                vm.getMagazine("")
+                                                bvm.getBookMark(accessToken, deviceId, memberId)
 
-
-//                                                v.isSelected = true
-//                                                vm.magazineAdapter.notifyDataSetChanged()
                                             }
                                         } catch (ex: Exception) {
                                             ex.printStackTrace()
+                                            LogUtil.logE("bookmark post catch error ! " + ex.message)
                                         }
                                     }
 
                                     override fun onFailure(call: Call<BaseDTO>, t: Throwable) {
-                                        LogUtil.logE("bookmark post call fail.." + t.stackTrace)
-
+                                        t.printStackTrace()
+                                        LogUtil.logE("bookmark post call fail.." + t.message)
                                     }
                                 })
                         } else {
-                            LogUtil.logE("isFavorite delete: $isFavorite")
-
                             response?.deleteBookMark(
                                 "Bearer $accessToken",
                                 deviceId,
@@ -328,17 +294,18 @@ class FragmentMagazine : Fragment() {
                                             if (!response.body().toString().isEmpty()) {
                                                 LogUtil.logE("bookmark status : " + response.body()?.status)
                                                 LogUtil.logE("delete smallTitle : $smallTitle")
-//                                                vm.getMagazine("")
+                                                bvm.getBookMark(accessToken, deviceId, memberId)
 
- //                                               vm.magazineAdapter.notifyDataSetChanged()
                                             }
                                         } catch (ex: Exception) {
                                             ex.printStackTrace()
+                                            LogUtil.logE("북마크 삭제 catch " + ex.message)
                                         }
                                     }
 
                                     override fun onFailure(call: Call<BaseDTO>, t: Throwable) {
-                                        LogUtil.logE("bookmark post call fail.." + t.stackTrace)
+                                        t.printStackTrace()
+                                        LogUtil.logE("bookmark post call fail.." + t.message)
 
                                     }
                                 })
@@ -376,6 +343,17 @@ class FragmentMagazine : Fragment() {
     override fun onResume() {
         super.onResume()
         vm.magazineAdapter.notifyDataSetChanged()
+
+
+        // 회원 북마크 갯수 - jhm 2022/09/01
+        bvm.liveData.observe(viewLifecycleOwner, Observer { bookMarkDto ->
+            bookMarkDto?.let {
+                binding.allBookmarkCount.text = bookMarkDto.size.toString()
+                bvm.bookMarkAdapter.notifyDataSetChanged()
+            }
+        })
+
+
     }
 
     fun Activity.setStatusBarTransparent() {

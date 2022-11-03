@@ -10,7 +10,9 @@ import android.view.WindowInsetsController
 import com.bsstandard.piece.R
 import com.bsstandard.piece.base.BaseActivity
 import com.bsstandard.piece.databinding.ActivityAccountSelectBinding
+import com.bsstandard.piece.view.common.NetworkActivity
 import com.bsstandard.piece.widget.utils.LogUtil
+import com.bsstandard.piece.widget.utils.NetworkConnection
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -26,13 +28,14 @@ import dagger.hilt.android.AndroidEntryPoint
  */
 
 @AndroidEntryPoint
-class BankSelectActivity : BaseActivity<ActivityAccountSelectBinding>(R.layout.activity_account_select){
+class BankSelectActivity :
+    BaseActivity<ActivityAccountSelectBinding>(R.layout.activity_account_select) {
     val mContext: Context = this@BankSelectActivity
-    
+
     // 선택한 은행코드 , 은행이름 - jhm 2022/10/05
     var bankCode: String = ""
     var bankName: String = ""
-    
+
 
     companion object {
         const val TAG: String = "BankRegisterActivity"
@@ -52,9 +55,16 @@ class BankSelectActivity : BaseActivity<ActivityAccountSelectBinding>(R.layout.a
 
         }
 
-
-        // 은행 선택 후 출금계좌 등록으로 이동 - jhm 2022/10/05
-        selectBank()
+        val networkConnection = NetworkConnection(applicationContext)
+        networkConnection.observe(this) { isConnected -> // 인터넷 연결되어있음 - jhm 2022/11/02
+            if (isConnected) {
+                // 은행 선택 후 출금계좌 등록으로 이동 - jhm 2022/10/05
+                selectBank()
+            } else {
+                val intent = Intent(applicationContext, NetworkActivity::class.java)
+                startActivity(intent)
+            }
+        }
 
     }
 
@@ -231,10 +241,11 @@ class BankSelectActivity : BaseActivity<ActivityAccountSelectBinding>(R.layout.a
     // 계좌 등록/변경하기 Activity 로 이동 - jhm 2022/10/05
     private fun bankRegister() {
         val intent = Intent(mContext, BankRegisterActivity::class.java)
-        intent.putExtra("accountBankCode",bankCode)
-        intent.putExtra("bankName",bankName)
+        intent.putExtra("accountBankCode", bankCode)
+        intent.putExtra("bankName", bankName)
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         startActivity(intent)
+        finish()
     }
 
     /** Util start **/

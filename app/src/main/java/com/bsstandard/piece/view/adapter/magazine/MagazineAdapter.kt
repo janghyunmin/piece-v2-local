@@ -45,7 +45,7 @@ class MagazineAdapter(viewModel: MagazineViewModel, val context: Context) :
             tag: String,
             magazineId: String,
             magazineImagePath: String,
-            isFavorite: String,
+            isFavorite: Boolean,
             smallTitle: String,
             position: Int
         )
@@ -66,10 +66,11 @@ class MagazineAdapter(viewModel: MagazineViewModel, val context: Context) :
             binding.magazineViewModel = viewModel
             binding.executePendingBindings()
 
-            // 로그인이 되어있을때에만 isFavorite isSelected 설정 - jhm 2022/08/30
-//            if (PrefsHelper.read("isJoin", "").equals("true")) {
-//                binding.bookmark.isSelected = magazineViewModel.getMagazineItem()[pos].isFavorite.equals("Y")
-//            }
+            if(!PrefsHelper.read("memberId","").equals("")) {
+                binding.bookmark.isSelected =
+                    magazineViewModel.getMagazineItem()[pos].isFavorite.toString() != "N"
+            }
+
 
             // item 개별 클릭시 webView Go - jhm 2022/08/29
             itemView.setOnClickListener {
@@ -81,7 +82,7 @@ class MagazineAdapter(viewModel: MagazineViewModel, val context: Context) :
                             "webView",
                             magazineViewModel.getMagazineItem()[pos].magazineId,
                             magazineViewModel.getMagazineItem()[pos].representThumbnailPath,
-                            "",
+                            binding.bookmark.isSelected,
                             magazineViewModel.getMagazineItem()[pos].smallTitle,
                             pos
                         )
@@ -95,7 +96,7 @@ class MagazineAdapter(viewModel: MagazineViewModel, val context: Context) :
             binding.bookmark.setOnClickListener {
 
                 // 북마크 클릭시 로그인 판별 - jhm 2022/08/30
-                if (!PrefsHelper.read("isJoin", "").equals("true")) {
+                if (PrefsHelper.read("memberId", "").equals("")) {
                     val intent = Intent(context, LoginChkActivity::class.java)
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                     context.startActivity(intent)
@@ -111,7 +112,7 @@ class MagazineAdapter(viewModel: MagazineViewModel, val context: Context) :
                                 "bookMark",
                                 magazineViewModel.getMagazineItem()[pos].magazineId,
                                 magazineViewModel.getMagazineItem()[pos].representThumbnailPath,
-                                magazineViewModel.getMagazineItem()[pos].isFavorite,
+                                binding.bookmark.isSelected,
                                 magazineViewModel.getMagazineItem()[pos].smallTitle,
                                 pos
                             )

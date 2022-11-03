@@ -3,6 +3,8 @@ package com.bsstandard.piece.data.dto;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 /**
  * packageName    : com.bsstandard.piece.data.dto
  * fileName       : EventDetailDTO
@@ -83,6 +85,12 @@ public class EventDetailDTO {
         @SerializedName("createdAt")
         @Expose
         private String createdAt;
+        @SerializedName("shareUrl")
+        @Expose
+        private String shareUrl;
+        @SerializedName("eventButtons")
+        @Expose
+        private List<Object> eventButtons = null;
 
         public String getEventId() {
             return eventId;
@@ -138,6 +146,22 @@ public class EventDetailDTO {
 
         public void setCreatedAt(String createdAt) {
             this.createdAt = createdAt;
+        }
+
+        public String getShareUrl() {
+            return shareUrl;
+        }
+
+        public void setShareUrl(String shareUrl) {
+            this.shareUrl = shareUrl;
+        }
+
+        public List<Object> getEventButtons() {
+            return eventButtons;
+        }
+
+        public void setEventButtons(List<Object> eventButtons) {
+            this.eventButtons = eventButtons;
         }
 
     }

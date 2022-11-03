@@ -2,7 +2,7 @@ package com.bsstandard.piece.data.repository;
 
 import android.app.Application;
 
-import com.bsstandard.piece.data.datamodel.dmodel.SmsAuthModel;
+import com.bsstandard.piece.data.datamodel.dmodel.sms.CallSmsVerification;
 import com.bsstandard.piece.data.dto.SmsVerificationDTO;
 import com.bsstandard.piece.di.hilt.ApiModule;
 import com.bsstandard.piece.retrofit.RetrofitService;
@@ -40,8 +40,8 @@ public class VerifyRepository {
     }
 
     // 한번씩만 실행하게 SingleLiveEvent 사용 - jhm 2022/06/24
-    public SingleLiveEvent<SmsVerificationDTO> getVerifyData(SmsAuthModel smsAuthModel){
-        Call<SmsVerificationDTO> smsVerificationDTOCall = mInstance.PostVerification(smsAuthModel);
+    public SingleLiveEvent<SmsVerificationDTO> getVerifyData(CallSmsVerification callSmsVerification){
+        Call<SmsVerificationDTO> smsVerificationDTOCall = mInstance.PostVerification(callSmsVerification);
         smsVerificationDTOCall.enqueue(new Callback<SmsVerificationDTO>() {
             @Override
             public void onResponse(Call<SmsVerificationDTO> call, Response<SmsVerificationDTO> response) {

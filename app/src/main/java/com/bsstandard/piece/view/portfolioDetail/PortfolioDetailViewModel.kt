@@ -98,14 +98,16 @@ class PortfolioDetailViewModel(application: Application) : AndroidViewModel(appl
                     }
 
                     for(i in 0 until detailResponse.value!!.data.products.size) {
-                        // 포트폴리오 하단 구성 - jhm 2022/08/25
-                        evidenceList.add(detailResponse.value!!.data.products[i].productDocuments[i])
-                        portfolioDetailEvidenceAdapter.notifyDataSetChanged()
+                        if(detailResponse.value?.data?.products?.isNotEmpty() == true){
+                            // 포트폴리오 하단 구성 - jhm 2022/08/25
+                            evidenceList.add(detailResponse.value!!.data.products[i].productDocuments[i])
+                            portfolioDetailEvidenceAdapter.notifyDataSetChanged()
 
-                        for(i in 0 until detailResponse.value!!.data.products[i].productDocuments.size) {
-                            // 포트폴리오 증빙 자료 - jhm 2022/10/13
-                            documentList.add(detailResponse.value!!.data.products[i]!!.productDocuments[i])
-                            portfolioDetailCompositionAdapter.notifyDataSetChanged()
+                            for(i in 0 until detailResponse.value!!.data.products[i].productDocuments.size) {
+                                // 포트폴리오 증빙 자료 - jhm 2022/10/13
+                                documentList.add(detailResponse.value!!.data.products[i]!!.productDocuments[i])
+                                portfolioDetailCompositionAdapter.notifyDataSetChanged()
+                            }
                         }
                     }
                 } else {

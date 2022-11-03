@@ -10,7 +10,7 @@ import java.util.List;
  * fileName       : BookMarkDTO
  * author         : piecejhm
  * date           : 2022/08/30
- * description    :
+ * description    : 회원 북마크 DTO
  * ===========================================================
  * DATE              AUTHOR             NOTE
  * -----------------------------------------------------------
@@ -73,7 +73,7 @@ public class BookMarkDTO {
         private String smallTitle;
         @SerializedName("author")
         @Expose
-        private Object author;
+        private String author;
         @SerializedName("representThumbnailPath")
         @Expose
         private String representThumbnailPath;
@@ -89,6 +89,9 @@ public class BookMarkDTO {
         @SerializedName("createdAt")
         @Expose
         private String createdAt;
+        @SerializedName("isFavorite")
+        @Expose
+        private String isFavorite;
 
         public String getMemberId() {
             return memberId;
@@ -138,11 +141,11 @@ public class BookMarkDTO {
             this.smallTitle = smallTitle;
         }
 
-        public Object getAuthor() {
+        public String getAuthor() {
             return author;
         }
 
-        public void setAuthor(Object author) {
+        public void setAuthor(String author) {
             this.author = author;
         }
 
@@ -184,6 +187,14 @@ public class BookMarkDTO {
 
         public void setCreatedAt(String createdAt) {
             this.createdAt = createdAt;
+        }
+
+        public String getIsFavorite() {
+            return isFavorite;
+        }
+
+        public void setIsFavorite(String isFavorite) {
+            this.isFavorite = isFavorite;
         }
 
     }

@@ -6,24 +6,24 @@
         android:icon="@drawable/tab1_icon"
         android:onClick="onClick"
         android:title=""
-        app:showAsAction="ifRoom" />
+        app:showAsAction="never" />
     <item
         android:id="@+id/FragmentMagazine"
         android:icon="@drawable/tab2_icon"
         android:onClick="onClick"
         android:title=""
-        app:showAsAction="ifRoom" />
+        app:showAsAction="never" />
     <item
         android:id="@+id/FragmentWallet"
         android:icon="@drawable/tab3_icon"
         android:onClick="onClick"
         android:title=""
-        app:showAsAction="ifRoom" />
+        app:showAsAction="never" />
     <item
         android:id="@+id/FragmentMore"
         android:icon="@drawable/tab4_icon"
         android:onClick="onClick"
         android:title=""
-        app:showAsAction="ifRoom" />
+        app:showAsAction="never" />
 </menu>
 

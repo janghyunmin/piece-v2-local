@@ -13,15 +13,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 
 import com.bsstandard.piece.R;
 import com.bsstandard.piece.data.datasource.shared.PrefsHelper;
 import com.bsstandard.piece.databinding.ActivityJoinBinding;
+import com.bsstandard.piece.view.common.NetworkActivity;
 import com.bsstandard.piece.view.intro.IntroActivity;
 import com.bsstandard.piece.view.join.dialog.BottomSheetDialog;
 import com.bsstandard.piece.widget.utils.Division;
 import com.bsstandard.piece.widget.utils.LogUtil;
+import com.bsstandard.piece.widget.utils.NetworkConnection;
 
 import java.util.regex.Pattern;
 
@@ -70,26 +71,37 @@ public class JoinActivity extends AppCompatActivity implements View.OnClickListe
         joinBinding = DataBindingUtil.setContentView(this, R.layout.activity_join);
         joinBinding.setLifecycleOwner(this);
 
-
         joinViewModel = new ViewModelProvider(this).get(JoinViewModel.class);
         joinBinding.setJv(joinViewModel);
 
-        // 통신사 선택 dialog
-        bottomSheetDialog = new BottomSheetDialog(context);
+        NetworkConnection networkConnection = new NetworkConnection(getApplicationContext());
+        networkConnection.observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean isConnected) {
+                // 인터넷 연결되어있음 - jhm 2022/11/02
+                if(isConnected) {
+                    // 통신사 선택 dialog
+                    bottomSheetDialog = new BottomSheetDialog(context);
 
-        // 화면 Render 후 첫 실행 함수 - jhm 2022/06/16
-        DefaultSetting();
+                    // 화면 Render 후 첫 실행 함수 - jhm 2022/06/16
+                    DefaultSetting();
 
-        // statusBar Custom
-        setStatusBar();
+                    // statusBar Custom
+                    setStatusBar();
 
-        // editText 클릭시 title color 변경 로직
-        FocusTextLogic();
+                    // editText 클릭시 title color 변경 로직
+                    FocusTextLogic();
 
-        // ViewModel 연동처리 로직 - jhm 2022/06/16
-        ObserverLogic();
-
-
+                    // ViewModel 연동처리 로직 - jhm 2022/06/16
+                    ObserverLogic();
+                }
+                // 인터넷 연결 안되어있음 - jhm 2022/11/02
+                else {
+                    Intent intent = new Intent(context, NetworkActivity.class);
+                    startActivity(intent);
+                }
+            }
+        });
     }
 
     public void DefaultSetting() {

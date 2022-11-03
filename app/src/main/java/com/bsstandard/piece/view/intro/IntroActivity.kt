@@ -10,11 +10,13 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import com.bsstandard.piece.R
+import com.bsstandard.piece.databinding.ActivityIntroBinding
+import com.bsstandard.piece.view.common.NetworkActivity
 import com.bsstandard.piece.view.join.JoinActivity
 import com.bsstandard.piece.view.main.MainActivity
 import com.bsstandard.piece.widget.utils.Division
 import com.bsstandard.piece.widget.utils.LogUtil
-import com.bsstandard.piece.databinding.ActivityIntroBinding
+import com.bsstandard.piece.widget.utils.NetworkConnection
 import com.bumptech.glide.Glide
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -47,14 +49,30 @@ class IntroActivity : AppCompatActivity() {
 
         // statusBar 공통 - jhm 2022/06/13
         setStatusBar()
+        Glide.with(this).load(R.drawable.hello_lopping).into(introBinding.hello)
+
         // 권한체크 - jhm 2022/06/13
         checkPermission()
 
+        val networkConnection = NetworkConnection(applicationContext)
+        networkConnection.observe(this) { isConnected -> // 인터넷 연결되어있음 - jhm 2022/11/02
+            if (isConnected) {
+                introBinding.iButton.setOnClickListener {
+                    val intent = Intent(this, JoinActivity::class.java)
+                    startActivity(intent)
+                    overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
+                }
 
-
-        Glide.with(this).load(R.drawable.hello_lopping).into(introBinding.hello)
-
-
+                introBinding.pieceText.setOnClickListener {
+                    val intent = Intent(this,MainActivity::class.java)
+                    startActivity(intent)
+                    overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
+                }
+            } else {
+                val intent = Intent(applicationContext, NetworkActivity::class.java)
+                startActivity(intent)
+            }
+        }
     }
     private fun setStatusBar(){
         val w: Window = window
@@ -94,30 +112,14 @@ class IntroActivity : AppCompatActivity() {
                     for((i, permission) in permissions.withIndex()) {
                         if(grantResults[i] != PackageManager.PERMISSION_GRANTED) {
                             //권한 획득 실패
+
+                                // 권한 체크 로직 변경해야함 - jhm 2022/11/02
                             LogUtil.logE( "권한 거부함 + $permission")
-                            finish()
+//                            finish()
                         }
                     }
                 }
             }
         }
     }
-
-    // 피스 시작하기
-    fun piece_start(){
-        val intent = Intent(this, JoinActivity::class.java)
-        startActivity(intent)
-        overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
-        finish()
-    }
-
-    // 서비스 둘러보기
-    fun piece_beta(){
-        val intent = Intent(this,MainActivity::class.java)
-        startActivity(intent)
-        overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
-        finish()
-    }
-
-
 }

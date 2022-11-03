@@ -8,6 +8,8 @@ import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.databinding.BindingAdapter
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bsstandard.piece.data.dto.MagazineDTO
@@ -40,6 +42,12 @@ class MagazineViewModel(application: Application) : AndroidViewModel(application
     private val context = getApplication<Application>().applicationContext
     var magazineAdapter = MagazineAdapter(this , context)
     private val magazineList: ArrayList<MagazineDTO.Data.Magazine> = arrayListOf()
+
+    private val _isFavorite: MutableLiveData<String> = MutableLiveData()
+    val isFavorite: LiveData<String>
+        get() = _isFavorite
+
+
     var n = 1
 
     // 매거진 (비회원) 전체 list - jhm 2022/08/30
@@ -53,6 +61,7 @@ class MagazineViewModel(application: Application) : AndroidViewModel(application
                 for (i in ArrayList(MagazineDTO.data.magazines).indices) {
                     magazineList.add(MagazineDTO.data.magazines[i])
                     LogUtil.logE("isFavorite : ${MagazineDTO.data.magazines[i].isFavorite}")
+
                     magazineAdapter.notifyDataSetChanged()
                 }
 
@@ -69,10 +78,12 @@ class MagazineViewModel(application: Application) : AndroidViewModel(application
                 magazineList.clear()
                 for (i in ArrayList(MagazineDTO.data.magazines).indices) {
                     magazineList.add(MagazineDTO.data.magazines[i])
+
+                    _isFavorite.value = MagazineDTO.data.magazines[i].isFavorite
+                    _isFavorite.postValue(MagazineDTO.data.magazines[i].isFavorite)
+
                     magazineAdapter.notifyDataSetChanged()
                 }
-
-
 
             }, { throwable -> LogUtil.logE("라운지 리스트 GET List Error!" + throwable.message) }
         )

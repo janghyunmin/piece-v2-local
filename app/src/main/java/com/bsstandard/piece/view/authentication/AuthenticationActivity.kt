@@ -146,13 +146,11 @@ class AuthenticationActivity :
                                         response: Response<BaseDTO>
                                     ) {
                                         try {
-                                            LogUtil.logE("고객 분배금 예치금 계좌 입금 완료")
-                                            LogUtil.logE("try: ${response.body()?.message}")
                                             if(response.code() == 200) {
-                                                DialogManager.openDalog(mContext,"실명 인증 완료","분배금이 예치금으로 입금되었어요.",this@AuthenticationActivity)
+                                                DialogManager.openDalog(mContext,"실명 인증 완료","분배금이 예치금으로 입금되었어요.","확인",this@AuthenticationActivity)
                                             }
                                             else {
-                                                DialogManager.openDalog(mContext,"분배금 전환에 실패했어요!","분배금이 존재하지 않습니다.",this@AuthenticationActivity)
+                                                DialogManager.openDalog(mContext,"분배금 전환에 실패했어요!","분배금이 존재하지 않습니다.","확인",this@AuthenticationActivity)
                                             }
                                         } catch (ex: Exception) {
                                             ex.printStackTrace()
@@ -167,12 +165,12 @@ class AuthenticationActivity :
                                 })
                             }
                             else {
-                                DialogManager.openDalog(mContext,"실명 인증에 실패했어요!","주민등록번호를 정확하게 입력한 후 \n다시 시도해 주세요.",this@AuthenticationActivity)
+                                DialogManager.openDalog(mContext,"실명 인증에 실패했어요!","주민등록번호를 정확하게 입력한 후 \n다시 시도해 주세요.","확인",this@AuthenticationActivity)
                             }
                         } catch (ex: Exception) {
                             ex.printStackTrace()
                             LogUtil.logE("실명인증 Fail..")
-                            DialogManager.openDalog(mContext,"실명 인증에 실패했어요!","주민등록번호를 정확하게 입력한 후 \n다시 시도해 주세요.",this@AuthenticationActivity)
+                            DialogManager.openDalog(mContext,"실명 인증에 실패했어요!","주민등록번호를 정확하게 입력한 후 \n다시 시도해 주세요.","확인",this@AuthenticationActivity)
                         }
                     }
 

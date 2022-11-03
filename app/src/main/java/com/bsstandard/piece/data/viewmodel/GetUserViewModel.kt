@@ -23,7 +23,7 @@ import kotlinx.coroutines.launch
  * fileName       : GetUserViewModel
  * author         : piecejhm
  * date           : 2022/09/06
- * description    :
+ * description    : 회원 정보 조회 ViewModel
  * ===========================================================
  * DATE              AUTHOR             NOTE
  * -----------------------------------------------------------
@@ -42,10 +42,6 @@ class GetUserViewModel(application: Application) : AndroidViewModel(application)
     @SuppressLint("StaticFieldLeak")
     private val context = getApplication<Application>().applicationContext
     private val memberArrayList: ArrayList<String> = arrayListOf()
-
-
-    private var baseAddress: String = ""
-    private var detailAddress: String = ""
 
     private val _liveAddress = MutableLiveData<String>()
     val liveAddress: LiveData<String> get() = _liveAddress
@@ -117,12 +113,14 @@ class GetUserViewModel(application: Application) : AndroidViewModel(application)
                     db.userDao().insert(newUser)
                 }
 
-                baseAddress = MemberDTO?.data?.baseAddress.toString()
-                detailAddress = MemberDTO?.data?.detailAddress.toString()
+                _liveAddress.value = MemberDTO?.data?.baseAddress.toString()
+                _liveAddress.postValue(MemberDTO?.data?.baseAddress.toString())
+
+                _liveDetailAddress.value = MemberDTO?.data?.detailAddress.toString()
+                _liveDetailAddress.postValue(MemberDTO?.data?.detailAddress.toString())
 
 
 
-                loadData()
                 LogUtil.logE("회원 정보 조회" + MemberDTO?.data?.name)
                 LogUtil.logE("member ci" + MemberDTO?.data?.ci)
                 LogUtil.logE("member di" + MemberDTO?.data?.di)
@@ -142,16 +140,6 @@ class GetUserViewModel(application: Application) : AndroidViewModel(application)
                 LogUtil.logE("회원 정보 조회 GET Error!" + throwable.message)
             }
         )
-    }
-
-    // 주소 정보 liveData - jhm 2022/09/08
-    fun loadData(){
-        LogUtil.logE("주소 liveData$baseAddress$detailAddress")
-        _liveAddress.value = baseAddress
-        _liveAddress.postValue(baseAddress)
-
-        _liveDetailAddress.value = detailAddress
-        _liveDetailAddress.postValue(detailAddress)
     }
 
 }

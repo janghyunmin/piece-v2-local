@@ -12,9 +12,9 @@
     <uses-permission android:name="android.permission.USE_FINGERPRINT" />
     <!-- WIFI 상태활용시 추가 -->
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <!-- WIFI 상태활용시 추가 -->
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT"/>
 
     <!-- android:name="com.bsstandard.piece.di.App" -->
     <application
@@ -26,9 +26,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TransparentStatusBar"
         android:usesCleartextTraffic="true">
-        <meta-data
-            android:name="com.google.firebase.messaging.default_notification_channel_id"
-            android:value="@string/default_notification_channel_id" />
 
         <activity
             android:name="com.bsstandard.piece.view.splash.SplashActivity"
@@ -39,6 +36,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".view.common.NetworkActivity"
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name=".view.common.LoginChkActivity"
@@ -69,14 +69,22 @@
         <activity android:name=".view.purchase.PurchaseActivity"
             android:screenOrientation="portrait"/>
 
+        <!-- exported : true - 다른 앱에서 Activity 를 시작할수 있으면 true / 그게 아니면 false -->
         <activity
             android:name=".view.webview.MagazineDetailWebView"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+        </activity>
+
 
         <activity
             android:name=".view.bookmark.BookMarkActivity"
             android:screenOrientation="portrait" />
-
 
         <!-- 내지갑 -->
         <!-- 나의 예치금 잔액 상세 -->
@@ -102,7 +110,18 @@
 
         <activity
             android:name=".view.webview.EventDetailWebView"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:exported="true">
+            <intent-filter
+                android:icon="@drawable/app_icon"
+                android:label="테스트">
+
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/plain" />
+
+            </intent-filter>
+        </activity>
 
         <activity
             android:name=".view.coupon.CouponActivity"
@@ -195,6 +214,22 @@
 
         <activity android:name=".view.authentication.AuthenticationActivity"
             android:screenOrientation="portrait"/>
+
+
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="@string/default_notification_channel_id" />
+
+        <service android:name=".firebase.MyFirebaseMessagingService"
+            android:stopWithTask="false"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/app_icon" />
 
     </application>
 

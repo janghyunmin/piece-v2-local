@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bsstandard.piece.R
 import com.bsstandard.piece.data.viewmodel.DepositHistoryViewModel
 import com.bsstandard.piece.databinding.DepositDetailItemBinding
 
@@ -39,6 +40,77 @@ class DepositHistoryAdapter(viewModel: DepositHistoryViewModel, val context: Con
 
     override fun onBindViewHolder(holder: DepositHistoryAdapter.ViewHolder, position: Int) {
         holder.bind(historyVm, position, listener)
+
+        when (historyVm.getDepositHistoryItem()[position].changeReason) {
+            // 예치금 입금 - jhm 2022/11/02
+            "MDR0101" -> {
+                holder.binding.changeAmount.setTextColor(context.getColorStateList(R.color.c_10cfc9))
+                holder.binding.remainAmount.visibility = View.VISIBLE
+            }
+            // 예치금 출금 - jhm 2022/11/02
+            "MDR0102" -> {
+                holder.binding.changeAmount.setTextColor(context.getColorStateList(R.color.c_131313))
+                holder.binding.remainAmount.visibility = View.VISIBLE
+            }
+            // 분배금 입금 - jhm 2022/11/02
+            "MDR0103" -> {
+                holder.binding.changeAmount.setTextColor(context.getColorStateList(R.color.c_10cfc9))
+                holder.binding.remainAmount.visibility = View.GONE
+            }
+            // 분배 수수료 - jhm 2022/11/02
+            "MDR0104" -> {
+                holder.binding.changeAmount.setTextColor(context.getColorStateList(R.color.c_131313))
+                holder.binding.remainAmount.visibility = View.GONE
+            }
+            // 분배금 입금 - jhm 2022/11/02
+            "MDR0105" -> {
+                holder.binding.changeAmount.setTextColor(context.getColorStateList(R.color.c_10cfc9))
+                holder.binding.remainAmount.visibility = View.GONE
+            }
+            // 조각 구매 - jhm 2022/11/02
+            "MDR0201" -> {
+                holder.binding.changeAmount.setTextColor(context.getColorStateList(R.color.c_131313))
+                holder.binding.remainAmount.visibility = View.GONE
+            }
+            // 구매 취소 - jhm 2022/11/02
+            "MDR0202" -> {
+                holder.binding.changeAmount.setTextColor(context.getColorStateList(R.color.c_10cfc9))
+                holder.binding.remainAmount.visibility = View.GONE
+            }
+            // 조각 판매 - jhm 2022/11/02
+            "MDR0203" -> {
+
+            }
+            // 부가가치세 - jhm 2022/11/02
+            "MDR0204" -> {
+                holder.binding.changeAmount.setTextColor(context.getColorStateList(R.color.c_10cfc9))
+                holder.binding.remainAmount.visibility = View.GONE
+            }
+
+            // 부가가치세 환급 - jhm 2022/11/02
+            "MDR0205" -> {
+                holder.binding.changeAmount.setTextColor(context.getColorStateList(R.color.c_10cfc9))
+                holder.binding.remainAmount.visibility = View.GONE
+            }
+
+            // 예치금 출금 신청 - jhm 2022/11/02
+            "MDR0301" -> {
+                holder.binding.changeAmount.setTextColor(context.getColorStateList(R.color.c_131313))
+                holder.binding.remainAmount.visibility = View.GONE
+            }
+
+            // 예치금 출금 완료  - jhm 2022/11/02
+            "MDR0306" -> {
+                holder.binding.changeAmount.setTextColor(context.getColorStateList(R.color.c_131313))
+                holder.binding.remainAmount.visibility = View.VISIBLE
+            }
+
+            // 예치금 출금 실패 - jhm 2022/11/02
+            "MDR0307" -> {
+                holder.binding.changeAmount.setTextColor(context.getColorStateList(R.color.c_10cfc9))
+                holder.binding.remainAmount.visibility = View.VISIBLE
+            }
+        }
     }
 
     interface OnItemClickListener {

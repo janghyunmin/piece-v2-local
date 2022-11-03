@@ -4,10 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
-            name="VersionViewModel"
-            type="com.bsstandard.piece.data.viewmodel.VersionViewModel"
-            />
+            name="activity"
+            type="com.bsstandard.piece.view.splash.SplashActivity" />
+
+        <variable
+            name="versionVm"
+            type="com.bsstandard.piece.data.viewmodel.AppVersionViewModel" />
     </data>
 
 
@@ -17,15 +21,22 @@
         android:background="@color/white"
         tools:context=".view.splash.SplashActivity">
 
-        <com.airbnb.lottie.LottieAnimationView
-            android:id="@+id/splash_animation_view"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="100">
 
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/splash_animation_view"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintWidth_percent="100" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 </layout>

@@ -1,6 +1,8 @@
 package com.bsstandard.piece.view.bank
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
 import android.os.Build
@@ -14,7 +16,9 @@ import com.bsstandard.piece.base.BaseActivity
 import com.bsstandard.piece.data.datasource.shared.PrefsHelper
 import com.bsstandard.piece.data.viewmodel.AccountViewModel
 import com.bsstandard.piece.databinding.ActivityAccountSuccessBinding
+import com.bsstandard.piece.view.common.NetworkActivity
 import com.bsstandard.piece.widget.utils.LogUtil
+import com.bsstandard.piece.widget.utils.NetworkConnection
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
@@ -37,7 +41,8 @@ import io.reactivex.disposables.Disposable
 
 
 @AndroidEntryPoint
-class BankRegisterSuccessActivity : BaseActivity<ActivityAccountSuccessBinding>(R.layout.activity_account_success){
+class BankRegisterSuccessActivity :
+    BaseActivity<ActivityAccountSuccessBinding>(R.layout.activity_account_success) {
     private lateinit var mavm: AccountViewModel // 회원 계좌 정보 조회 ViewModel - jhm 2022/10/04
     private var disposable: Disposable? = null
 
@@ -54,6 +59,7 @@ class BankRegisterSuccessActivity : BaseActivity<ActivityAccountSuccessBinding>(
         const val TAG: String = "BankRegisterSuccessActivity"
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -65,146 +71,156 @@ class BankRegisterSuccessActivity : BaseActivity<ActivityAccountSuccessBinding>(
             setStatusBarBgColor("#ffffff") // 상태바 배경색상 설정
             setNaviBarIconColor(true) // 네비게이션 true : 검정색
             setNaviBarBgColor("#ffffff") // 네비게이션 배경색
+
+            mavm = ViewModelProvider(this@BankRegisterSuccessActivity)[AccountViewModel::class.java]
+            binding.memberAccountVm = mavm
+
         }
 
+        val networkConnection = NetworkConnection(applicationContext)
+        networkConnection.observe(this) { isConnected -> // 인터넷 연결되어있음 - jhm 2022/11/02
+            if (isConnected) {
+                Glide.with(mContext).load(R.raw.withdraw_complete_lopping)
+                    .into(binding.withdrawSuccessLottie)
 
-        mavm = ViewModelProvider(this@BankRegisterSuccessActivity)[AccountViewModel::class.java]
-        binding.memberAccountVm = mavm
-
-        Glide.with(mContext).load(R.raw.withdraw_complete_lopping).into(binding.withdrawSuccessLottie)
-
-        // 계좌 정보 - jhm 2022/10/04
-        mavm.getAccount(accessToken, deviceId, memberId)
-        mavm.accountResponse.observe(this@BankRegisterSuccessActivity, Observer {
-            try {
-                var statusIcon: String = ""
-                when(it.data.bankCode) {
-                    "001" -> {
-                        LogUtil.logE("한국 은행")
-                    }
-                    "002" -> {
-                        LogUtil.logE("KDB 산업은행")
-                        statusIcon = getURLForResource(R.drawable.bank02)
-                    }
-                    "003" -> {
-                        LogUtil.logE("기업은행")
-                        statusIcon = getURLForResource(R.drawable.bank03)
-                    }
-                    "004" -> {
-                        LogUtil.logE("국민은행")
-                        statusIcon = getURLForResource(R.drawable.bank04)
-                    }
-                    "005" -> {
-                        LogUtil.logE("KEB 하나은행")
-                        statusIcon = getURLForResource(R.drawable.bank05)
-                    }
-                    "007" -> {
-                        LogUtil.logE("수협은행")
-                        statusIcon = getURLForResource(R.drawable.bank07)
-                    }
-                    "008" -> {
-                        LogUtil.logE("수출입 은행")
-                    }
-                    "011" -> {
-                        LogUtil.logE("NH농협은행")
-                        statusIcon = getURLForResource(R.drawable.bank11)
-                    }
+                // 계좌 정보 - jhm 2022/10/04
+                mavm.getAccount(accessToken, deviceId, memberId)
+                mavm.accountResponse.observe(this@BankRegisterSuccessActivity, Observer {
+                    try {
+                        var statusIcon: String = ""
+                        when (it.data.bankCode) {
+                            "001" -> {
+                                LogUtil.logE("한국 은행")
+                            }
+                            "002" -> {
+                                LogUtil.logE("KDB 산업은행")
+                                statusIcon = getURLForResource(R.drawable.bank02)
+                            }
+                            "003" -> {
+                                LogUtil.logE("기업은행")
+                                statusIcon = getURLForResource(R.drawable.bank03)
+                            }
+                            "004" -> {
+                                LogUtil.logE("국민은행")
+                                statusIcon = getURLForResource(R.drawable.bank04)
+                            }
+                            "005" -> {
+                                LogUtil.logE("KEB 하나은행")
+                                statusIcon = getURLForResource(R.drawable.bank05)
+                            }
+                            "007" -> {
+                                LogUtil.logE("수협은행")
+                                statusIcon = getURLForResource(R.drawable.bank07)
+                            }
+                            "008" -> {
+                                LogUtil.logE("수출입 은행")
+                            }
+                            "011" -> {
+                                LogUtil.logE("NH농협은행")
+                                statusIcon = getURLForResource(R.drawable.bank11)
+                            }
 //                    "012" -> {
 //                        LogUtil.logE("지역 농축협")
 //                    }
-                    "020" -> {
-                        LogUtil.logE("우리은행")
-                        statusIcon = getURLForResource(R.drawable.bank20)
-                    }
-                    "021" -> {
-                        LogUtil.logE("외환은행")
-                        statusIcon = getURLForResource(R.drawable.bank21)
-                    }
-                    "023" -> {
-                        LogUtil.logE("SC제일은행")
-                        statusIcon = getURLForResource(R.drawable.bank23)
-                    }
-                    "026" -> {
-                        LogUtil.logE("신한은행")
-                        statusIcon = getURLForResource(R.drawable.bank26)
-                    }
-                    "027" -> {
-                        LogUtil.logE("한국씨티은행")
-                        statusIcon = getURLForResource(R.drawable.bank27)
-                    }
-                    "031" -> {
-                        LogUtil.logE("대구은행")
-                        statusIcon = getURLForResource(R.drawable.bank31)
-                    }
-                    "032" -> {
-                        LogUtil.logE("부산은행")
-                        statusIcon = getURLForResource(R.drawable.bank32)
-                    }
-                    "034" -> {
-                        LogUtil.logE("광주은행")
-                        statusIcon = getURLForResource(R.drawable.bank34)
-                    }
-                    "035" -> {
-                        LogUtil.logE("제주은행")
-                        statusIcon = getURLForResource(R.drawable.bank35)
-                    }
-                    "037" -> {
-                        LogUtil.logE("전북은행")
-                        statusIcon = getURLForResource(R.drawable.bank37)
-                    }
-                    "039" -> {
-                        LogUtil.logE("경남은행")
-                        statusIcon = getURLForResource(R.drawable.bank39)
-                    }
-                    "045" -> {
-                        LogUtil.logE("새마을 금고")
-                        statusIcon = getURLForResource(R.drawable.bank45)
-                    }
-                    "047" -> {
-                        LogUtil.logE("신협")
-                        statusIcon = getURLForResource(R.drawable.bank47)
-                    }
-                    "064" -> {
-                        LogUtil.logE("산림조합중앙회")
-                        statusIcon = getURLForResource(R.drawable.bank64)
-                    }
-                    "071" -> {
-                        LogUtil.logE("우체국")
-                        statusIcon = getURLForResource(R.drawable.bank71)
-                    }
-                    "089" -> {
-                        LogUtil.logE("케이뱅크")
-                        statusIcon = getURLForResource(R.drawable.bank89)
-                    }
-                    "090" -> {
-                        LogUtil.logE("카카오 뱅크")
-                        statusIcon = getURLForResource(R.drawable.bank90)
-                    }
-                    "092" -> {
-                        LogUtil.logE("토스뱅크")
-                        statusIcon = getURLForResource(R.drawable.bank92)
-                    }
+                            "020" -> {
+                                LogUtil.logE("우리은행")
+                                statusIcon = getURLForResource(R.drawable.bank20)
+                            }
+                            "021" -> {
+                                LogUtil.logE("외환은행")
+                                statusIcon = getURLForResource(R.drawable.bank21)
+                            }
+                            "023" -> {
+                                LogUtil.logE("SC제일은행")
+                                statusIcon = getURLForResource(R.drawable.bank23)
+                            }
+                            "026" -> {
+                                LogUtil.logE("신한은행")
+                                statusIcon = getURLForResource(R.drawable.bank26)
+                            }
+                            "027" -> {
+                                LogUtil.logE("한국씨티은행")
+                                statusIcon = getURLForResource(R.drawable.bank27)
+                            }
+                            "031" -> {
+                                LogUtil.logE("대구은행")
+                                statusIcon = getURLForResource(R.drawable.bank31)
+                            }
+                            "032" -> {
+                                LogUtil.logE("부산은행")
+                                statusIcon = getURLForResource(R.drawable.bank32)
+                            }
+                            "034" -> {
+                                LogUtil.logE("광주은행")
+                                statusIcon = getURLForResource(R.drawable.bank34)
+                            }
+                            "035" -> {
+                                LogUtil.logE("제주은행")
+                                statusIcon = getURLForResource(R.drawable.bank35)
+                            }
+                            "037" -> {
+                                LogUtil.logE("전북은행")
+                                statusIcon = getURLForResource(R.drawable.bank37)
+                            }
+                            "039" -> {
+                                LogUtil.logE("경남은행")
+                                statusIcon = getURLForResource(R.drawable.bank39)
+                            }
+                            "045" -> {
+                                LogUtil.logE("새마을 금고")
+                                statusIcon = getURLForResource(R.drawable.bank45)
+                            }
+                            "047" -> {
+                                LogUtil.logE("신협")
+                                statusIcon = getURLForResource(R.drawable.bank47)
+                            }
+                            "064" -> {
+                                LogUtil.logE("산림조합중앙회")
+                                statusIcon = getURLForResource(R.drawable.bank64)
+                            }
+                            "071" -> {
+                                LogUtil.logE("우체국")
+                                statusIcon = getURLForResource(R.drawable.bank71)
+                            }
+                            "089" -> {
+                                LogUtil.logE("케이뱅크")
+                                statusIcon = getURLForResource(R.drawable.bank89)
+                            }
+                            "090" -> {
+                                LogUtil.logE("카카오 뱅크")
+                                statusIcon = getURLForResource(R.drawable.bank90)
+                            }
+                            "092" -> {
+                                LogUtil.logE("토스뱅크")
+                                statusIcon = getURLForResource(R.drawable.bank92)
+                            }
 
+                        }
+                        var requestOptions = RequestOptions()
+                        requestOptions = requestOptions.transforms(CenterCrop(), RoundedCorners(30))
+                        Glide.with(mContext)
+                            .load(statusIcon)
+                            .apply(requestOptions)
+                            .transition(DrawableTransitionOptions.withCrossFade())
+                            .into(binding.bankIcon)
+
+                        bankName = it.data.bankName
+                        binding.accountNumber.text = it.data.bankName + " " + it.data.accountNo
+                    } catch (e: Exception) {
+                        LogUtil.logE("회원 계좌 정보 조회 Error ! ${e.printStackTrace()}")
+                    }
+                })
+
+                // 확인 클릭시 Activity 종료 - jhm 2022/10/05
+                binding.confirmBtn.setOnClickListener {
+                    finish()
                 }
-                var requestOptions = RequestOptions()
-                requestOptions = requestOptions.transforms(CenterCrop(), RoundedCorners(30))
-                Glide.with(mContext)
-                    .load(statusIcon)
-                    .apply(requestOptions)
-                    .transition(DrawableTransitionOptions.withCrossFade())
-                    .into(binding.bankIcon)
-
-                bankName = it.data.bankName
-                binding.accountNumber.text = it.data.bankName + " " + it.data.accountNo
-            } catch (e: Exception) {
-                LogUtil.logE("회원 계좌 정보 조회 Error ! ${e.printStackTrace()}")
+            } else {
+                val intent = Intent(applicationContext, NetworkActivity::class.java)
+                startActivity(intent)
             }
-        })
-
-        // 확인 클릭시 Activity 종료 - jhm 2022/10/05
-        binding.confirmBtn.setOnClickListener {
-            finish()
         }
+
 
     }
 

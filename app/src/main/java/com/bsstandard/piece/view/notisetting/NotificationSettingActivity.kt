@@ -1,6 +1,7 @@
 package com.bsstandard.piece.view.notisetting
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
@@ -19,7 +20,9 @@ import com.bsstandard.piece.data.viewmodel.ConsentViewModel
 import com.bsstandard.piece.data.viewmodel.GetUserViewModel
 import com.bsstandard.piece.data.viewmodel.MemberPutViewModel
 import com.bsstandard.piece.databinding.ActivityNotisettingBinding
+import com.bsstandard.piece.view.common.NetworkActivity
 import com.bsstandard.piece.widget.utils.LogUtil
+import com.bsstandard.piece.widget.utils.NetworkConnection
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 
@@ -40,7 +43,7 @@ class NotificationSettingActivity :
     BaseActivity<ActivityNotisettingBinding>(R.layout.activity_notisetting) {
     val mContext: Context = this@NotificationSettingActivity
     private val mv by viewModels<GetUserViewModel>() // 회원 정보 조회 - jhm 2022/09/21
-    
+
     private var memberModifyModel: MemberModifyModel? = null // 회원 정보 변경시 필요 모델 - jhm 2022/09/21
     private val memberPutViewModel by viewModels<MemberPutViewModel>() // 회원 정보 변경 - jhm 2022/09/21
     private val consentViewModel by viewModels<ConsentViewModel>() // 회원 정보 변경시 필요 consentViewModel - jhm 2022/09/21
@@ -70,8 +73,6 @@ class NotificationSettingActivity :
 
             // 내정보 조회 ViewModel API - jhm 2022/09/21
             memberVm = mv
-            
-            
             mv.getUserData()
 
             // 회원 정보 변경 ViewModel - jhm 2022/09/21
@@ -83,69 +84,80 @@ class NotificationSettingActivity :
 
         }
 
-        LogUtil.logE("assetNotification : $assetNotification")
-        LogUtil.logE("portfolioNotification : $portfolioNotification")
-        LogUtil.logE("marketingSms : $marketingSms")
-        LogUtil.logE("marketingApp : $marketingApp")
+
+        val networkConnection = NetworkConnection(applicationContext)
+        networkConnection.observe(this) { isConnected -> // 인터넷 연결되어있음 - jhm 2022/11/02
+            if (isConnected) {
+
+                LogUtil.logE("assetNotification : $assetNotification")
+                LogUtil.logE("portfolioNotification : $portfolioNotification")
+                LogUtil.logE("marketingSms : $marketingSms")
+                LogUtil.logE("marketingApp : $marketingApp")
 
 
-        isChecked()
+                isChecked()
 
-        // 자산 변동 switch - jhm 2022/09/21
-        binding.assetNotificationSwitch.setOnCheckedChangeListener { _, isChecked ->
-            LogUtil.logE("assetNotificationSwitch : $isChecked")
-            if(isChecked) {
-                PrefsHelper.write("assetNotification","Y")
-                assetNotification = "Y"
+                // 자산 변동 switch - jhm 2022/09/21
+                binding.assetNotificationSwitch.setOnCheckedChangeListener { _, isChecked ->
+                    LogUtil.logE("assetNotificationSwitch : $isChecked")
+                    if (isChecked) {
+                        PrefsHelper.write("assetNotification", "Y")
+                        assetNotification = "Y"
+                    } else {
+                        PrefsHelper.write("assetNotification", "N")
+                        assetNotification = "N"
+                    }
+                    isChecked()
+                    getModelData()
+                }
+                // 포트폴리오 switch - jhm 2022/09/21
+                binding.portfolioNotificationSwitch.setOnCheckedChangeListener { _, isChecked ->
+                    LogUtil.logE("portfolioNotificationSwitch : $isChecked")
+                    if (isChecked) {
+                        PrefsHelper.write("portfolioNotification", "Y")
+                        portfolioNotification = "Y"
+                    } else {
+                        PrefsHelper.write("portfolioNotification", "N")
+                        portfolioNotification = "N"
+                    }
+                    isChecked()
+                    getModelData()
+                }
+                // 문자 알림 switch - jhm 2022/09/21
+                binding.marketingSmsSwitch.setOnCheckedChangeListener { _, isChecked ->
+                    LogUtil.logE("marketingSmsSwitch : $isChecked")
+                    if (isChecked) {
+                        PrefsHelper.write("marketingSms", "Y")
+                        marketingSms = "Y"
+                    } else {
+                        PrefsHelper.write("marketingSms", "N")
+                        marketingSms = "N"
+                    }
+                    isChecked()
+                    getModelData()
+                }
+                // 앱 알림 switch - jhm 2022/09/21
+                binding.marketingAppSwitch.setOnCheckedChangeListener { _, isChecked ->
+                    LogUtil.logE("marketingAppSwitch : $isChecked")
+                    if (isChecked) {
+                        PrefsHelper.write("marketingApp", "Y")
+                        marketingApp = "Y"
+                    } else {
+                        PrefsHelper.write("marketingApp", "N")
+                        marketingApp = "N"
+                    }
+                    isChecked()
+                    getModelData()
+                }
             } else {
-                PrefsHelper.write("assetNotification","N")
-                assetNotification = "N"
+                val intent = Intent(applicationContext, NetworkActivity::class.java)
+                startActivity(intent)
             }
-            isChecked()
-            getModelData()
         }
-        // 포트폴리오 switch - jhm 2022/09/21
-        binding.portfolioNotificationSwitch.setOnCheckedChangeListener { _, isChecked ->
-            LogUtil.logE("portfolioNotificationSwitch : $isChecked")
-            if(isChecked) {
-                PrefsHelper.write("portfolioNotification","Y")
-                portfolioNotification = "Y"
-            } else {
-                PrefsHelper.write("portfolioNotification","N")
-                portfolioNotification = "N"
-            }
-            isChecked()
-            getModelData()
-        }
-        // 문자 알림 switch - jhm 2022/09/21
-        binding.marketingSmsSwitch.setOnCheckedChangeListener { _, isChecked ->
-            LogUtil.logE("marketingSmsSwitch : $isChecked")
-            if(isChecked) {
-                PrefsHelper.write("marketingSms","Y")
-                marketingSms = "Y"
-            } else {
-                PrefsHelper.write("marketingSms","N")
-                marketingSms = "N"
-            }
-            isChecked()
-            getModelData()
-        }
-        // 앱 알림 switch - jhm 2022/09/21
-        binding.marketingAppSwitch.setOnCheckedChangeListener { _, isChecked ->
-            LogUtil.logE("marketingAppSwitch : $isChecked")
-            if(isChecked) {
-                PrefsHelper.write("marketingApp","Y")
-                marketingApp = "Y"
-            } else {
-                PrefsHelper.write("marketingApp","N")
-                marketingApp = "N"
-            }
-            isChecked()
-            getModelData()
-        }
+
+
+
     }
-
-
 
 
     // 알림 설정 Y/N - jhm 2022/09/21
@@ -220,7 +232,7 @@ class NotificationSettingActivity :
         LogUtil.logE("변경됨? : $assetNotification")
 
         val notification = NotificationModel(
-            PrefsHelper.read("memberId",""),
+            PrefsHelper.read("memberId", ""),
             assetNotification,
             portfolioNotification,
             marketingSms,
@@ -257,8 +269,6 @@ class NotificationSettingActivity :
 
             })
     }
-
-
 
 
     /** Util start **/

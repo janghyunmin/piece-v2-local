@@ -6,6 +6,7 @@ buildscript {
         maven(url = "https://maven.fabric.io/public")
         maven(url = "https://dl.google.com/dl/android/maven2")
         maven(url = "https://oss.jfrog.org/libs-snapshot")
+
         mavenCentral()
 
     }

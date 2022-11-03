@@ -19,6 +19,10 @@
             type="com.bsstandard.piece.data.viewmodel.PurchaseViewModel" />
 
         <variable
+            name="memberVm"
+            type="com.bsstandard.piece.data.viewmodel.GetUserViewModel" />
+
+        <variable
             name="pos"
             type="Integer" />
 
@@ -796,7 +800,7 @@
             app:layout_constraintBottom_toBottomOf="parent">
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/portfolio_btn"
+                android:id="@+id/emailBtn"
                 android:layout_width="0dp"
                 android:layout_height="48dp"
                 android:layout_marginStart="10dp"
@@ -811,11 +815,11 @@
                 android:visibility="visible"
                 app:fontFamily="@font/pretendard_bold"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toRightOf="@+id/cancleBtn"
+                app:layout_constraintLeft_toRightOf="@+id/postBtn"
                 app:layout_constraintRight_toRightOf="parent" />
 
             <TextView
-                android:id="@+id/cancleBtn"
+                android:id="@+id/postBtn"
                 android:layout_width="0dp"
                 android:layout_height="48dp"
                 android:layout_marginStart="16dp"
@@ -830,7 +834,7 @@
                 app:fontFamily="@font/pretendard_bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toLeftOf="@+id/portfolio_btn" />
+                app:layout_constraintRight_toLeftOf="@+id/emailBtn" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
         <!-- Bottom Button Layout End -->

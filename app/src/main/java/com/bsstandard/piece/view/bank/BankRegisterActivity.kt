@@ -10,7 +10,6 @@ import android.os.Bundle
 import android.view.View
 import android.view.WindowInsetsController
 import androidx.activity.viewModels
-import androidx.annotation.RequiresApi
 import androidx.lifecycle.Observer
 import com.bsstandard.piece.R
 import com.bsstandard.piece.base.BaseActivity
@@ -21,7 +20,11 @@ import com.bsstandard.piece.data.viewmodel.AccountRegisterViewModel
 import com.bsstandard.piece.databinding.ActivityRegisterBinding
 import com.bsstandard.piece.di.hilt.ApiModule
 import com.bsstandard.piece.retrofit.RetrofitService
-import com.bsstandard.piece.widget.utils.*
+import com.bsstandard.piece.view.common.NetworkActivity
+import com.bsstandard.piece.widget.utils.DialogManager
+import com.bsstandard.piece.widget.utils.KeyboardVisibilityUtils
+import com.bsstandard.piece.widget.utils.LogUtil
+import com.bsstandard.piece.widget.utils.NetworkConnection
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
@@ -67,7 +70,6 @@ class BankRegisterActivity : BaseActivity<ActivityRegisterBinding>(R.layout.acti
     private val vm by viewModels<AccountRegisterViewModel>()
     var mUserInputAccount: String? = null
 
-    var customDialog: CustomDialog? = null
 
 
     companion object {
@@ -79,24 +81,6 @@ class BankRegisterActivity : BaseActivity<ActivityRegisterBinding>(R.layout.acti
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        keyboardVisibilityUtils =
-            KeyboardVisibilityUtils(window, onShowKeyboard = { keyboardHeight ->
-                sv_root.run {
-                    smoothScrollTo(scrollX, scrollY + keyboardHeight)
-                }
-            })
-
-
-        val intent = intent
-        accountBankCode = intent.extras!!.getString("accountBankCode")
-        bankName = intent.extras!!.getString("bankName")
-        userName = PrefsHelper.read("name", "")
-
-        LogUtil.logE("accountBankCode $accountBankCode")
-        LogUtil.logE("bankName $bankName")
-
-
-
         binding.apply {
             binding.lifecycleOwner = this@BankRegisterActivity
             // UI Setting 최종 - jhm 2022/09/14
@@ -107,226 +91,234 @@ class BankRegisterActivity : BaseActivity<ActivityRegisterBinding>(R.layout.acti
 
             registerVm = vm
 
-            val accountNoObserver = Observer {
-                InputAccountNo: String ->
-                mUserInputAccount = InputAccountNo
+        }
 
-            }
 
-            vm.getAccountNum().observe(this@BankRegisterActivity, accountNoObserver)
-            vm.getAccountNum().observe(this@BankRegisterActivity, Observer {
-                mUserInputAccount = it
-                LogUtil.logE("입력한 계좌번호 : $mUserInputAccount")
 
-                if (binding.accountNumEdit.text.toString().isEmpty()) {
-                    LogUtil.logE("계좌번호 입력값 없음")
-                    binding.confirmBtn.isSelected = false
-                } else {
-                    LogUtil.logE("계좌번호 입력값 있음")
-                    binding.confirmBtn.isSelected = true
+        val networkConnection = NetworkConnection(applicationContext)
+        networkConnection.observe(this) { isConnected -> // 인터넷 연결되어있음 - jhm 2022/11/02
+            if (isConnected) {
+                keyboardVisibilityUtils =
+                    KeyboardVisibilityUtils(window, onShowKeyboard = { keyboardHeight ->
+                        sv_root.run {
+                            smoothScrollTo(scrollX, scrollY + keyboardHeight)
+                        }
+                    })
+                val intent = intent
+                accountBankCode = intent.extras!!.getString("accountBankCode")
+                bankName = intent.extras!!.getString("bankName")
+                userName = PrefsHelper.read("name", "")
 
-                    binding.confirmBtn.setOnClickListener {
-                        LogUtil.logE("회원 출금 계좌 등록(변경) 요청 실행.. ")
+                LogUtil.logE("accountBankCode $accountBankCode")
+                LogUtil.logE("bankName $bankName")
 
-                        val customDialogListener: CustomDialogListener =
-                            object : CustomDialogListener {
-                                @RequiresApi(Build.VERSION_CODES.R)
-                                override fun onOkButtonClicked() {
-                                    LogUtil.logE("계좌 확인 실패 다시시도하기 OnClick..")
-                                    customDialog?.dismiss()
+                val accountNoObserver = Observer {
+                        InputAccountNo: String ->
+                    mUserInputAccount = InputAccountNo
+
+                }
+
+                vm.getAccountNum().observe(this@BankRegisterActivity, accountNoObserver)
+                vm.getAccountNum().observe(this@BankRegisterActivity, Observer {
+                    mUserInputAccount = it
+                    LogUtil.logE("입력한 계좌번호 : $mUserInputAccount")
+
+                    if (binding.accountNumEdit.text.toString().isEmpty()) {
+                        LogUtil.logE("계좌번호 입력값 없음")
+                        binding.confirmBtn.isSelected = false
+                    } else {
+                        LogUtil.logE("계좌번호 입력값 있음")
+                        binding.confirmBtn.isSelected = true
+
+                        binding.confirmBtn.setOnClickListener {
+                            LogUtil.logE("회원 출금 계좌 등록(변경) 요청 실행.. ")
+
+                            response?.postMemberAccount(
+                                "Bearer $accessToken",
+                                deviceId,
+                                memberId,
+                                memberBankAccountModel = MemberBankAccountModel(accountBankCode,binding.accountNumEdit.text.toString())
+                            )?.enqueue(object : Callback<BaseDTO> {
+                                override fun onResponse(call: Call<BaseDTO>, response: Response<BaseDTO>) {
+                                    try{
+                                        LogUtil.logE("계좌 등록(변경) 성공..")
+
+                                        // 계좌 변경 완료 페이지로 이동 - jhm 2022/10/05
+                                        val intent = Intent(mContext,BankRegisterSuccessActivity::class.java)
+                                        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                                        startActivity(intent)
+                                        finish()
+
+                                    } catch (ex: Exception) {
+                                        ex.printStackTrace()
+                                    }
                                 }
 
-                                override fun onCancelButtonClicked() {
-                                    LogUtil.logE("취소 OnClick..")
+                                override fun onFailure(call: Call<BaseDTO>, t: Throwable) {
+                                    LogUtil.logE("계좌 등록(변경) 실패.." + t.printStackTrace())
+
+                                    DialogManager.openNotGoDalog(mContext,"계좌 확인에 실패했어요.","정보를 다시 확인해주세요.")
                                 }
-                            }
-
-                        val customNoListener: CustomDialogPassCodeListener =
-                            object : CustomDialogPassCodeListener {
-                                @RequiresApi(Build.VERSION_CODES.R)
-                                override fun onCancleButtonClicked() {
-                                    TODO("Not yet implemented")
-                                }
-
-                                override fun onRetryPassCodeButtonClicked() {
-                                    TODO("Not yet implemented")
-                                }
-                            }
+                            })
 
 
-                        response?.postMemberAccount(
-                            "Bearer $accessToken",
-                            deviceId,
-                            memberId,
-                            memberBankAccountModel = MemberBankAccountModel(accountBankCode,binding.accountNumEdit.text.toString())
-                        )?.enqueue(object : Callback<BaseDTO> {
-                            override fun onResponse(call: Call<BaseDTO>, response: Response<BaseDTO>) {
-                                try{
-                                    LogUtil.logE("계좌 등록(변경) 성공..")
-
-                                    // 계좌 변경 완료 페이지로 이동 - jhm 2022/10/05
-                                    val intent = Intent(mContext,BankRegisterSuccessActivity::class.java)
-                                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                                    startActivity(intent)
-                                    finish()
-
-                                } catch (ex: Exception) {
-                                    ex.printStackTrace()
-                                }
-                            }
-
-                            override fun onFailure(call: Call<BaseDTO>, t: Throwable) {
-                                LogUtil.logE("계좌 등록(변경) 실패.." + t.printStackTrace())
-
-                                customDialog = CustomDialog(mContext,"account_fail",customDialogListener,customNoListener)
-                                customDialog!!.show()
-                            }
-                        })
+                        }
+                    }
+                })
 
 
+                binding.bankTitle.text = bankName
+                binding.name.text = userName
+
+
+                // 계좌번호 EditText 클릭시 부모 title 색상 변경 - jhm 2022/10/05
+                binding.accountNumEdit.setOnFocusChangeListener { v, hasFocus ->
+                    if (hasFocus) {
+                        binding.accountNumText.setTextColor(mContext.getColor(R.color.c_4a4d55))
+                    } else {
+                        binding.accountNumText.setTextColor(mContext.getColor(R.color.c_b8bcc8))
                     }
                 }
-            })
-
-        }
-
-        binding.bankTitle.text = bankName
-        binding.name.text = userName
 
 
-        // 계좌번호 EditText 클릭시 부모 title 색상 변경 - jhm 2022/10/05
-        binding.accountNumEdit.setOnFocusChangeListener { v, hasFocus ->
-            if (hasFocus) {
-                binding.accountNumText.setTextColor(mContext.getColor(R.color.c_4a4d55))
+
+                try {
+                    var statusIcon: String = ""
+                    LogUtil.logE("여기 $accountBankCode")
+                    when (accountBankCode) {
+                        "001" -> {
+                            LogUtil.logE("한국 은행")
+                        }
+                        "002" -> {
+                            LogUtil.logE("KDB 산업은행")
+                            statusIcon = getURLForResource(R.drawable.bank02)
+                        }
+                        "003" -> {
+                            LogUtil.logE("기업은행")
+                            statusIcon = getURLForResource(R.drawable.bank03)
+                        }
+                        "004" -> {
+                            LogUtil.logE("국민은행")
+                            statusIcon = getURLForResource(R.drawable.bank04)
+                        }
+                        "005" -> {
+                            LogUtil.logE("KEB 하나은행")
+                            statusIcon = getURLForResource(R.drawable.bank05)
+                        }
+                        "007" -> {
+                            LogUtil.logE("수협은행")
+                            statusIcon = getURLForResource(R.drawable.bank07)
+                        }
+                        "008" -> {
+                            LogUtil.logE("수출입 은행")
+                        }
+                        "011" -> {
+                            LogUtil.logE("NH농협은행")
+                            statusIcon = getURLForResource(R.drawable.bank11)
+                        }
+                        "020" -> {
+                            LogUtil.logE("우리은행")
+                            statusIcon = getURLForResource(R.drawable.bank20)
+                        }
+                        "023" -> {
+                            LogUtil.logE("SC제일은행")
+                            statusIcon = getURLForResource(R.drawable.bank23)
+                        }
+                        "026" -> {
+                            LogUtil.logE("신한은행")
+                            statusIcon = getURLForResource(R.drawable.bank26)
+                        }
+                        "027" -> {
+                            LogUtil.logE("한국씨티은행")
+                            statusIcon = getURLForResource(R.drawable.bank27)
+                        }
+                        "031" -> {
+                            LogUtil.logE("대구은행")
+                            statusIcon = getURLForResource(R.drawable.bank31)
+                        }
+                        "032" -> {
+                            LogUtil.logE("부산은행")
+                            statusIcon = getURLForResource(R.drawable.bank32)
+                        }
+                        "034" -> {
+                            LogUtil.logE("광주은행")
+                            statusIcon = getURLForResource(R.drawable.bank34)
+                        }
+                        "035" -> {
+                            LogUtil.logE("제주은행")
+                            statusIcon = getURLForResource(R.drawable.bank35)
+                        }
+                        "037" -> {
+                            LogUtil.logE("전북은행")
+                            statusIcon = getURLForResource(R.drawable.bank37)
+                        }
+                        "039" -> {
+                            LogUtil.logE("경남은행")
+                            statusIcon = getURLForResource(R.drawable.bank39)
+                        }
+                        "045" -> {
+                            LogUtil.logE("새마을 금고")
+                            statusIcon = getURLForResource(R.drawable.bank45)
+                        }
+                        "047" -> {
+                            LogUtil.logE("신협")
+                            statusIcon = getURLForResource(R.drawable.bank47)
+                        }
+                        "064" -> {
+                            LogUtil.logE("산림조합중앙회")
+                            statusIcon = getURLForResource(R.drawable.bank64)
+                        }
+                        "071" -> {
+                            LogUtil.logE("우체국")
+                            statusIcon = getURLForResource(R.drawable.bank71)
+                        }
+                        "089" -> {
+                            LogUtil.logE("케이뱅크")
+                            statusIcon = getURLForResource(R.drawable.bank89)
+                        }
+                        "090" -> {
+                            LogUtil.logE("카카오 뱅크")
+                            statusIcon = getURLForResource(R.drawable.bank90)
+                        }
+                        "092" -> {
+                            LogUtil.logE("토스뱅크")
+                            statusIcon = getURLForResource(R.drawable.bank92)
+                        }
+                    }
+                    var requestOptions = RequestOptions()
+                    requestOptions = requestOptions.transforms(CenterCrop(), RoundedCorners(30))
+                    Glide.with(mContext)
+                        .load(statusIcon)
+                        .apply(requestOptions)
+                        .transition(DrawableTransitionOptions.withCrossFade())
+                        .into(binding.bankIcon)
+
+                } catch (ex: Exception) {
+                    ex.printStackTrace()
+                    LogUtil.logE("은행 이미지 불러오기 실패..")
+                }
+
+
+                // 변경 버튼 OnClick - jhm 2022/10/05
+                binding.selectBtn.setOnClickListener {
+                    LogUtil.logE("변경 버튼 OnClick..")
+                    finish()
+                }
+
             } else {
-                binding.accountNumText.setTextColor(mContext.getColor(R.color.c_b8bcc8))
+                val intent = Intent(applicationContext, NetworkActivity::class.java)
+                startActivity(intent)
             }
         }
 
 
 
-        try {
-            var statusIcon: String = ""
-            LogUtil.logE("여기 $accountBankCode")
-            when (accountBankCode) {
-                "001" -> {
-                    LogUtil.logE("한국 은행")
-                }
-                "002" -> {
-                    LogUtil.logE("KDB 산업은행")
-                    statusIcon = getURLForResource(R.drawable.bank02)
-                }
-                "003" -> {
-                    LogUtil.logE("기업은행")
-                    statusIcon = getURLForResource(R.drawable.bank03)
-                }
-                "004" -> {
-                    LogUtil.logE("국민은행")
-                    statusIcon = getURLForResource(R.drawable.bank04)
-                }
-                "005" -> {
-                    LogUtil.logE("KEB 하나은행")
-                    statusIcon = getURLForResource(R.drawable.bank05)
-                }
-                "007" -> {
-                    LogUtil.logE("수협은행")
-                    statusIcon = getURLForResource(R.drawable.bank07)
-                }
-                "008" -> {
-                    LogUtil.logE("수출입 은행")
-                }
-                "011" -> {
-                    LogUtil.logE("NH농협은행")
-                    statusIcon = getURLForResource(R.drawable.bank11)
-                }
-                "020" -> {
-                    LogUtil.logE("우리은행")
-                    statusIcon = getURLForResource(R.drawable.bank20)
-                }
-                "023" -> {
-                    LogUtil.logE("SC제일은행")
-                    statusIcon = getURLForResource(R.drawable.bank23)
-                }
-                "026" -> {
-                    LogUtil.logE("신한은행")
-                    statusIcon = getURLForResource(R.drawable.bank26)
-                }
-                "027" -> {
-                    LogUtil.logE("한국씨티은행")
-                    statusIcon = getURLForResource(R.drawable.bank27)
-                }
-                "031" -> {
-                    LogUtil.logE("대구은행")
-                    statusIcon = getURLForResource(R.drawable.bank31)
-                }
-                "032" -> {
-                    LogUtil.logE("부산은행")
-                    statusIcon = getURLForResource(R.drawable.bank32)
-                }
-                "034" -> {
-                    LogUtil.logE("광주은행")
-                    statusIcon = getURLForResource(R.drawable.bank34)
-                }
-                "035" -> {
-                    LogUtil.logE("제주은행")
-                    statusIcon = getURLForResource(R.drawable.bank35)
-                }
-                "037" -> {
-                    LogUtil.logE("전북은행")
-                    statusIcon = getURLForResource(R.drawable.bank37)
-                }
-                "039" -> {
-                    LogUtil.logE("경남은행")
-                    statusIcon = getURLForResource(R.drawable.bank39)
-                }
-                "045" -> {
-                    LogUtil.logE("새마을 금고")
-                    statusIcon = getURLForResource(R.drawable.bank45)
-                }
-                "047" -> {
-                    LogUtil.logE("신협")
-                    statusIcon = getURLForResource(R.drawable.bank47)
-                }
-                "064" -> {
-                    LogUtil.logE("산림조합중앙회")
-                    statusIcon = getURLForResource(R.drawable.bank64)
-                }
-                "071" -> {
-                    LogUtil.logE("우체국")
-                    statusIcon = getURLForResource(R.drawable.bank71)
-                }
-                "089" -> {
-                    LogUtil.logE("케이뱅크")
-                    statusIcon = getURLForResource(R.drawable.bank89)
-                }
-                "090" -> {
-                    LogUtil.logE("카카오 뱅크")
-                    statusIcon = getURLForResource(R.drawable.bank90)
-                }
-                "092" -> {
-                    LogUtil.logE("토스뱅크")
-                    statusIcon = getURLForResource(R.drawable.bank92)
-                }
-            }
-            var requestOptions = RequestOptions()
-            requestOptions = requestOptions.transforms(CenterCrop(), RoundedCorners(30))
-            Glide.with(mContext)
-                .load(statusIcon)
-                .apply(requestOptions)
-                .transition(DrawableTransitionOptions.withCrossFade())
-                .into(binding.bankIcon)
-
-        } catch (ex: Exception) {
-            ex.printStackTrace()
-            LogUtil.logE("은행 이미지 불러오기 실패..")
-        }
 
 
-        // 변경 버튼 OnClick - jhm 2022/10/05
-        binding.selectBtn.setOnClickListener {
-            LogUtil.logE("변경 버튼 OnClick..")
-            finish()
-        }
+
+
+
+
 
     }
 

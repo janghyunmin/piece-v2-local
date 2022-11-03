@@ -12,19 +12,24 @@
 <!--        <variable-->
 <!--            name="socketVm"-->
 <!--            type="com.bsstandard.piece.data.viewmodel.WebSocketViewModel" />-->
+
+        <variable
+            name="popup"
+            type="com.bsstandard.piece.data.viewmodel.PopupViewModel" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/p_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="10dp"
         >
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layout"
             app:layout_constraintTop_toTopOf="parent"
             android:layout_width="match_parent"
-            android:layout_height="80dp">
+            android:layout_height="70dp">
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/top_title"

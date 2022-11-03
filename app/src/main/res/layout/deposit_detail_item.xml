@@ -59,6 +59,7 @@
             android:fontFamily="@font/pretendard_regular"
             android:textColor="@color/c_757983"
             app:createdAt='@{historyVm.depositHistoryItem.get(pos).createdAt}'
+            app:changeReasonDetail='@{historyVm.depositHistoryItem.get(pos).changeReasonDetail}'
             />
 
         <TextView

@@ -59,6 +59,7 @@ public class MagazineDetailDTO {
     public void setData(Data data) {
         this.data = data;
     }
+
     public class Data {
 
         @SerializedName("magazineId")
@@ -94,6 +95,9 @@ public class MagazineDetailDTO {
         @SerializedName("createdAt")
         @Expose
         private String createdAt;
+        @SerializedName("shareUrl")
+        @Expose
+        private String shareUrl;
 
         public String getMagazineId() {
             return magazineId;
@@ -181,6 +185,14 @@ public class MagazineDetailDTO {
 
         public void setCreatedAt(String createdAt) {
             this.createdAt = createdAt;
+        }
+
+        public String getShareUrl() {
+            return shareUrl;
+        }
+
+        public void setShareUrl(String shareUrl) {
+            this.shareUrl = shareUrl;
         }
 
     }

@@ -19,10 +19,20 @@ public class Division {
 
     /** API URL **/
     //public static final String PIECE_API_V2_DEV = "https://lui1qyiqx4.apigw.ntruss.com/piece-dev/v2/";
-    public static final String PIECE_API_V2_PROD = "https://z8danh2uj7.apigw.ntruss.com/pieve-prod/v2/";
+    //public static final String PIECE_API_V2_PROD = "https://z8danh2uj7.apigw.ntruss.com/pieve-prod/v2/";
 
-    /** PIECE V2 금융존 이관 후 URL **/
+    /** PIECE V2 금융존 개발 DB API URL **/
     public static final String PIECE_API_V2_DEV = "https://fdev-gateway.piece.la";
+    public static final String PIECE_API_V2_PROD = "";
+    public static final String PIECE_WS_PORTFOLIO = "wss://fdev-websocket.piece.la/portfolio";
+    public static final String PIECE_WS_PORTFOLIO_DETAIL = "wss://fdev-websocket.piece.la/portfolio/{portfolioId}";
+
+    /** PIECE V2 Stage DB API URL **/
+    public static final String PIECE_API_V2_STAGE_DEV = "https://fstage-gateway.piece.la/";
+    public static final String PIECE_API_V2_STAGE_PROD = "";
+    public static final String PIECE_WS_STAGE_PORTFOLIO = "https://fstage-websocket.piece.la";
+    public static final String PIECE_WS_STAGE_PORTFOLIO_DETAIL = "wss://fstage-websocket.piece.la/portfolio/{portfolioId}";
+
 
 
     /** Permission Code **/

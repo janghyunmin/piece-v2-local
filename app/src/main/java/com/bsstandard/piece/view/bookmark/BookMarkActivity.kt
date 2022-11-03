@@ -22,9 +22,11 @@ import com.bsstandard.piece.data.viewmodel.BookMarkViewModel
 import com.bsstandard.piece.databinding.ActivityBookmarkBinding
 import com.bsstandard.piece.di.hilt.ApiModule
 import com.bsstandard.piece.retrofit.RetrofitService
+import com.bsstandard.piece.view.common.NetworkActivity
 import com.bsstandard.piece.view.webview.MagazineDetailWebView
 import com.bsstandard.piece.widget.utils.LocalObserver
 import com.bsstandard.piece.widget.utils.LogUtil
+import com.bsstandard.piece.widget.utils.NetworkConnection
 import dagger.hilt.android.AndroidEntryPoint
 import retrofit2.Call
 import retrofit2.Callback
@@ -67,96 +69,105 @@ class BookMarkActivity : BaseActivity<ActivityBookmarkBinding>(R.layout.activity
         binding.memberBookMarkVm = bvm
         binding.lifecycleOwner = this@BookMarkActivity
 
-
-        bvm.getBookMark(accessToken = accessToken, deviceId = deviceId, memberId = memberId)
-
         setStatusBarIconColor(true) // 상태바 아이콘 true : 검정색
         setStatusBarBgColor("#ffffff") // 상태바 배경색상 설정
         setNaviBarIconColor(true) // 네비게이션 true : 검정색
         setNaviBarBgColor("#ffffff") // 네비게이션 배경색
 
 
-        bookMarkList.clear()
+        val networkConnection = NetworkConnection(applicationContext)
+        networkConnection.observe(this) { isConnected -> // 인터넷 연결되어있음 - jhm 2022/11/02
+            if (isConnected) {
+                bvm.getBookMark(accessToken = accessToken, deviceId = deviceId, memberId = memberId)
+                bookMarkList.clear()
+
+                // isFavorite 정보 받아와야함 - jhm 2022/08/31
+                bvm.bookMarkAdapter.setOnItemClickListener(object :
+                    BookMarkAdapter.OnItemClickListener {
+                    override fun onItemClick(
+                        v: View,
+                        tag: String,
+                        magazineId: String,
+                        magazineImagePath: String,
+                        isFavorite: Boolean,
+                        smallTitle: String,
+                        position: Int
+                    ) {
+                        LogUtil.logE("onClick..")
+                        when (tag) {
+                            "webView" -> {
+                                val intent = Intent(context, MagazineDetailWebView::class.java)
+                                intent.putExtra("magazineId", magazineId)
+                                intent.putExtra("isFavorite", isFavorite)
+                                intent.putExtra("pos", position)
+                                startActivity(intent)
+                                overridePendingTransition(
+                                    android.R.anim.fade_in,
+                                    android.R.anim.fade_out
+                                );
+                            }
+                            "bookMark" -> {
+                                LogUtil.logE("북마크 select..")
+
+                                // 북마크 Post 요청시 필요 모델 - jhm 2022/08/29
+                                val memberBookmarkRegModel =
+                                    MemberBookmarkRegModel(memberId, magazineId)
+                                // 북마크 Delete 요청시 필요 모델 - jhm 2022/08/29
+                                val memberBookmarkRemoveModel =
+                                    MemberBookmarkRemoveModel(memberId, magazineId)
+
+                                LogUtil.logE("memberBookmarkRegModel : ${memberBookmarkRegModel.memberId}")
+                                LogUtil.logE("memberBookmarkRegModel : ${memberBookmarkRegModel.magazineId}")
+                                LogUtil.logE("v.isSelected : ${v.isSelected}")
+                                LogUtil.logE("isFavorite : $isFavorite")
 
 
+                                if (!isFavorite) {
+                                    // deleteBookMark call - jhm 2022/08/29
+                                    response?.deleteBookMark(
+                                        "Bearer $accessToken",
+                                        deviceId,
+                                        memberId,
+                                        memberBookmarkRemoveModel
+                                    )?.enqueue(object : Callback<BaseDTO> {
+                                        @SuppressLint("NotifyDataSetChanged")
+                                        override fun onResponse(
+                                            call: Call<BaseDTO>,
+                                            response: Response<BaseDTO>
+                                        ) {
+                                            LogUtil.logE("bookmark delete call success.." + response.body()?.status)
+                                            try {
+                                                if (!response.body().toString().isEmpty()) {
+                                                    LogUtil.logE("bookmark status : " + response.body()?.status)
+                                                    LogUtil.logE("delete smallTitle : $smallTitle")
 
-        // isFavorite 정보 받아와야함 - jhm 2022/08/31
-        bvm.bookMarkAdapter.setOnItemClickListener(object : BookMarkAdapter.OnItemClickListener {
-            override fun onItemClick(
-                v: View,
-                tag: String,
-                magazineId: String,
-                magazineImagePath: String,
-                isFavorite: String,
-                smallTitle: String,
-                position: Int
-            ) {
-                LogUtil.logE("onClick..")
-                when (tag) {
-                    "webView" -> {
-                        val intent = Intent(context, MagazineDetailWebView::class.java)
-                        intent.putExtra("magazineId", magazineId)
-                        intent.putExtra("isFavorite", isFavorite)
-                        intent.putExtra("pos", position)
-                        startActivity(intent)
-                        overridePendingTransition(
-                            android.R.anim.fade_in,
-                            android.R.anim.fade_out
-                        );
-                    }
-                    "bookMark" -> {
-                        LogUtil.logE("북마크 select..")
-
-                        // 북마크 Post 요청시 필요 모델 - jhm 2022/08/29
-                        val memberBookmarkRegModel = MemberBookmarkRegModel(memberId, magazineId)
-                        // 북마크 Delete 요청시 필요 모델 - jhm 2022/08/29
-                        val memberBookmarkRemoveModel =
-                            MemberBookmarkRemoveModel(memberId, magazineId)
-
-                        LogUtil.logE("memberBookmarkRegModel : ${memberBookmarkRegModel.memberId}")
-                        LogUtil.logE("memberBookmarkRegModel : ${memberBookmarkRegModel.magazineId}")
-                        LogUtil.logE("v.isSelected : ${v.isSelected}")
-                        LogUtil.logE("isFavorite : $isFavorite")
-
-                        v.isSelected = !v.isSelected
-
-                        // deleteBookMark call - jhm 2022/08/29
-                        response?.deleteBookMark(
-                            "Bearer $accessToken",
-                            deviceId,
-                            memberId,
-                            memberBookmarkRemoveModel
-                        )?.enqueue(object : Callback<BaseDTO> {
-                                @SuppressLint("NotifyDataSetChanged")
-                                override fun onResponse(
-                                    call: Call<BaseDTO>,
-                                    response: Response<BaseDTO>
-                                ) {
-                                    LogUtil.logE("bookmark delete call success.." + response.body()?.status)
-                                    try {
-                                        if (!response.body().toString().isEmpty()) {
-                                            LogUtil.logE("bookmark status : " + response.body()?.status)
-                                            LogUtil.logE("delete smallTitle : $smallTitle")
-
-                                            bvm.getBookMark(accessToken = accessToken, deviceId = deviceId, memberId = memberId)
-                                            bvm.bookMarkAdapter.notifyDataSetChanged()
+                                                    bvm.getBookMark(
+                                                        accessToken = accessToken,
+                                                        deviceId = deviceId,
+                                                        memberId = memberId
+                                                    )
+                                                    bvm.bookMarkAdapter.notifyDataSetChanged()
+                                                }
+                                            } catch (ex: Exception) {
+                                                ex.printStackTrace()
+                                            }
                                         }
-                                    } catch (ex: Exception) {
-                                        ex.printStackTrace()
-                                    }
-                                }
 
-                                override fun onFailure(call: Call<BaseDTO>, t: Throwable) {
-                                    LogUtil.logE("bookmark post call fail.." + t.stackTrace)
+                                        override fun onFailure(call: Call<BaseDTO>, t: Throwable) {
+                                            LogUtil.logE("bookmark post call fail.." + t.stackTrace)
 
+                                        }
+                                    })
                                 }
-                            })
+                            }
+                        }
                     }
-                }
+                })
+            } else {
+                val intent = Intent(applicationContext, NetworkActivity::class.java)
+                startActivity(intent)
             }
-        })
-
-
+        }
     }
 
 

@@ -1,9 +1,9 @@
 package com.bsstandard.piece.retrofit
 
 import com.bsstandard.piece.data.datamodel.dmodel.MemberPinModel
-import com.bsstandard.piece.data.datamodel.dmodel.SmsAuthModel
 import com.bsstandard.piece.data.datamodel.dmodel.account.MemberBankAccountModel
 import com.bsstandard.piece.data.datamodel.dmodel.authentication.CallUsernameAuthModel
+import com.bsstandard.piece.data.datamodel.dmodel.document.MemberPortfolioDocument
 import com.bsstandard.piece.data.datamodel.dmodel.join.JoinModel
 import com.bsstandard.piece.data.datamodel.dmodel.magazine.MemberBookmarkRegModel
 import com.bsstandard.piece.data.datamodel.dmodel.magazine.MemberBookmarkRemoveModel
@@ -13,6 +13,8 @@ import com.bsstandard.piece.data.datamodel.dmodel.occupation.OccupationVerifyMod
 import com.bsstandard.piece.data.datamodel.dmodel.purchase.PurchaseModel
 import com.bsstandard.piece.data.datamodel.dmodel.purchase.PurchaseRmModel
 import com.bsstandard.piece.data.datamodel.dmodel.purchase.RequestPurchaseConfirmModel
+import com.bsstandard.piece.data.datamodel.dmodel.sms.CallSmsAuthModel
+import com.bsstandard.piece.data.datamodel.dmodel.sms.CallSmsVerification
 import com.bsstandard.piece.data.datamodel.dmodel.withdraw.WithdrawModel
 import com.bsstandard.piece.data.dto.*
 import io.reactivex.Observable
@@ -33,8 +35,9 @@ import retrofit2.http.*
 interface RetrofitService {
     // 앱 버전 조회 - jhm 2022/06/21
     @GET("member/app/version/{deviceType}")
-    fun getVersion(@Path("deviceType") deviceType: String?): Call<VersionDTO?>?
-
+    suspend fun getVersion(
+        @Header("memberId") memberId: String?,
+        @Path("deviceType") deviceType: String?): VersionDTO
 
     // 기존 V2 board/consent - jhm 2022/10/25
     //@GET("board/consent")
@@ -49,11 +52,11 @@ interface RetrofitService {
 
     // 문자 발송 요청 - jhm 2022/06/22
     @POST("member/call_sms_auth")
-    fun reqSmsAuth(@Body smsAuthModel: SmsAuthModel?): Call<CallSmsAuthDTO?>?
+    fun PostSmsCall(@Body callSmsAuthModel: CallSmsAuthModel?): Call<CallSmsAuthDTO?>?
 
     // 문자 sms 검증요청 - jhm 2022/06/24
     @POST("member/call_sms_verification")
-    fun PostVerification(@Body smsAuthModel: SmsAuthModel?): Call<SmsVerificationDTO?>?
+    fun PostVerification(@Body callSmsVerification: CallSmsVerification?): Call<SmsVerificationDTO?>?
 
     // 회원가입 요청 - jhm 2022/06/30
     @POST("member/join")
@@ -113,6 +116,9 @@ interface RetrofitService {
         @Body memberModifyModel: MemberModifyModel?
     ): Call<MemberPutDTO?>?
 
+    // 팝업 조회 요청 - jhm 2022/10/29
+    @GET("popup")
+    fun getPopup(@Query("popupType") popupType: String) : Observable<PopupDTO>
 
     // 포트폴리오 조회 - jhm 2022/08/17
     @GET("portfolio")
@@ -143,6 +149,15 @@ interface RetrofitService {
         @Header("memberId") memberId: String?,
         @Body purchaseRmModel: PurchaseRmModel?
     ): Call<BaseDTO>
+    
+    // 회원 포트폴리오 소유증서 신청 요청  - jhm 2022/10/31
+    @POST("member/document")
+    fun postDocument(
+        @Header("accessToken") accessToken: String?,
+        @Header("deviceId") deviceId: String?,
+        @Header("memberId") memberId: String?,
+        @Body memberPortfolioDocument: MemberPortfolioDocument?
+    ) : Call<BaseDTO>
 
     // 포트폴리오 구매 확정 요청 - jhm 2022/10/25
     // 사용자 알림 읽음 처리 요청 - jhm 2022/10/17
@@ -153,15 +168,39 @@ interface RetrofitService {
         @Header("memberId") memberId: String?,
         @Body requestPurchaseConfirmModel: RequestPurchaseConfirmModel?
     ): Call<BaseDTO>
+    
+    // 회원 포트폴리오 알림 설정 여부 조회 - jhm 2022/11/02
+    @GET("member/portfolio/notification/{portfolioId}")
+    suspend fun getPortfolioNotification(
+        @Header("accessToken") accessToken: String?,
+        @Header("deviceId") deviceId: String?,
+        @Header("memberId") memberId: String?,
+        @Path("portfolioId") portfolioId: String?
+    ): PortfolioNotiDTO
 
+
+    // 포트폴리오 알림 설정 정보 입력 요청 - jhm 2022/11/02
+    @POST("member/portfolio/notification/{portfolioId}")
+    fun postPortfolioNotification(
+        @Header("accessToken") accessToken: String?,
+        @Header("deviceId") deviceId: String?,
+        @Header("memberId") memberId: String?,
+        @Path ("portfolioId") portfolioId: String?
+    ) : Call<BaseDTO>
+
+    // 포트폴리오 알림 설정 정보 삭제 요청 - jhm 2022/11/02
+    @HTTP(method = "DELETE", path = "member/portfolio/notification/{portfolioId}", hasBody = false)
+    fun deletePortfolioNotification(
+        @Header("accessToken") accessToken: String?,
+        @Header("deviceId") deviceId: String?,
+        @Header("memberId") memberId: String?,
+        @Path("portfolioId") portfolioId: String?
+    ): Call<BaseDTO>
 
 
     // 매거진(라운지) 조회 (비로그인 전용)- jhm 2022/08/29
     @GET("board/magazine")
     fun getNoMemberMagazine(@Query("magazineType") magazineType: String): Observable<MagazineDTO>
-
-    @GET("board/magazine/{magazineId}")
-    suspend fun getMagazineDetail(@Path("magazineId") magazineId: String?): MagazineDetailDTO
 
     // 매거진(라운지) 조회 (회원 전용) - jhm 2022/08/30
     @GET("member/magazine")
@@ -171,6 +210,21 @@ interface RetrofitService {
         @Header("memberId") memberId: String?,
         @Query("magazineType") magazineType: String
     ): Observable<MagazineDTO>
+
+    // 매거진(라운지) 상세 조회 (비로그인 전용)- jhm 2022/11/01
+    @GET("board/magazine/{magazineId}")
+    suspend fun getNoMemberMagazineDetail(@Path("magazineId") magazineId: String?): MagazineDetailDTO
+
+    // 매거진(라운지) 상세 조회 (회원 전용) - jhm 2022/08/30
+    @GET("member/magazine/{magazineId}")
+    suspend fun getMagazineDetail(
+        @Header("accessToken") accessToken: String?,
+        @Header("deviceId") deviceId: String?,
+        @Header("memberId") memberId: String?,
+        @Path("magazineId") magazineId: String
+    ): MemberMagazineDetailDTO
+
+
 
     // 회원 북마크 조회 - jhm 2022/09/04
     @GET("member/bookmark")
@@ -201,10 +255,6 @@ interface RetrofitService {
 
     // 내정보 상세 주소검색 - jhm 2022/09/04
     @GET("common/location")
-//    fun getSearchAddress(
-//        @Query("countPerPage") countPerPage: Int ,
-//        @Query("currentPage") currentPage: Int,
-//        @Query("keyword") keyword:String ): Call<LocationDTO?>?
     fun getSearchAddress(@Query("keyword") keyword: String , @Query("countPerPage") countPerPage: Int): Call<LocationDTO?>?
 
 
@@ -220,7 +270,7 @@ interface RetrofitService {
     ): Observable<BoardDTO>
 
     // board 공지사항 상세 조회 - jhm 2022/09/11
-    @GET("board/detail/{boardId}")
+    @GET("board/{boardId}")
     suspend fun getNoticeDetail(@Path("boardId") boardId: String): BoardDetailDTO
 
 

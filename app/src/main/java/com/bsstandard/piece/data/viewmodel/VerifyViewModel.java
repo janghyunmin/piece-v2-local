@@ -5,7 +5,7 @@ import android.app.Application;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 
-import com.bsstandard.piece.data.datamodel.dmodel.SmsAuthModel;
+import com.bsstandard.piece.data.datamodel.dmodel.sms.CallSmsVerification;
 import com.bsstandard.piece.data.dto.SmsVerificationDTO;
 import com.bsstandard.piece.data.repository.VerifyRepository;
 import com.bsstandard.piece.widget.utils.LogUtil;
@@ -32,19 +32,19 @@ public class VerifyViewModel extends AndroidViewModel {
         super(application);
         verifyRepository = new VerifyRepository(application);
     }
-    public SingleLiveEvent<SmsVerificationDTO> postCallVerifyData(SmsAuthModel smsAuthModel) {
+    public SingleLiveEvent<SmsVerificationDTO> postCallVerifyData(CallSmsVerification callSmsVerification) {
         if(verifyData == null){
             LogUtil.logE("verifyData null");
             verifyData = new SingleLiveEvent<>();
-            verifyData = loadVerifyData(smsAuthModel);
+            verifyData = loadVerifyData(callSmsVerification);
         } else {
             LogUtil.logE("verifyData not null");
-            verifyData = loadVerifyData(smsAuthModel);
+            verifyData = loadVerifyData(callSmsVerification);
         }
         return verifyData;
     }
-    public SingleLiveEvent<SmsVerificationDTO> loadVerifyData(SmsAuthModel smsAuthModel) {
-        return verifyRepository.getVerifyData(smsAuthModel);
+    public SingleLiveEvent<SmsVerificationDTO> loadVerifyData(CallSmsVerification callSmsVerification) {
+        return verifyRepository.getVerifyData(callSmsVerification);
     }
 
 

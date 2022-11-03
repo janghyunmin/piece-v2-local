@@ -2,6 +2,7 @@ package com.bsstandard.piece.view.withdrawal
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
@@ -13,8 +14,10 @@ import com.bsstandard.piece.data.datasource.shared.PrefsHelper
 import com.bsstandard.piece.data.viewmodel.AccountViewModel
 import com.bsstandard.piece.data.viewmodel.DepositBalanceViewModel
 import com.bsstandard.piece.databinding.ActivityWithdrawSuccessBinding
+import com.bsstandard.piece.view.common.NetworkActivity
 import com.bsstandard.piece.widget.utils.LogUtil
 import com.bsstandard.piece.widget.utils.MoneyFormatToWon
+import com.bsstandard.piece.widget.utils.NetworkConnection
 import com.bumptech.glide.Glide
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -57,26 +60,32 @@ class WithdrawSuccessActivity :
 
         }
 
+        val networkConnection = NetworkConnection(applicationContext)
+        networkConnection.observe(this) { isConnected -> // 인터넷 연결되어있음 - jhm 2022/11/02
+            if (isConnected) {
+                Glide.with(mContext).load(R.raw.withdraw_complete_lopping)
+                    .into(binding.withdrawSuccessLottie)
 
 
-        Glide.with(mContext).load(R.raw.withdraw_complete_lopping)
-            .into(binding.withdrawSuccessLottie)
+                val intent = intent
+                var withdrawRequestAmount = intent.getStringExtra("withdrawRequestAmount")
+                var bankName = intent.getStringExtra("bankName")
+                LogUtil.logE("최종 넘겨받은 값 : $withdrawRequestAmount")
 
 
-        val intent = intent
-        var withdrawRequestAmount = intent.getStringExtra("withdrawRequestAmount")
-        var bankName = intent.getStringExtra("bankName")
-        LogUtil.logE("최종 넘겨받은 값 : $withdrawRequestAmount")
+                binding.subTitle.text =
+                    "예치금 ${MoneyFormatToWon.moneyFormatToWon(withdrawRequestAmount!!.toInt())} 원이 \n $bankName 계좌로 입금되었어요."
 
 
-        binding.subTitle.text = "예치금 ${MoneyFormatToWon.moneyFormatToWon(withdrawRequestAmount!!.toInt())} 원이 \n $bankName 계좌로 입금되었어요."
-
-
-        // 확인 클릭시 나의 예치금 - jhm 2022/10/04
-        binding.confirmBtn.setOnClickListener {
-            finish()
-       }
-
+                // 확인 클릭시 나의 예치금 - jhm 2022/10/04
+                binding.confirmBtn.setOnClickListener {
+                    finish()
+                }
+            } else {
+                val intent = Intent(applicationContext, NetworkActivity::class.java)
+                startActivity(intent)
+            }
+        }
     }
 
 

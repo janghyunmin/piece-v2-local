@@ -121,7 +121,7 @@ public class DepositHistoryDTO {
             private String changeReasonName;
             @SerializedName("changeReasonDetail")
             @Expose
-            private Object changeReasonDetail;
+            private String changeReasonDetail;
             @SerializedName("createdAt")
             @Expose
             private String createdAt;
@@ -174,11 +174,11 @@ public class DepositHistoryDTO {
                 this.changeReasonName = changeReasonName;
             }
 
-            public Object getChangeReasonDetail() {
+            public String getChangeReasonDetail() {
                 return changeReasonDetail;
             }
 
-            public void setChangeReasonDetail(Object changeReasonDetail) {
+            public void setChangeReasonDetail(String changeReasonDetail) {
                 this.changeReasonDetail = changeReasonDetail;
             }
 
@@ -191,6 +191,5 @@ public class DepositHistoryDTO {
             }
 
         }
-
     }
 }

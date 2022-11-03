@@ -1,6 +1,7 @@
 package com.bsstandard.piece.view.webview
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.net.http.SslError
@@ -18,7 +19,9 @@ import com.bsstandard.piece.R
 import com.bsstandard.piece.base.BaseActivity
 import com.bsstandard.piece.data.viewmodel.NoticeDetailViewModel
 import com.bsstandard.piece.databinding.ActivityNoticeWebviewBinding
+import com.bsstandard.piece.view.common.NetworkActivity
 import com.bsstandard.piece.widget.utils.LogUtil
+import com.bsstandard.piece.widget.utils.NetworkConnection
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.disposables.Disposable
 
@@ -35,7 +38,8 @@ import io.reactivex.disposables.Disposable
  */
 
 @AndroidEntryPoint
-class NoticeDetailWebView : BaseActivity<ActivityNoticeWebviewBinding>(R.layout.activity_notice_webview) {
+class NoticeDetailWebView :
+    BaseActivity<ActivityNoticeWebviewBinding>(R.layout.activity_notice_webview) {
     private var disposable: Disposable? = null
     private lateinit var webView: WebView
     private lateinit var mProgressBar: ProgressBar
@@ -60,55 +64,76 @@ class NoticeDetailWebView : BaseActivity<ActivityNoticeWebviewBinding>(R.layout.
             setStatusBarBgColor("#00000000") // 상태바 배경색상 설정
             postponeEnterTransition()
 
-
             boardId = intent.getStringExtra("boardId").toString()
-            vm.getNoticeDetail(boardId)
-            vm.detailResponse.observe(this@NoticeDetailWebView, Observer {
-                LogUtil.logE("notice response : " + it.data.contents)
-                url = it.data.contents
-
-                binding.title.text = it.data.title
-                binding.midTitle.text = it.data.createdAt
-
-                binding.webView.apply {
-                    webViewClient = WebViewClient() // 새창안뜨게 - jhm 2022/08/30
-                    settings.javaScriptEnabled = true // 자바스크립트 허용 - jhm 2022/08/30
-                    settings.setSupportMultipleWindows(false) // 새창 띄우기 허용 여부 - jhm 2022/08/30
-                    settings.javaScriptCanOpenWindowsAutomatically = false // 자바스크립트 새창 띄우기 (멀티뷰) 허용 여부 - jhm 2022/08/30
-                    settings.loadWithOverviewMode = true // 메타태그 허용 - jhm 2022/08/30
-                    //settings.useWideViewPort = true // 화면 사이즈 맞추기 허용 - jhm 2022/08/30
-                    settings.setSupportZoom(false) // 화면 줌 허용 여부 - j부m 2022/08/30
-                    settings.builtInZoomControls = false // 화면 확대 축소 허용 여부 - jhm 2022/08/30
-
-                    settings.cacheMode = WebSettings.LOAD_NO_CACHE // 브라우저 캐시 허용 여부 - jhm 2022/08/30
-                    settings.domStorageEnabled = true // 로컬 저장소 허용 여부 - jhm 2022/08/30
-                    settings.displayZoomControls = false // 줌 컨트롤 허용 여부 - jhm 2022/08/30
-
-                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        settings.safeBrowsingEnabled = true // api 26 - jhm 2022/08/30
-                    }
-                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                        settings.mediaPlaybackRequiresUserGesture = false
-                    }
-                    settings.allowContentAccess = true
-                    settings.setGeolocationEnabled(false) // 위치 허용 여부 - jhm 2022/08/30
-                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                        settings.allowUniversalAccessFromFileURLs = true
-                    }
-                    settings.allowFileAccess = true
-                    binding.webView.loadDataWithBaseURL(null,it.data.contents,"text/html; charset=utf-8","utf-8",null)
-                }
-                binding.backImg.setOnClickListener {
-                    LogUtil.logE("webview 종료")
-                    finish()
-                }
-
-            })
-
         }
+
+
+        val networkConnection = NetworkConnection(applicationContext)
+        networkConnection.observe(this) { isConnected -> // 인터넷 연결되어있음 - jhm 2022/11/02
+            if (isConnected) {
+                vm.getNoticeDetail(boardId)
+                vm.detailResponse.observe(this@NoticeDetailWebView, Observer {
+                    LogUtil.logE("notice response : " + it.data.contents)
+                    url = it.data.contents
+
+                    binding.title.text = it.data.title
+                    binding.midTitle.text = it.data.createdAt
+
+                    binding.webView.apply {
+                        webViewClient = WebViewClient() // 새창안뜨게 - jhm 2022/08/30
+                        settings.javaScriptEnabled = true // 자바스크립트 허용 - jhm 2022/08/30
+                        settings.setSupportMultipleWindows(false) // 새창 띄우기 허용 여부 - jhm 2022/08/30
+                        settings.javaScriptCanOpenWindowsAutomatically =
+                            false // 자바스크립트 새창 띄우기 (멀티뷰) 허용 여부 - jhm 2022/08/30
+                        settings.loadWithOverviewMode = true // 메타태그 허용 - jhm 2022/08/30
+                        //settings.useWideViewPort = true // 화면 사이즈 맞추기 허용 - jhm 2022/08/30
+                        settings.setSupportZoom(false) // 화면 줌 허용 여부 - j부m 2022/08/30
+                        settings.builtInZoomControls = false // 화면 확대 축소 허용 여부 - jhm 2022/08/30
+
+                        settings.cacheMode =
+                            WebSettings.LOAD_NO_CACHE // 브라우저 캐시 허용 여부 - jhm 2022/08/30
+                        settings.domStorageEnabled = true // 로컬 저장소 허용 여부 - jhm 2022/08/30
+                        settings.displayZoomControls = false // 줌 컨트롤 허용 여부 - jhm 2022/08/30
+
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            settings.safeBrowsingEnabled = true // api 26 - jhm 2022/08/30
+                        }
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                            settings.mediaPlaybackRequiresUserGesture = false
+                        }
+                        settings.allowContentAccess = true
+                        settings.setGeolocationEnabled(false) // 위치 허용 여부 - jhm 2022/08/30
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                            settings.allowUniversalAccessFromFileURLs = true
+                        }
+                        settings.allowFileAccess = true
+                        binding.webView.loadDataWithBaseURL(
+                            null,
+                            it.data.contents,
+                            "text/html; charset=utf-8",
+                            "utf-8",
+                            null
+                        )
+                    }
+                    binding.backImg.setOnClickListener {
+                        LogUtil.logE("webview 종료")
+                        finish()
+                    }
+
+                })
+
+            } else {
+                val intent = Intent(applicationContext, NetworkActivity::class.java)
+                startActivity(intent)
+            }
+        }
+
+
+
     }
+
     // 웹뷰 새창이 아닌 기존창에서 실행되도록 - jhm 2022/08/30
-    inner class WebViewClient: android.webkit.WebViewClient() {
+    inner class WebViewClient : android.webkit.WebViewClient() {
         override fun shouldOverrideUrlLoading(
             view: WebView?,
             request: WebResourceRequest?
@@ -163,7 +188,8 @@ class NoticeDetailWebView : BaseActivity<ActivityNoticeWebviewBinding>(R.layout.
             val flags = WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
             window.addFlags(flags)
         }
-        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+        window.decorView.systemUiVisibility =
+            View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
     }
 
     private fun setStatusBarIconColor(isBlack: Boolean) {
@@ -249,7 +275,6 @@ class NoticeDetailWebView : BaseActivity<ActivityNoticeWebviewBinding>(R.layout.
 
     }
     /** Util end **/
-
 
 
 }

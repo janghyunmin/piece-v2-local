@@ -10,7 +10,9 @@ import android.view.WindowInsetsController
 import com.bsstandard.piece.R
 import com.bsstandard.piece.base.BaseActivity
 import com.bsstandard.piece.databinding.ActivityWithdrawFailBinding
+import com.bsstandard.piece.view.common.NetworkActivity
 import com.bsstandard.piece.view.deposit.MyDepositActivity
+import com.bsstandard.piece.widget.utils.NetworkConnection
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -27,7 +29,8 @@ import dagger.hilt.android.AndroidEntryPoint
 
 
 @AndroidEntryPoint
-class WithdrawFailActivity : BaseActivity<ActivityWithdrawFailBinding>(R.layout.activity_withdraw_fail){
+class WithdrawFailActivity :
+    BaseActivity<ActivityWithdrawFailBinding>(R.layout.activity_withdraw_fail) {
     val mContext: Context = this@WithdrawFailActivity
 
     companion object {
@@ -49,15 +52,24 @@ class WithdrawFailActivity : BaseActivity<ActivityWithdrawFailBinding>(R.layout.
         }
 
 
-        // 확인 클릭시 나의 예치금 Activity로 이동 - jhm 2022/10/04
-        binding.confirmBtn.setOnClickListener {
-            val intent = Intent(this, MyDepositActivity::class.java)
-            overridePendingTransition(
-                android.R.anim.fade_in,
-                android.R.anim.fade_out
-            );
-            startActivity(intent)
-            finish()
+        val networkConnection = NetworkConnection(applicationContext)
+        networkConnection.observe(this) { isConnected -> // 인터넷 연결되어있음 - jhm 2022/11/02
+            if (isConnected) {
+                // 확인 클릭시 나의 예치금 Activity로 이동 - jhm 2022/10/04
+                binding.confirmBtn.setOnClickListener {
+                    val intent = Intent(this, MyDepositActivity::class.java)
+                    overridePendingTransition(
+                        android.R.anim.fade_in,
+                        android.R.anim.fade_out
+                    );
+                    startActivity(intent)
+                    finish()
+                }
+
+            } else {
+                val intent = Intent(applicationContext, NetworkActivity::class.java)
+                startActivity(intent)
+            }
         }
 
 

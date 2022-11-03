@@ -2,13 +2,13 @@ package com.bsstandard.piece.retrofit
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.bsstandard.piece.data.datasource.shared.PrefsHelper
 import com.bsstandard.piece.widget.utils.LogUtil
-import com.google.gson.JsonObject
-import com.google.gson.JsonParser
 import okhttp3.Response
 import okhttp3.WebSocket
 import okhttp3.WebSocketListener
 import okio.ByteString
+import org.json.JSONObject
 
 /**
  *packageName    : com.bsstandard.piece.retrofit
@@ -22,41 +22,52 @@ import okio.ByteString
  * 2022/10/14        piecejhm       최초 생성
  */
 
-class WebData {
-    var purchaseTotalAmount: Int? = null
-    var portfolioId: String? = null
-    var purchasePieceVolume: Int? = null
-    var recruitmentState: String? = null
 
-    override fun toString(): String {
-        return "purchaseTotalAmount $purchaseTotalAmount, portfolioId $portfolioId ," +
-                "purchasePieceVolume $purchasePieceVolume , recruitmentState $recruitmentState"
-    }
-}
+data class Portfolio(
+    val data : ArrayList<String>,
+    val purchaseTotalAmount: Int,
+    val portfolioId: String,
+    val purchasePieceVolume: Int,
+    val recruitmentState: String
+)
 class WebSocketListener : WebSocketListener() {
 
-    private val _liveData = MutableLiveData<JsonObject>()
-    val liveData: LiveData<JsonObject> get() = _liveData
+    private val _liveData = MutableLiveData<JSONObject>()
+    val liveData: LiveData<JSONObject> get() = _liveData
 
     var listdata = ArrayList<String>()
+
+
     private fun outputData(string: String) {
-        LogUtil.logE("string : $string" )
+        val data = JSONObject(string)
 
-        val resp: JsonObject = JsonParser().parse(string).asJsonObject
-        var jsonObject = JsonObject()
-        jsonObject.add("data", resp)
+        val jsonArray = data.optJSONArray("data")
+        var i = 0
+        var tempStr = ""
+        while(i < jsonArray.length()) {
+            val jsonObject = jsonArray.getJSONObject(i)
+            val purchaseTotalAmount = jsonObject.getInt("purchaseTotalAmount")
+            tempStr += "[purchaseTotalAmount : $purchaseTotalAmount], "
+            i++
+        }
+        // 소켓데이터 Custom - jhm 2022/11/02
+//        LogUtil.logE("tempStr $tempStr")
 
-        _liveData.postValue(jsonObject)
+        val firstStatus = jsonArray.getJSONObject(0)
+        val recruitmentState = firstStatus.getString("recruitmentState")
+        PrefsHelper.write("recruitmentState",recruitmentState)
+
+        _liveData.postValue(data)
     }
 
 
     override fun onOpen(webSocket: WebSocket, response: Response?) {
         webSocket.send("")
-        webSocket.close(NORMAL_CLOSURE_STATUS, "Socket Close!!") //없을 경우 끊임없이 서버와 통신함
+        //webSocket.close(NORMAL_CLOSURE_STATUS, "Socket Close!!") //없을 경우 끊임없이 서버와 통신함
     }
 
     override fun onMessage(webSocket: WebSocket?, text: String) {
-        LogUtil.logE("Socket Receiving : $text")
+//        LogUtil.logE("Socket Receiving : $text")
         outputData(text)
     }
 

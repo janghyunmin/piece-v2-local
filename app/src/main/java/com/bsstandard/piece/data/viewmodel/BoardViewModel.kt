@@ -84,18 +84,24 @@ class BoardViewModel(application: Application) : AndroidViewModel(application) {
     fun getNotice(boardType: String, length: Int, page: Int) {
         repo.getBoardList("", boardType = boardType, length = length, page = page).subscribe(
             { BoardDTO ->
-                LogUtil.logE("공지사항 갯수 : " + BoardDTO.data.boards.size)
+                try {
+                    LogUtil.logE("공지사항 갯수 : " + BoardDTO.data.boards.size)
+                    noticeList.clear()
+                    for (i in ArrayList(BoardDTO.data.boards).indices) {
+                        noticeList.add(BoardDTO.data.boards[i])
+                        LogUtil.logE("BoardDTO : " + BoardDTO.data.boards[i])
+                        _liveData.value = noticeList
+                        _liveData.postValue(noticeList)
+                    }
+                    noticeAdapter.notifyDataSetChanged()
 
-                noticeList.clear()
-                for (i in ArrayList(BoardDTO.data.boards).indices) {
-                    noticeList.add(BoardDTO.data.boards[i])
-                    LogUtil.logE("BoardDTO : " + BoardDTO.data.boards[i])
-                    _liveData.value = noticeList
-                    _liveData.postValue(noticeList)
+                } catch (ex: Exception) {
+                    ex.printStackTrace()
+                    LogUtil.logE("공지사항 Get List Error ! ${ex.message}")
                 }
-                noticeAdapter.notifyDataSetChanged()
             }, { throwable ->
-                LogUtil.logE("공지사항 GET List Error! $throwable")
+                throwable.printStackTrace()
+                LogUtil.logE("공지사항 GET List Error! ${throwable.message}")
             }
         )
     }
