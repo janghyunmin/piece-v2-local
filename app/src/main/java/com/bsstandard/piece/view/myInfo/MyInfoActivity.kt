@@ -68,6 +68,7 @@ class MyInfoActivity : BaseActivity<ActivityMyinfoBinding>(R.layout.activity_myi
 
             // 내정보 API - jhm 2022/09/03
             memberVm = mv
+            mv.liveAddress
         }
 
 
@@ -79,6 +80,7 @@ class MyInfoActivity : BaseActivity<ActivityMyinfoBinding>(R.layout.activity_myi
                     piece_reauth()
                     LogUtil.logE("유저 재인증 OnClick..")
                 }
+
 
                 mv.liveAddress.observe(this@MyInfoActivity, Observer {
                     LogUtil.logE("옵저버 1 : $it")

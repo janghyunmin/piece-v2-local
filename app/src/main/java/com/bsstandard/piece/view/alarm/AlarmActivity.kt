@@ -111,24 +111,27 @@ class AlarmActivity : BaseActivity<ActivityAlarmBinding>(R.layout.activity_alarm
                     binding.benefitTitle.setTextColor(mContext.getColor(R.color.c_dadce3))
                     binding.noticeTitle.setTextColor(mContext.getColor(R.color.c_131313))
 
-                    avm.getAlarmList(
-                        accessToken = "Bearer $accessToken",
-                        deviceId = deviceId,
-                        memberId = memberId,
-                        100,
-                        "NTT01"
-                    )
+                    GlobalScope.launch {
+                        avm.getAlarmList(
+                            accessToken = "Bearer $accessToken",
+                            deviceId = deviceId,
+                            memberId = memberId,
+                            100,
+                            "NTT01"
+                        )
 
-
-                    if (avm.alarmResponse.value?.data?.totalCount == 0) {
-                        binding.noticeLayout.visibility = View.VISIBLE
-                        binding.eventLayout.visibility = View.GONE
-                        binding.scrollLayout.visibility = View.GONE
-                    } else {
-                        binding.noticeLayout.visibility = View.GONE
-                        binding.eventLayout.visibility = View.GONE
-                        binding.scrollLayout.visibility = View.VISIBLE
-                        avm.viewInit(binding.alarmRv)
+                        this@AlarmActivity.runOnUiThread {
+                            if (avm.alarmResponse.value?.data?.totalCount == 0) {
+                                binding.noticeLayout.visibility = View.VISIBLE
+                                binding.eventLayout.visibility = View.GONE
+                                binding.scrollLayout.visibility = View.GONE
+                            } else {
+                                binding.noticeLayout.visibility = View.GONE
+                                binding.eventLayout.visibility = View.GONE
+                                binding.scrollLayout.visibility = View.VISIBLE
+                                avm.viewInit(binding.alarmRv)
+                            }
+                        }
                     }
                 }
 

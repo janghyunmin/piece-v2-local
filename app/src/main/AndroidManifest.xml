@@ -29,6 +29,7 @@
 
         <activity
             android:name="com.bsstandard.piece.view.splash.SplashActivity"
+            android:theme="@style/FullScreenTheme"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

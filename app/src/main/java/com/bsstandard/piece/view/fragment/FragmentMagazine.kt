@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
@@ -92,8 +93,14 @@ class FragmentMagazine : Fragment() {
     ): View? {
         _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_magazine, container, false)
 
-        // 상단 시계바 투명처리 - jhm 2022/10/27
-        requireActivity().setStatusBarTransparent()
+//        // 상단 시계바 투명처리 - jhm 2022/10/27
+//        requireActivity().setStatusBarTransparent()
+
+        getStatusBarHeight(requireContext())
+//        binding.motionlayout.setPadding(0, getStatusBarHeight(requireContext()), 0, 0)
+        binding.motionlayout.setPadding(0, 0, 0, 0)
+
+
 
         vm = ViewModelProvider(this)[MagazineViewModel::class.java]
         vm.viewInit(binding.magazineRv)
@@ -379,6 +386,21 @@ class FragmentMagazine : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    // statusbar height 추가
+    open fun getStatusBarHeight(context: Context): Int {
+        val screenSizeType = context.resources.configuration.screenLayout and
+                Configuration.SCREENLAYOUT_SIZE_MASK
+        var statusbar = 0
+        if (screenSizeType != Configuration.SCREENLAYOUT_SIZE_XLARGE) {
+            val resourceId =
+                context.resources.getIdentifier("status_bar_height", "dimen", "android")
+            if (resourceId > 0) {
+                statusbar = context.resources.getDimensionPixelSize(resourceId)
+            }
+        }
+        return statusbar
     }
 
 

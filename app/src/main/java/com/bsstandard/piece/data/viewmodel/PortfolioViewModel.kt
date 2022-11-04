@@ -192,26 +192,41 @@ object BindingAdapter {
         val dayFormat = dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.KOREA)
         val newDate = "$month.$day($dayFormat)$hour:$minute 오픈"
 
+        
+        /**
+         * PRS0101
+         * PRS0102
+         * PRS0111
+         * 을 제외한 나머지 문구 모두 SOLD OUT 변경
+         * **/
         when (recruitmentState) {
             "PRS0101" -> textView.text = newDate // 오픈예정일때 오픈날짜와 시간을 set text 해준다. - jhm 2022/07/18
             "PRS0102" -> textView.text =
                 "남은 수량 " + remainingPieceVolume + "피스" // 판매중일때 남은 조각 갯수를 set text 해준다. - jhm 2022/07/18
             "PRS0103" -> textView.text =
-                soldOutAt?.let { getSoldOut(string, it) } // 마감 시간 - jhm 2022/07/18
+//                soldOutAt?.let { getSoldOut(string, it) } // 마감 시간 - jhm 2022/07/18
+                "SOLD OUT"
             "PRS0104" -> textView.text =
-                soldOutAt?.let { getSoldOut(string, it) } // 매각 대기 - jhm 2022/07/18
+//                soldOutAt?.let { getSoldOut(string, it) } // 매각 대기 - jhm 2022/07/18
+                "SOLD OUT"
             "PRS0105" -> textView.text =
-                soldOutAt?.let { getSoldOut(string, it) } // 매각 진행 - jhm 2022/07/18
+//                soldOutAt?.let { getSoldOut(string, it) } // 매각 진행 - jhm 2022/07/18
+                "SOLD OUT"
             "PRS0106" -> textView.text =
-                soldOutAt?.let { getSoldOut(string, it) } // 매각 완료 - jhm 2022/07/18
+//                soldOutAt?.let { getSoldOut(string, it) } // 매각 완료 - jhm 2022/07/18
+                "SOLD OUT"
             "PRS0107" -> textView.text =
-                soldOutAt?.let { getSoldOut(string, it) } // 정산중 - jhm 2022/07/18
+//                soldOutAt?.let { getSoldOut(string, it) } // 정산중 - jhm 2022/07/18
+                "SOLD OUT"
             "PRS0108" -> textView.text =
-                soldOutAt?.let { getSoldOut(string, it) } // 분배 완료 - jhm 2022/07/18
+//                soldOutAt?.let { getSoldOut(string, it) } // 분배 완료 - jhm 2022/07/18
+                "SOLD OUT"
             "PRS0109" -> textView.text =
-                soldOutAt?.let { getSoldOut(string, it) } // 일시 중지 - jhm 2022/07/18
+//                soldOutAt?.let { getSoldOut(string, it) } // 일시 중지 - jhm 2022/07/18
+                "SOLD OUT"
             "PRS0110" -> textView.text =
-                soldOutAt?.let { getSoldOut(string, it) } // 기한 만료 - jhm 2022/07/18
+//                soldOutAt?.let { getSoldOut(string, it) } // 기한 만료 - jhm 2022/07/18
+                "SOLD OUT"
             "PRS0111" -> textView.text = "수익률 $expectationProfitRate% 달성" // 수익 분배 - jhm 2022/07/18
         }
     }

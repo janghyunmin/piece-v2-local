@@ -9,14 +9,6 @@
             name="home"
             type="com.bsstandard.piece.data.viewmodel.PortfolioViewModel" />
 
-<!--        <variable-->
-<!--            name="socketVm"-->
-<!--            type="com.bsstandard.piece.data.viewmodel.WebSocketViewModel" />-->
-
-        <variable
-            name="popup"
-            type="com.bsstandard.piece.data.viewmodel.PopupViewModel" />
-
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

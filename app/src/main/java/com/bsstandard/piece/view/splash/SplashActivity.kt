@@ -1,6 +1,7 @@
 package com.bsstandard.piece.view.splash
 
 import android.animation.Animator
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -9,6 +10,8 @@ import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.view.WindowInsetsController
+import android.view.WindowManager
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.bsstandard.piece.R
@@ -39,7 +42,6 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class SplashActivity : BaseActivity<ActivitySplashBinding>(R.layout.activity_splash) {
 
-
     private lateinit var vv: AppVersionViewModel
     var mContext: Context = this@SplashActivity
     var memberId: String = ""
@@ -50,6 +52,8 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>(R.layout.activity_spl
         super.onStart()
     }
 
+    @SuppressLint("ObsoleteSdkInt")
+    @RequiresApi(Build.VERSION_CODES.S)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -61,10 +65,34 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>(R.layout.activity_spl
         binding.lifecycleOwner = this@SplashActivity
 
 
-        setStatusBarIconColor(true) // 상태바 아이콘 true : 검정색
-        setStatusBarBgColor("#ffffff") // 상태바 배경색상 설정
-        setNaviBarIconColor(true) // 네비게이션 true : 검정색
-        setNaviBarBgColor("#ffffff") // 네비게이션 배경색
+
+        if (Build.VERSION.SDK_INT < 16) {
+            window.setFlags(
+                WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN
+            )
+        }
+
+        // Navigationbar 숨기기 - jhm 2022/11/04
+        hideNavigationBar()
+
+        // 상단 StatusBar 투명처리 - jhm 2022/11/04
+        window.decorView.apply {
+            // Hide both the navigation bar and the status bar.
+            // SYSTEM_UI_FLAG_FULLSCREEN is only available on Android 4.1 and higher, but as
+            // a general rule, you should design your app to hide the status bar whenever you
+            // hide the navigation bar.
+            if(Build.VERSION.SDK_INT >= 19) {
+                window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                if(Build.VERSION.SDK_INT < 21) {
+                    setWindowFlag(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, true)
+                } else {
+                    setWindowFlag(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, false)
+                    window.statusBarColor = Color.TRANSPARENT
+                }
+            }
+
+        }
 
 
         val networkConnection = NetworkConnection(applicationContext)
@@ -82,20 +110,20 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>(R.layout.activity_spl
         binding.splashAnimationView.playAnimation()
         binding.splashAnimationView.addAnimatorListener(object : Animator.AnimatorListener {
             override fun onAnimationStart(animation: Animator) {
-                LogUtil.logE("start")
+                LogUtil.logE("SplashActivity Animation Start")
             }
 
             override fun onAnimationEnd(animation: Animator) {
-                LogUtil.logE("end")
+                LogUtil.logE("SplashActivity Animation End")
                 versionChk()
             }
 
             override fun onAnimationCancel(animation: Animator) {
-                LogUtil.logE("cancel")
+                LogUtil.logE("SplashActivity Animation Cancel")
             }
 
             override fun onAnimationRepeat(animation: Animator) {
-                LogUtil.logE("repeat")
+                LogUtil.logE("SplashActivity Animation Repeat")
             }
         })
 
@@ -108,10 +136,9 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>(R.layout.activity_spl
 
         vv.getAppVersion("MDO0101")
         vv.detailResponse.observe(this@SplashActivity, Observer {
-            PrefsHelper.write("appVersion",it.data.version)
+            PrefsHelper.write("appVersion", it.data.version)
             storeVersion = it.data.version
         })
-
 
 
     }
@@ -141,10 +168,25 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>(R.layout.activity_spl
             }
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
             finish()
-//            val handler = Handler()
-//            handler.postDelayed({
-//
-//            }, 1000)
+        }
+    }
+
+
+    private fun setWindowFlag(bits: Int, on: Boolean) {
+        val winAttr = window.attributes
+        winAttr.flags = if (on) winAttr.flags or bits else winAttr.flags and bits.inv()
+        window.attributes = winAttr
+    }
+
+
+    fun hideNavigationBar() {
+        window.decorView.apply {
+            // Hide both the navigation bar and the status bar.
+            // SYSTEM_UI_FLAG_FULLSCREEN is only available on Android 4.1 and higher, but as
+            // a general rule, you should design your app to hide the status bar whenever you
+            // hide the navigation bar.
+            systemUiVisibility =
+                View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_FULLSCREEN
         }
     }
 

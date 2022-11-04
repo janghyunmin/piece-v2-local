@@ -43,6 +43,9 @@ class GetUserViewModel(application: Application) : AndroidViewModel(application)
     private val context = getApplication<Application>().applicationContext
     private val memberArrayList: ArrayList<String> = arrayListOf()
 
+    private val _detailResponse: MutableLiveData<MemberDTO> = MutableLiveData()
+    val detailResponse: LiveData<MemberDTO> get() = _detailResponse
+
     private val _liveAddress = MutableLiveData<String>()
     val liveAddress: LiveData<String> get() = _liveAddress
 
@@ -112,6 +115,10 @@ class GetUserViewModel(application: Application) : AndroidViewModel(application)
                     db!!.userDao().deleteUserByName(MemberDTO?.data?.name.toString())
                     db.userDao().insert(newUser)
                 }
+
+
+                _detailResponse.value = MemberDTO
+                _detailResponse.postValue(MemberDTO)
 
                 _liveAddress.value = MemberDTO?.data?.baseAddress.toString()
                 _liveAddress.postValue(MemberDTO?.data?.baseAddress.toString())

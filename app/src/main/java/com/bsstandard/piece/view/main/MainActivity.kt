@@ -7,8 +7,6 @@ import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.*
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
@@ -25,12 +23,10 @@ import com.bsstandard.piece.databinding.ActivityMainBinding
 import com.bsstandard.piece.view.common.LoginChkActivity
 import com.bsstandard.piece.view.common.NetworkActivity
 import com.bsstandard.piece.view.fragment.navigation.KeepStateNavigator
-import com.bsstandard.piece.view.main.dialog.EventSheet
 import com.bsstandard.piece.widget.utils.LogUtil
 import com.bsstandard.piece.widget.utils.NetworkConnection
 import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.AndroidEntryPoint
-import java.text.SimpleDateFormat
 import java.util.*
 
 /**
@@ -67,7 +63,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
 //        binding.pLayout.setPadding(0,getStatusBarHeight(mContext),0,0)
 
 
-        supportActionBar?.hide()
+//        supportActionBar?.hide()
 
         binding.apply {
             lifecycleOwner = this@MainActivity
@@ -97,22 +93,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
         val networkConnection = NetworkConnection(applicationContext)
         networkConnection.observe(this) { isConnected -> // 인터넷 연결되어있음 - jhm 2022/11/02
             if (isConnected) {
-
-                val CurrentTime = System.currentTimeMillis() // 현재 시간을 msec 단위로 얻음
-                val TodayDate = Date(CurrentTime) // 현재 시간 Date 변수에 저장
-                val SDFormat = SimpleDateFormat("dd")
-                strSDFormatDay = SDFormat.format(TodayDate) // 'dd' 형태로 포맷 변경
-
-                LogUtil.logE("strSDFormatDay $strSDFormatDay")
-
-
-                // 오늘하루 안보기 이벤트 날짜 비교 - jhm 2022/10/28
-                if(strSDFormatDay.toInt().minus(PrefsHelper.read("Day","0").toInt()) != 0) {
-                    val eventSheet = EventSheet()
-                    Handler(Looper.getMainLooper()).postDelayed({
-                        eventSheet.show(supportFragmentManager, eventSheet.tag)
-                    }, 500)
-                }
 
                 initFirebase()
                 updateResult()
@@ -228,7 +208,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
             }
         }
         transaction.setReorderingAllowed(true) // 화면전환간 애니메이션 정상 동작 처리 - jhm 2022/08/16
-        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+//        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
         transaction.commit()
     }
 

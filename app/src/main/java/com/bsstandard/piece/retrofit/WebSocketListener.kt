@@ -2,13 +2,13 @@ package com.bsstandard.piece.retrofit
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.bsstandard.piece.data.datasource.shared.PrefsHelper
 import com.bsstandard.piece.widget.utils.LogUtil
+import com.google.gson.JsonObject
+import com.google.gson.JsonParser
 import okhttp3.Response
 import okhttp3.WebSocket
 import okhttp3.WebSocketListener
 import okio.ByteString
-import org.json.JSONObject
 
 /**
  *packageName    : com.bsstandard.piece.retrofit
@@ -23,42 +23,77 @@ import org.json.JSONObject
  */
 
 
+/**
+ * 포트폴리오 조회 웹소켓 데이터 리스트
+ * **/
 data class Portfolio(
-    val data : ArrayList<String>,
     val purchaseTotalAmount: Int,
     val portfolioId: String,
     val purchasePieceVolume: Int,
     val recruitmentState: String
 )
+
+/**
+ * 포트폴리오 상세 웹소켓 데이터 리스트
+ * **/
+data class PortfolioDetail(
+    val purchaseTotalAmount: Int
+)
+
 class WebSocketListener : WebSocketListener() {
 
-    private val _liveData = MutableLiveData<JSONObject>()
-    val liveData: LiveData<JSONObject> get() = _liveData
-
-    var listdata = ArrayList<String>()
-
+    private val _liveData = MutableLiveData<JsonObject>()
+    val liveData: LiveData<JsonObject> get() = _liveData
 
     private fun outputData(string: String) {
-        val data = JSONObject(string)
+        val resp: JsonObject = JsonParser().parse(string).asJsonObject
+        var jsonObject = JsonObject()
+        jsonObject.add("data", resp)
 
-        val jsonArray = data.optJSONArray("data")
-        var i = 0
-        var tempStr = ""
-        while(i < jsonArray.length()) {
-            val jsonObject = jsonArray.getJSONObject(i)
-            val purchaseTotalAmount = jsonObject.getInt("purchaseTotalAmount")
-            tempStr += "[purchaseTotalAmount : $purchaseTotalAmount], "
-            i++
-        }
-        // 소켓데이터 Custom - jhm 2022/11/02
-//        LogUtil.logE("tempStr $tempStr")
+        val post1Object: JsonObject? = jsonObject.getAsJsonObject("data")
+        println(post1Object.toString())
 
-        val firstStatus = jsonArray.getJSONObject(0)
-        val recruitmentState = firstStatus.getString("recruitmentState")
-        PrefsHelper.write("recruitmentState",recruitmentState)
-
-        _liveData.postValue(data)
+        _liveData.postValue(jsonObject)
     }
+
+
+//    private val _portfolioWsList = MutableLiveData<ArrayList<Portfolio>>()
+//    val portfolioWsList: LiveData<ArrayList<Portfolio>> get() = _portfolioWsList
+//
+//    private val portfolioSocketData: ArrayList<Portfolio> = arrayListOf()
+//
+//
+//    private fun outputData(string: String) {
+//        val data = JSONObject(string)
+//        LogUtil.logE("string : $string")
+//
+//        val jsonArray = data.optJSONArray("data")
+//        var i = 0
+//        var tempStr = ""
+//
+//        portfolioSocketData.clear()
+//
+//        while(i < jsonArray.length()) {
+//            val jsonObject = jsonArray.getJSONObject(i)
+//            portfolioSocketData.add(
+//                Portfolio(
+//                    jsonObject.getInt("purchaseTotalAmount"),
+//                    jsonObject.getString("portfolioId"),
+//                    jsonObject.getInt("purchasePieceVolume"),
+//                    jsonObject.getString("recruitmentState")
+//            ))
+//        }
+//
+//
+//        LogUtil.logE("portfolioId 0 : " + portfolioSocketData[0].portfolioId)
+//        LogUtil.logE("portfolioId 1 : " + portfolioSocketData[1].portfolioId)
+//
+//        LogUtil.logE("purchaseTotalAmount 0 : " + portfolioSocketData[0].purchaseTotalAmount)
+//        LogUtil.logE("purchaseTotalAmount 1 : " + portfolioSocketData[1].purchaseTotalAmount)
+//
+//        _portfolioWsList.value = string
+//
+//    }
 
 
     override fun onOpen(webSocket: WebSocket, response: Response?) {

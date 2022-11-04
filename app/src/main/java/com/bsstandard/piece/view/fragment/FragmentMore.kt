@@ -4,12 +4,14 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -82,14 +84,16 @@ class FragmentMore : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_more, container, false)
-        requireActivity().setStatusBarTransparent()
+//        requireActivity().setStatusBarTransparent()
+//        getStatusBarHeight(requireContext())
+//        binding.pLayout.setPadding(0, 0, 0, 0)
+
+//        activity?.window?.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
+//        (activity as AppCompatActivity).supportActionBar?.hide()
 
         vm = MoreViewModel()
-
-
         binding.moreViewModel = vm
         binding.lifecycleOwner = viewLifecycleOwner
-
 
         // 내정보 API - jhm 2022/09/03
         getUserViewModel = ViewModelProvider(this)[GetUserViewModel::class.java]
@@ -97,7 +101,6 @@ class FragmentMore : Fragment() {
 
         binding.userName.text = PrefsHelper.read("name", "") + " 님"
         binding.dateText.text = PrefsHelper.read("joinDay", "") + "일"
-
         binding.version.text = "v." + PrefsHelper.read("appVersion","")
 
 
@@ -256,4 +259,21 @@ class FragmentMore : Fragment() {
             context?.startActivity(intent)
         }
     }
+
+
+    // statusbar height 추가
+    open fun getStatusBarHeight(context: Context): Int {
+        val screenSizeType = context.resources.configuration.screenLayout and
+                Configuration.SCREENLAYOUT_SIZE_MASK
+        var statusbar = 0
+        if (screenSizeType != Configuration.SCREENLAYOUT_SIZE_XLARGE) {
+            val resourceId =
+                context.resources.getIdentifier("status_bar_height", "dimen", "android")
+            if (resourceId > 0) {
+                statusbar = context.resources.getDimensionPixelSize(resourceId)
+            }
+        }
+        return statusbar
+    }
+
 }

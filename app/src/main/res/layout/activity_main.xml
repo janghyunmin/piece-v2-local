@@ -4,13 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="main"
             type="com.bsstandard.piece.view.main.MainViewModel" />
 
-<!--        <variable-->
-<!--            name="memberVm"-->
-<!--            type="com.bsstandard.piece.data.viewmodel.GetUserViewModel" />-->
+        <!--        <variable-->
+        <!--            name="memberVm"-->
+        <!--            type="com.bsstandard.piece.data.viewmodel.GetUserViewModel" />-->
 
         <variable
             name="popup"
@@ -28,62 +29,25 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:fillViewport="true"
+            app:layout_constraintBottom_toTopOf="@+id/bottom_nav"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/bottom_nav"
-            >
+            app:layout_constraintTop_toTopOf="parent">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/layout"
+
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/nav_main_fragment"
+                android:name="androidx.navigation.fragment.NavHostFragment"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-<!--                <androidx.appcompat.widget.AppCompatTextView-->
-<!--                    android:id="@+id/top_title"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_marginStart="22dp"-->
-<!--                    android:layout_marginTop="23dp"-->
-<!--                    android:text="포트폴리오"-->
-<!--                    android:textColor="@color/c_4a4d55"-->
-<!--                    android:textSize="25dp"-->
-<!--                    app:fontFamily="@font/pretendard_extrabold"-->
-<!--                    app:layout_constraintLeft_toLeftOf="parent"-->
-<!--                    app:layout_constraintTop_toTopOf="parent" />-->
-
-<!--                <androidx.appcompat.widget.AppCompatImageView-->
-<!--                    android:id="@+id/noti_icon"-->
-<!--                    android:layout_width="18dp"-->
-<!--                    android:layout_height="22dp"-->
-<!--                    android:layout_marginTop="23dp"-->
-<!--                    android:layout_marginEnd="28dp"-->
-<!--                    android:background="@drawable/noti_icon"-->
-<!--                    app:layout_constraintRight_toRightOf="parent"-->
-<!--                    app:layout_constraintTop_toTopOf="parent" />-->
-
-<!--                <FrameLayout-->
-<!--                    android:id="@+id/menu_frame_layout"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="0dp"-->
-<!--                    app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                    app:layout_constraintTop_toBottomOf="@id/top_title" />-->
-
-                <androidx.fragment.app.FragmentContainerView
-                    android:id="@+id/nav_main_fragment"
-                    android:name="androidx.navigation.fragment.NavHostFragment"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:defaultNavHost="true"
-                    />
-                <!-- app:navGraph="@navigation/nav_graph"  제거 -->
+                android:layout_height="0dp"
+                app:defaultNavHost="true"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+            <!-- app:navGraph="@navigation/nav_graph"  제거 -->
 
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.core.widget.NestedScrollView>
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
@@ -94,6 +58,6 @@
             app:itemIconTint="@drawable/menu_item_color"
             app:labelVisibilityMode="unlabeled"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:menu="@menu/navi_menu"/>
+            app:menu="@menu/navi_menu" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

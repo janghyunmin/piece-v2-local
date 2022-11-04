@@ -106,8 +106,7 @@ public class MyInfoBottomSheetDialog extends BottomSheetDialogFragment implement
         consentViewModel = new ViewModelProvider(this).get(ConsentViewModel.class);
 
 
-
-        slideupAddressBinding.addressSearchText.setText("");
+        slideupAddressBinding.addressSearchText.setText(null);
         slideupAddressBinding.searchBtn.setOnClickListener(this);
         slideupAddressBinding.closeBtn.setOnClickListener(this);
         slideupAddressBinding.clear.setOnClickListener(this);

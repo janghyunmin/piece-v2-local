@@ -7,26 +7,27 @@ import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowInsetsController
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.NavHostFragment
 import androidx.transition.TransitionInflater
 import com.bsstandard.piece.R
 import com.bsstandard.piece.data.datasource.shared.PrefsHelper
-import com.bsstandard.piece.data.viewmodel.PopupViewModel
 import com.bsstandard.piece.data.viewmodel.PortfolioViewModel
 import com.bsstandard.piece.databinding.FragmentHomeBinding
 import com.bsstandard.piece.retrofit.WebSocketListener
 import com.bsstandard.piece.view.adapter.portfolio.PortfolioAdapter
 import com.bsstandard.piece.view.alarm.AlarmActivity
 import com.bsstandard.piece.view.common.NetworkActivity
+import com.bsstandard.piece.view.main.dialog.EventSheet
 import com.bsstandard.piece.widget.utils.Division
 import com.bsstandard.piece.widget.utils.LogUtil
 import com.bsstandard.piece.widget.utils.NetworkConnection
@@ -38,6 +39,8 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 /**
@@ -52,6 +55,18 @@ import okhttp3.Request
  * 2022/07/08        piecejhm       최초 생성
  */
 
+
+/**
+ * 포트폴리오 조회 웹소켓 데이터 리스트
+ * **/
+data class Portfolio(
+    val purchaseTotalAmount: Int,
+    val portfolioId: String,
+    val purchasePieceVolume: Int,
+    val recruitmentState: String
+)
+
+
 @AndroidEntryPoint
 class FragmentHome : Fragment() {
     private var _binding: FragmentHomeBinding? = null
@@ -60,8 +75,9 @@ class FragmentHome : Fragment() {
     private lateinit var vm: PortfolioViewModel
     private lateinit var client: OkHttpClient
     private var disposable: Disposable? = null
+    var strSDFormatDay: String = ""
 
-    private lateinit var popVm: PopupViewModel
+    private val portfolioWsList: ArrayList<Portfolio> = arrayListOf()
 
 
     companion object {
@@ -84,7 +100,7 @@ class FragmentHome : Fragment() {
     }
 
 
-    @SuppressLint("UseRequireInsteadOfGet")
+    @SuppressLint("UseRequireInsteadOfGet", "SimpleDateFormat")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -96,9 +112,31 @@ class FragmentHome : Fragment() {
         binding.home = vm
         binding.lifecycleOwner = viewLifecycleOwner
 
-        // statusBar Height - jhm 2022/10/28
-        getStatusBarHeight(requireContext())
-        binding.pLayout.setPadding(0, getStatusBarHeight(requireContext()), 0, 0)
+        // UI Setting 최종 - jhm 2022/09/14
+        setStatusBarIconColor(true) // 상태바 아이콘 true : 검정색
+        setStatusBarBgColor("#ffffff") // 상태바 배경색상 설정
+        setNaviBarIconColor(false) // 네비게이션 true : 검정색
+        setNaviBarBgColor("#ffffff") // 네비게이션 배경색
+
+//        // statusBar Height - jhm 2022/10/28
+//        getStatusBarHeight(requireContext())
+//        binding.pLayout.setPadding(0, getStatusBarHeight(requireContext()), 0, 0)
+
+        val CurrentTime = System.currentTimeMillis() // 현재 시간을 msec 단위로 얻음
+        val TodayDate = Date(CurrentTime) // 현재 시간 Date 변수에 저장
+        val SDFormat = SimpleDateFormat("dd")
+        strSDFormatDay = SDFormat.format(TodayDate) // 'dd' 형태로 포맷 변경
+
+        LogUtil.logE("strSDFormatDay $strSDFormatDay")
+        // 오늘하루 안보기 이벤트 날짜 비교 - jhm 2022/10/28
+        if(strSDFormatDay.toInt().minus(PrefsHelper.read("Day","0").toInt()) != 0) {
+            val eventSheet = EventSheet(context!!)
+            Handler(Looper.getMainLooper()).postDelayed({
+                eventSheet.show(childFragmentManager, eventSheet.tag)
+            }, 1500)
+        }
+
+
 
         startWebSocket()
 
@@ -107,23 +145,7 @@ class FragmentHome : Fragment() {
             if (isConnected) {
 
                 vm.viewInit(binding.portfolioRv)
-                vm.getPortfolio(100)
-
-                popVm = ViewModelProvider(this)[PopupViewModel::class.java]
-                popVm.getPopup("POP0102")
-                popVm.popupResponse.observe(viewLifecycleOwner, Observer {
-                    if (it != null) {
-                        LogUtil.logE("팝업 조회 popupId : ${it.data.popupId}")
-                        LogUtil.logE("팝업 조회 popupTitle : ${it.data.popupTitle}")
-                        LogUtil.logE("팝업 조회 popupType : ${it.data.popupType}")
-                        LogUtil.logE("팝업 조회 popupTypeName : ${it.data.popupTypeName}")
-                        LogUtil.logE("팝업 조회 popupImagePath : ${it.data.popupImagePath}")
-                        LogUtil.logE("팝업 조회 popupLinkType : ${it.data.popupLinkType}")
-                        LogUtil.logE("팝업 조회 popupLinkUrl : ${it.data.popupLinkUrl}")
-
-                        PrefsHelper.write("popupImagePath", it.data.popupImagePath)
-                    }
-                })
+                vm.getPortfolio(500)
 
                 // 알림 및 혜택 페이지 이동 - jhm 2022/10/16
                 binding.notiIcon.setOnClickListener {
@@ -234,12 +256,6 @@ class FragmentHome : Fragment() {
         }
 
 
-//        vm.startWebSocket()
-//        val listener: WebSocketListener = WebSocketListener()
-//        listener.liveData.observe(viewLifecycleOwner, Observer {
-//            LogUtil.logE("json : ${it.getJSONArray("recruitmentState")}")
-//        })
-
         return binding.root
     }
 
@@ -260,6 +276,8 @@ class FragmentHome : Fragment() {
     fun startWebSocket(): String {
         val listener: WebSocketListener = WebSocketListener()
 
+        portfolioWsList.clear()
+
         GlobalScope.launch(Dispatchers.IO) {
             client = OkHttpClient()
 
@@ -267,10 +285,30 @@ class FragmentHome : Fragment() {
                 .url(Division.PIECE_WS_PORTFOLIO)
                 .build()
 
-
             client.newWebSocket(request, listener)
             client.dispatcher().executorService().shutdown()
+
         }
+
+
+//        val list = JSONObject(listener.liveData.value.toString())
+//        val jsonArray = list.optJSONArray("data")
+//        var i = 0
+//        while (i < jsonArray.length()) {
+//            val jsonObject = jsonArray.getJSONObject(i)
+//            portfolioWsList.add(
+//                Portfolio(
+//                    jsonObject.getInt("purchaseTotalAmount"),
+//                    jsonObject.getString("portfolioId"),
+//                    jsonObject.getInt("purchasePieceVolume"),
+//                    jsonObject.getString("recruitmentState")
+//                )
+//            )
+//        }
+//
+//        for(i in 0 until portfolioWsList.size) {
+//            LogUtil.logE("리스트 변환 : " + portfolioWsList[i].portfolioId)
+//        }
 
 
         return listener.liveData.value.toString()
