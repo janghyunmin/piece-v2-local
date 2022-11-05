@@ -82,9 +82,10 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>(R.layout.activity_spl
             // SYSTEM_UI_FLAG_FULLSCREEN is only available on Android 4.1 and higher, but as
             // a general rule, you should design your app to hide the status bar whenever you
             // hide the navigation bar.
-            if(Build.VERSION.SDK_INT >= 19) {
-                window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                if(Build.VERSION.SDK_INT < 21) {
+            if (Build.VERSION.SDK_INT >= 19) {
+                window.decorView.systemUiVisibility =
+                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                if (Build.VERSION.SDK_INT < 21) {
                     setWindowFlag(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, true)
                 } else {
                     setWindowFlag(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, false)
@@ -98,47 +99,47 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>(R.layout.activity_spl
         val networkConnection = NetworkConnection(applicationContext)
         networkConnection.observe(this) { isConnected -> // 인터넷 연결되어있음 - jhm 2022/11/02
             if (isConnected) {
+                binding.splashAnimationView.setAnimation("splash1.json")
+                binding.splashAnimationView.loop(false);
+                binding.splashAnimationView.playAnimation()
+                binding.splashAnimationView.addAnimatorListener(object : Animator.AnimatorListener {
+                    override fun onAnimationStart(animation: Animator) {
+                        LogUtil.logE("SplashActivity Animation Start")
+                    }
+
+                    override fun onAnimationEnd(animation: Animator) {
+                        LogUtil.logE("SplashActivity Animation End")
+                        versionChk()
+                    }
+
+                    override fun onAnimationCancel(animation: Animator) {
+                        LogUtil.logE("SplashActivity Animation Cancel")
+                    }
+
+                    override fun onAnimationRepeat(animation: Animator) {
+                        LogUtil.logE("SplashActivity Animation Repeat")
+                    }
+                })
+
+                // 현재 로컬 앱의 버전을 가져옴 - jhm 2022/06/13
+                try {
+                    localVersion = packageManager.getPackageInfo(packageName, 0).versionName
+                } catch (e: PackageManager.NameNotFoundException) {
+                    e.printStackTrace()
+                }
+
+                vv.getAppVersion("MDO0101")
+                vv.detailResponse.observe(this@SplashActivity, Observer {
+                    PrefsHelper.write("appVersion", it.data.version)
+                    storeVersion = it.data.version
+                })
 
             } else {
+//                DialogManager.openNetWorkChk(this@SplashActivity)
                 val intent = Intent(applicationContext, NetworkActivity::class.java)
                 startActivity(intent)
             }
         }
-
-        binding.splashAnimationView.setAnimation("splash1.json")
-        binding.splashAnimationView.loop(false);
-        binding.splashAnimationView.playAnimation()
-        binding.splashAnimationView.addAnimatorListener(object : Animator.AnimatorListener {
-            override fun onAnimationStart(animation: Animator) {
-                LogUtil.logE("SplashActivity Animation Start")
-            }
-
-            override fun onAnimationEnd(animation: Animator) {
-                LogUtil.logE("SplashActivity Animation End")
-                versionChk()
-            }
-
-            override fun onAnimationCancel(animation: Animator) {
-                LogUtil.logE("SplashActivity Animation Cancel")
-            }
-
-            override fun onAnimationRepeat(animation: Animator) {
-                LogUtil.logE("SplashActivity Animation Repeat")
-            }
-        })
-
-        // 현재 로컬 앱의 버전을 가져옴 - jhm 2022/06/13
-        try {
-            localVersion = packageManager.getPackageInfo(packageName, 0).versionName
-        } catch (e: PackageManager.NameNotFoundException) {
-            e.printStackTrace()
-        }
-
-        vv.getAppVersion("MDO0101")
-        vv.detailResponse.observe(this@SplashActivity, Observer {
-            PrefsHelper.write("appVersion", it.data.version)
-            storeVersion = it.data.version
-        })
 
 
     }

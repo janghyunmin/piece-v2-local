@@ -55,6 +55,9 @@ class PurchaseViewModel(application: Application) : AndroidViewModel(application
     private val purchaseList: ArrayList<PurchaseDTO.Datum> = arrayListOf()
     var purchaseAdapter = PurchaseAdapter(this,context)
 
+    private val volumeList: ArrayList<Int> = arrayListOf()
+    private var _purchaseVolume: MutableLiveData<ArrayList<Int>> = MutableLiveData()
+    val purchaseVolume: MutableLiveData<ArrayList<Int>> get() = _purchaseVolume
 
     @SuppressLint("CheckResult", "NotifyDataSetChanged")
     fun getPurchaseList(
@@ -84,6 +87,13 @@ class PurchaseViewModel(application: Application) : AndroidViewModel(application
 
                     _purchaseResponse.value = purchaseList
                     _purchaseResponse.postValue(purchaseList)
+
+
+                    // 포트폴리오 구매시 구매 제한 카운팅 때문에 사용 - jhm 2022/11/05
+                    volumeList.add(PurchaseDTO.data[i].purchasePieceVolume)
+                    _purchaseVolume.value = volumeList
+                    _purchaseVolume.postValue(volumeList)
+
 
                     purchaseAdapter.notifyDataSetChanged()
 

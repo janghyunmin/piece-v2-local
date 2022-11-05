@@ -328,9 +328,6 @@ public class BottomSheetDialog extends BottomSheetDialogFragment implements View
                                     String Contents = callSmsAuthDTO.getData().getRsltMsg();
                                     GetResponseSMS(Contents); // 인증번호 dialog 호출
                                     dismiss(); // 인증번호 dialog 호출 후 약관동의 dialog 는 닫는다.
-                                } else {
-                                    LogUtil.logE("인증번호 검증 실패 재시도 처리");
-
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();

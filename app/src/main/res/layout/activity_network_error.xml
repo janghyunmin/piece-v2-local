@@ -3,20 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <data>
-
-        <variable
-            name="activity"
-            type="com.bsstandard.piece.view.common.NetworkActivity" />
-
-    </data>
-
-
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:animateLayoutChanges="true"
-        tools:context=".view.common.NetworkActivity">
+        android:background="@color/c_ffffff"
+        >
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/close_icon"

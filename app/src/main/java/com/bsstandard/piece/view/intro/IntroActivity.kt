@@ -69,6 +69,8 @@ class IntroActivity : AppCompatActivity() {
                     overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
                 }
             } else {
+//                DialogManager.openNetWorkChk(this@IntroActivity)
+
                 val intent = Intent(applicationContext, NetworkActivity::class.java)
                 startActivity(intent)
             }

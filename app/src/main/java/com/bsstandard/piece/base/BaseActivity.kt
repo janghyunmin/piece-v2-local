@@ -31,6 +31,7 @@ abstract class BaseActivity<T : ViewDataBinding>(
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         binding = DataBindingUtil.setContentView(this, layoutResId)
         binding.lifecycleOwner = this
 
@@ -45,7 +46,6 @@ abstract class BaseActivity<T : ViewDataBinding>(
 //                decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
 //            }
 //        }
-
     }
 
 //    override fun onBackPressed() {

@@ -7,6 +7,8 @@ import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
+import android.os.VibrationEffect
+import android.os.Vibrator
 import android.view.*
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
@@ -50,7 +52,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
     val manager = supportFragmentManager
     var mContext: Context = this@MainActivity
     var strSDFormatDay: String = ""
-
 
 
     @SuppressLint("NewApi", "SimpleDateFormat")
@@ -102,7 +103,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
                 startActivity(intent)
             }
         }
-
 
 
     }
@@ -167,49 +167,61 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
 
 
     // 로그인 여부에 따른 wallet , more 탭 분기 - jhm 2022/08/14
+    @RequiresApi(Build.VERSION_CODES.O)
     fun onClick(item: MenuItem) {
+        // Vibrator 객체
+        val vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator;
+
         var navHostFragment =
-            supportFragmentManager.findFragmentById(binding.navMainFragment.id) as NavHostFragment
-        val transaction: FragmentTransaction = manager.beginTransaction()
+                supportFragmentManager.findFragmentById(binding.navMainFragment.id) as NavHostFragment
+            try {
+                val transaction: FragmentTransaction = manager.beginTransaction()
 
-
-        when (item.itemId) {
-            R.id.FragmentHome -> {
-                var navController = navHostFragment.navController
-                navController.navigate(R.id.FragmentHome)
-                transaction.addToBackStack(null)
-            }
-            R.id.FragmentMagazine -> {
-                var navController = navHostFragment.navController
-                navController.navigate(R.id.FragmentMagazine)
-                transaction.addToBackStack(null)
-            }
-            R.id.FragmentWallet -> {
-                LogUtil.logE("wallet..")
-                if (PrefsHelper.read("memberId", "").equals("")) {
-                    val intent = Intent(this@MainActivity, LoginChkActivity::class.java)
-                    startActivity(intent)
-                } else {
-                    var navController = navHostFragment.navController
-                    navController.navigate(R.id.FragmentWallet)
-                    transaction.addToBackStack(null)
+                when (item.itemId) {
+                    R.id.FragmentHome -> {
+                        var navController = navHostFragment.navController
+                        navController.navigate(R.id.FragmentHome)
+                        transaction.addToBackStack(null)
+                        vibrator.vibrate(VibrationEffect.createOneShot(100,50))
+                    }
+                    R.id.FragmentMagazine -> {
+                        var navController = navHostFragment.navController
+                        navController.navigate(R.id.FragmentMagazine)
+                        transaction.addToBackStack(null)
+                        vibrator.vibrate(VibrationEffect.createOneShot(100,50))
+                    }
+                    R.id.FragmentWallet -> {
+                        vibrator.vibrate(VibrationEffect.createOneShot(100,50))
+                        LogUtil.logE("wallet..")
+                        if (PrefsHelper.read("memberId", "").equals("")) {
+                            val intent = Intent(this@MainActivity, LoginChkActivity::class.java)
+                            startActivity(intent)
+                        } else {
+                            var navController = navHostFragment.navController
+                            navController.navigate(R.id.FragmentWallet)
+                            transaction.addToBackStack(null)
+                        }
+                    }
+                    R.id.FragmentMore -> {
+                        vibrator.vibrate(VibrationEffect.createOneShot(100,50))
+                        LogUtil.logE("more..")
+                        if (PrefsHelper.read("memberId", "").equals("")) {
+                            val intent = Intent(this@MainActivity, LoginChkActivity::class.java)
+                            startActivity(intent)
+                        } else {
+                            var navController = navHostFragment.navController
+                            navController.navigate(R.id.FragmentMore)
+                            transaction.addToBackStack(null)
+                        }
+                    }
                 }
-            }
-            R.id.FragmentMore -> {
-                LogUtil.logE("more..")
-                if (PrefsHelper.read("memberId", "").equals("")) {
-                    val intent = Intent(this@MainActivity, LoginChkActivity::class.java)
-                    startActivity(intent)
-                } else {
-                    var navController = navHostFragment.navController
-                    navController.navigate(R.id.FragmentMore)
-                    transaction.addToBackStack(null)
-                }
-            }
-        }
-        transaction.setReorderingAllowed(true) // 화면전환간 애니메이션 정상 동작 처리 - jhm 2022/08/16
+                transaction.setReorderingAllowed(true) // 화면전환간 애니메이션 정상 동작 처리 - jhm 2022/08/16
 //        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-        transaction.commit()
+                transaction.commitAllowingStateLoss()
+            } catch (message: IllegalStateException) {
+                LogUtil.logE("Exception : $message")
+                message.printStackTrace()
+            }
     }
 
 
@@ -309,6 +321,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
         } // end if
 
     }
+
     /** Util end **/
 
 
@@ -339,7 +352,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
     }
 
     fun getNaviBarHeight(context: Context): Int {
-        val resourceId: Int = context.resources.getIdentifier("navigation_bar_height", "dimen", "android")
+        val resourceId: Int =
+            context.resources.getIdentifier("navigation_bar_height", "dimen", "android")
         return if (resourceId > 0) {
             context.resources.getDimensionPixelSize(resourceId)
         } else {

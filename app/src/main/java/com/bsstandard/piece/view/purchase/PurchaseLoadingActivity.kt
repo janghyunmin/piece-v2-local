@@ -4,12 +4,10 @@ import android.animation.Animator
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
-import android.os.Build
-import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
+import android.os.*
 import android.view.View
 import android.view.WindowInsetsController
+import androidx.annotation.RequiresApi
 import com.bsstandard.piece.R
 import com.bsstandard.piece.base.BaseActivity
 import com.bsstandard.piece.databinding.ActivityPurchaseLateBinding
@@ -29,12 +27,15 @@ import dagger.hilt.android.AndroidEntryPoint
  */
 
 @AndroidEntryPoint
-class PurchaseLoadingActivity : BaseActivity<ActivityPurchaseLateBinding>(R.layout.activity_purchase_late){
+class PurchaseLoadingActivity :
+    BaseActivity<ActivityPurchaseLateBinding>(R.layout.activity_purchase_late) {
 
     val mContext: Context = this@PurchaseLoadingActivity
 
+    @RequiresApi(Build.VERSION_CODES.Q)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
 
         // UI Setting 최종 - jhm 2022/09/14
         setStatusBarIconColor(true) // 상태바 아이콘 true : 검정색
@@ -46,6 +47,15 @@ class PurchaseLoadingActivity : BaseActivity<ActivityPurchaseLateBinding>(R.layo
             lifecycleOwner = this@PurchaseLoadingActivity
             binding.activity = this@PurchaseLoadingActivity
         }
+
+        // Vibrator 객체
+        val vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator;
+
+        // 안드로이드 기본 제공 진동패턴효과 생성
+        val vibrationEffect = VibrationEffect.createPredefined(VibrationEffect.EFFECT_DOUBLE_CLICK);
+
+        // 진동 실행
+        vibrator.vibrate(vibrationEffect)
 
         binding.loading.setAnimation("progress_bar.json")
         binding.loading.loop(true)

@@ -17,6 +17,11 @@
         <variable
             name="numberPad"
             type="com.bsstandard.piece.view.withdrawal.NumberLiveViewModel"/>
+
+        <!-- 구매 정보 조회 ( 소유 조각 ) ViewModel -->
+        <variable
+            name="purchaseVm"
+            type="com.bsstandard.piece.data.viewmodel.PurchaseViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

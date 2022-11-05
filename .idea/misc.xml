@@ -152,7 +152,7 @@
         <entry key="app/src/main/res/layout/dialog_basic.xml" value="0.25138948268490807" />
         <entry key="app/src/main/res/layout/dialog_cancle.xml" value="0.24711415134672937" />
         <entry key="app/src/main/res/layout/dialog_middle.xml" value="0.25138948268490807" />
-        <entry key="app/src/main/res/layout/dialog_text_left.xml" value="0.32815221267617306" />
+        <entry key="app/src/main/res/layout/dialog_text_left.xml" value="0.3125" />
         <entry key="app/src/main/res/layout/document_dialog.xml" value="0.23685335613510047" />
         <entry key="app/src/main/res/layout/document_image_dialog.xml" value="0.2970509383378016" />
         <entry key="app/src/main/res/layout/document_item_composition_layout.xml" value="0.21804189824711415" />

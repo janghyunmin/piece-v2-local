@@ -219,10 +219,6 @@ class FragmentMagazine : Fragment() {
                 smallTitle: String,
                 pos: Int
             ) {
-                LogUtil.logE("view : $isFavorite")
-//                LogUtil.logE("tag : $tag")
-//                LogUtil.logE("magazineId $magazineId")
-//                LogUtil.logE("magazineThumnail ImagePath $magazineImagePath")
 
                 when (tag) {
                     "webView" -> {

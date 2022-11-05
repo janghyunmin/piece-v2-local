@@ -170,7 +170,7 @@ public class PortfolioDTO {
             private String shareUrl;
             @SerializedName("remainingPieceVolume")
             @Expose
-            private Object remainingPieceVolume;
+            private String remainingPieceVolume;
             @SerializedName("purchaseGuides")
             @Expose
             private List<PurchaseGuide> purchaseGuides = null;
@@ -362,11 +362,11 @@ public class PortfolioDTO {
                 this.shareUrl = shareUrl;
             }
 
-            public Object getRemainingPieceVolume() {
+            public String getRemainingPieceVolume() {
                 return remainingPieceVolume;
             }
 
-            public void setRemainingPieceVolume(Object remainingPieceVolume) {
+            public void setRemainingPieceVolume(String remainingPieceVolume) {
                 this.remainingPieceVolume = remainingPieceVolume;
             }
 

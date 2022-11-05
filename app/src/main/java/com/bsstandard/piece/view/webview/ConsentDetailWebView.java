@@ -1,6 +1,7 @@
 package com.bsstandard.piece.view.webview;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -74,6 +75,18 @@ public class ConsentDetailWebView extends AppCompatActivity {
                             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                                 view.loadUrl(url);
                                 return true;
+                            }
+
+                            @Override
+                            public void onPageStarted(WebView view, String url, Bitmap favicon) {
+                                super.onPageStarted(view, url, favicon);
+                                binding.progressBar.show();
+                            }
+
+                            @Override
+                            public void onPageFinished(WebView view, String url) {
+                                super.onPageFinished(view, url);
+                                binding.progressBar.hide();
                             }
                         });
                     }

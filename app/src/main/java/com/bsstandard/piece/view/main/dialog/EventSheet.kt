@@ -1,6 +1,7 @@
 package com.bsstandard.piece.view.main.dialog
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.graphics.Outline
 import android.os.Build
@@ -38,10 +39,9 @@ import java.util.*
  * 2022/07/07        piecejhm       최초 생성
  */
 
-class EventSheet(context: Context) : BottomSheetDialogFragment() {
+class EventSheet(activity: Activity) : BottomSheetDialogFragment() {
     private lateinit var popVm: PopupViewModel
     lateinit var binding: SlideupEventBinding;
-    private val mContext: Context = context
     private var strSDFormatDay: String = "0"
     private var imgPath: String = ""
 

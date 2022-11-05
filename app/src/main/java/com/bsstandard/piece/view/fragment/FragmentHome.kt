@@ -106,6 +106,7 @@ class FragmentHome : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        if(activity !=null && isAdded)
         _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
 
         vm = ViewModelProvider(this)[PortfolioViewModel::class.java]
@@ -129,14 +130,17 @@ class FragmentHome : Fragment() {
 
         LogUtil.logE("strSDFormatDay $strSDFormatDay")
         // 오늘하루 안보기 이벤트 날짜 비교 - jhm 2022/10/28
-        if(strSDFormatDay.toInt().minus(PrefsHelper.read("Day","0").toInt()) != 0) {
-            val eventSheet = EventSheet(context!!)
-            Handler(Looper.getMainLooper()).postDelayed({
-                eventSheet.show(childFragmentManager, eventSheet.tag)
-            }, 1500)
+        activity?.runOnUiThread {
+            if(activity != null) {
+                if(strSDFormatDay.toInt().minus(PrefsHelper.read("Day","0").toInt()) != 0) {
+                    val eventSheet = EventSheet(activity!!)
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        eventSheet.show(childFragmentManager, eventSheet.tag)
+                    }, 1500)
+                }
+            }
+
         }
-
-
 
         startWebSocket()
 

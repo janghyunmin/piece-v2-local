@@ -9,8 +9,6 @@ import android.net.Network
 import android.net.NetworkInfo
 import android.os.Build
 import androidx.lifecycle.LiveData
-import java.util.*
-import kotlin.concurrent.schedule
 
 /**
  *packageName    : com.bsstandard.piece.utils
@@ -35,7 +33,6 @@ class NetworkConnection(private val context: Context) : LiveData<Boolean>()
     {
         super.onActive()
         updateConnection()
-
         when
         {
             Build.VERSION.SDK_INT >= Build.VERSION_CODES.N ->

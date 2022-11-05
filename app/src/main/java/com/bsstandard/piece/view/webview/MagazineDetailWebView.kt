@@ -10,7 +10,6 @@ import android.os.Build
 import android.os.Bundle
 import android.view.*
 import android.webkit.*
-import android.widget.ProgressBar
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
@@ -58,7 +57,6 @@ class MagazineDetailWebView :
 
     private var disposable: Disposable? = null
     private lateinit var webView: WebView
-    private lateinit var mProgressBar: ProgressBar
     private lateinit var vm: MagazineDetailViewModel
     private lateinit var mvm: MemberMagazineDetailViewModel
     private var magazineId: String = ""
@@ -362,6 +360,7 @@ class MagazineDetailWebView :
 
     // 웹뷰 새창이 아닌 기존창에서 실행되도록 - jhm 2022/08/30
     inner class WebViewClient : android.webkit.WebViewClient() {
+
         override fun shouldOverrideUrlLoading(
             view: WebView?,
             request: WebResourceRequest?
@@ -374,6 +373,11 @@ class MagazineDetailWebView :
 
         override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
             super.onPageStarted(view, url, favicon)
+            binding.progressBar.show()
+        }
+        override fun onPageFinished(view: WebView?, url: String?) {
+            super.onPageFinished(view, url)
+            binding.progressBar.hide()
         }
 
         override fun onPageCommitVisible(view: WebView?, url: String?) {

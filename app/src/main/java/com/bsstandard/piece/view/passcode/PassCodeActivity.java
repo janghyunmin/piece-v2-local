@@ -1,11 +1,16 @@
 package com.bsstandard.piece.view.passcode;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.view.View;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
@@ -141,6 +146,13 @@ public class PassCodeActivity extends AppCompatActivity {
                     passCodeModelList.clear();
                     passCodeVerifyList.clear();
 
+                    binding.backImg.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            finish();
+                        }
+                    });
+
                     // 최초 로그인인지 , 최초 로그인이 아니고 재접속 인지 , 비밀번호 변경인지 분기 - jhm 2022/10/17
                     Intent intent = getIntent();
                     if (intent != null) {
@@ -179,8 +191,11 @@ public class PassCodeActivity extends AppCompatActivity {
                     }
 
                     binding.clear.setOnClickListener(new View.OnClickListener() {
+                        Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+                        @RequiresApi(api = Build.VERSION_CODES.O)
                         @Override
                         public void onClick(View v) {
+                            vibrator.vibrate(VibrationEffect.createOneShot(100,100));
                             PinNumberDelete(); // 번호 뒤에서부터 지우는 로직 - jhm 2022/06/27
                         }
                     });
@@ -204,21 +219,28 @@ public class PassCodeActivity extends AppCompatActivity {
      *
      ***/
     private void KeyPad(String Step) {
+        Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+
+
         binding.code0.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
                 if (passCodeModelList.size() <= 6) {
                     passCodeModelList.add(binding.code0.getText().toString());
                 }
+                vibrator.vibrate(VibrationEffect.createOneShot(100,100));
                 PasswordChk(Step);
             }
         });
         binding.code1.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
                 if (passCodeModelList.size() <= 6) {
                     passCodeModelList.add(binding.code1.getText().toString());
                 }
+                vibrator.vibrate(VibrationEffect.createOneShot(100,100));
                 PasswordChk(Step);
             }
         });
@@ -228,6 +250,7 @@ public class PassCodeActivity extends AppCompatActivity {
                 if (passCodeModelList.size() <= 6) {
                     passCodeModelList.add(binding.code2.getText().toString());
                 }
+                vibrator.vibrate(VibrationEffect.createOneShot(100,100));
                 PasswordChk(Step);
             }
         });
@@ -237,6 +260,7 @@ public class PassCodeActivity extends AppCompatActivity {
                 if (passCodeModelList.size() <= 6) {
                     passCodeModelList.add(binding.code3.getText().toString());
                 }
+                vibrator.vibrate(VibrationEffect.createOneShot(100,100));
                 PasswordChk(Step);
             }
         });
@@ -246,6 +270,7 @@ public class PassCodeActivity extends AppCompatActivity {
                 if (passCodeModelList.size() <= 6) {
                     passCodeModelList.add(binding.code4.getText().toString());
                 }
+                vibrator.vibrate(VibrationEffect.createOneShot(100,100));
                 PasswordChk(Step);
             }
         });
@@ -255,6 +280,7 @@ public class PassCodeActivity extends AppCompatActivity {
                 if (passCodeModelList.size() <= 6) {
                     passCodeModelList.add(binding.code5.getText().toString());
                 }
+                vibrator.vibrate(VibrationEffect.createOneShot(100,100));
                 PasswordChk(Step);
             }
         });
@@ -264,6 +290,7 @@ public class PassCodeActivity extends AppCompatActivity {
                 if (passCodeModelList.size() <= 6) {
                     passCodeModelList.add(binding.code6.getText().toString());
                 }
+                vibrator.vibrate(VibrationEffect.createOneShot(100,100));
                 PasswordChk(Step);
             }
         });
@@ -273,6 +300,7 @@ public class PassCodeActivity extends AppCompatActivity {
                 if (passCodeModelList.size() <= 6) {
                     passCodeModelList.add(binding.code7.getText().toString());
                 }
+                vibrator.vibrate(VibrationEffect.createOneShot(100,100));
                 PasswordChk(Step);
             }
         });
@@ -282,15 +310,18 @@ public class PassCodeActivity extends AppCompatActivity {
                 if (passCodeModelList.size() <= 6) {
                     passCodeModelList.add(binding.code8.getText().toString());
                 }
+                vibrator.vibrate(VibrationEffect.createOneShot(100,100));
                 PasswordChk(Step);
             }
         });
         binding.code9.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
                 if (passCodeModelList.size() <= 6) {
                     passCodeModelList.add(binding.code9.getText().toString());
                 }
+                vibrator.vibrate(VibrationEffect.createOneShot(100,100));
                 PasswordChk(Step);
             }
         });
@@ -708,7 +739,14 @@ public class PassCodeActivity extends AppCompatActivity {
     }
 
     // 간편비밀번호 재설정 Dialog - jhm 2022/07/05
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public void PinNumberReset() {
+        Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+        // 안드로이드 기본제공 진동패턴 효과 생성
+        @SuppressLint({"NewApi", "LocalSuppress"})
+        VibrationEffect vibrationEffect = VibrationEffect.createPredefined(VibrationEffect.EFFECT_DOUBLE_CLICK);
+        vibrator.vibrate(vibrationEffect);
+
         LogUtil.logE("간편비밀번호 재등록 필요..");
         // 실패시 비밀번호 재설정 - jhm 2022/07/05
         CustomDialogListener customDialogListener = new CustomDialogListener() {
@@ -722,6 +760,7 @@ public class PassCodeActivity extends AppCompatActivity {
 
             @Override
             public void onOkButtonClicked() {
+
                 LogUtil.logE("비밀번호 재설정");
                 PrefsHelper.write("pinNumChk", "true");
                 pinNumber = "";
@@ -741,6 +780,7 @@ public class PassCodeActivity extends AppCompatActivity {
 
     // 입력비밀번호 뒤에서부터 한자리씩 지우기 - jhm 2022/06/27
     public void PinNumberDelete() {
+
         if (passCodeModelList.size() > 0) {
             LogUtil.logE("size 0 보다 큼");
 
@@ -757,9 +797,12 @@ public class PassCodeActivity extends AppCompatActivity {
 
     // 입력한 간편비밀번호 모두 초기화 - jhm 2022/06/27
     public void PinNumberClear() {
+        Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
         binding.clearText.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
+                vibrator.vibrate(VibrationEffect.createOneShot(100,100));
                 passCodeModelList.clear();
                 setActiveChk();
             }

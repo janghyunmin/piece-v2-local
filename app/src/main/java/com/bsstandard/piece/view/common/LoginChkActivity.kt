@@ -64,11 +64,12 @@ class LoginChkActivity : AppCompatActivity() {
             startActivity(intent)
             finishAffinity() // 이전 앱 화면 모두 제거 및 앱스택 제거 - jhm 2022/08/31
         }
-
-
-
     }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+        finish()
+    }
     /** Util start **/
     /**
      * 상태바 아이콘 색상 지정

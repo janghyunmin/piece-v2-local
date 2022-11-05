@@ -154,6 +154,12 @@ class EventDetailWebView :
 
         override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
             super.onPageStarted(view, url, favicon)
+            binding.progressBar.show()
+        }
+
+        override fun onPageFinished(view: WebView?, url: String?) {
+            super.onPageFinished(view, url)
+            binding.progressBar.hide()
         }
 
         override fun onPageCommitVisible(view: WebView?, url: String?) {

@@ -99,6 +99,7 @@ class PortfolioDetailActivity :
     private var minPurchaseAmount: String = ""
     private var maxPurchaseAmount: String = ""
     private var portfolioTitle: String = ""
+    private var remainingPieceVolume: String = ""
 
     // 포트폴리오 알림 조회 여부 상태값 - jhm 2022/11/02
     private var notificationYn: String = ""
@@ -230,24 +231,29 @@ class PortfolioDetailActivity :
 
 
 
-        pvm.getPortfolioNotification(portfolioId)
-        pvm.detailResponse.observe(this@PortfolioDetailActivity, Observer {
-            if (it.data.notificationYn.isNotEmpty()) {
-                LogUtil.logE("notificationYn ${it.data.notificationYn}")
-                notificationYn = it.data.notificationYn
-                if (notificationYn == "N") {
-                    binding.unionLayout.visibility = View.VISIBLE
-                    binding.notiView.visibility = View.VISIBLE
-                    binding.notiRadius.background =
-                        applicationContext.getDrawable(R.drawable.layout_round_border_eaecf0)
-                } else {
-                    binding.unionLayout.visibility = View.GONE
-                    binding.notiView.visibility = View.GONE
-                    binding.notiRadius.background =
-                        applicationContext.getDrawable(R.drawable.noti_call)
+        if(memberId.isNotEmpty()){
+            LogUtil.logE("memberId isNotEmpty")
+            pvm.getPortfolioNotification(portfolioId)
+            pvm.detailResponse.observe(this@PortfolioDetailActivity, Observer {
+                if (it.data.notificationYn.isNotEmpty()) {
+                    LogUtil.logE("notificationYn ${it.data.notificationYn}")
+                    notificationYn = it.data.notificationYn
+                    if (notificationYn == "N") {
+                        binding.unionLayout.visibility = View.VISIBLE
+                        binding.notiView.visibility = View.VISIBLE
+                        binding.notiRadius.background =
+                            applicationContext.getDrawable(R.drawable.layout_round_border_eaecf0)
+                    } else {
+                        LogUtil.logE("요기용")
+                        binding.unionLayout.visibility = View.GONE
+                        binding.notiView.visibility = View.GONE
+                        binding.notiRadius.background =
+                            applicationContext.getDrawable(R.drawable.noti_call)
+                    }
                 }
-            }
-        })
+            })
+        }
+
 
         vm.getPortfolioDetail(portfolioId)
         vm.detailResponse.observe(this@PortfolioDetailActivity, Observer {
@@ -282,94 +288,110 @@ class PortfolioDetailActivity :
                     val dayFormat = dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.KOREA)
                     val newDate = "$month.$day($dayFormat)$hour:$minute 오픈예정"
 
-                    if (notificationYn == "N") {
+
+                    if(memberId.isNotEmpty()) {
+                        if (notificationYn == "N") {
+                            binding.unionLayout.visibility = View.VISIBLE
+                            binding.notiView.visibility = View.VISIBLE
+                            binding.notiRadius.background =
+                                applicationContext.getDrawable(R.drawable.layout_round_border_eaecf0)
+                        } else {
+                            binding.unionLayout.visibility = View.GONE
+                            binding.notiView.visibility = View.GONE
+                            binding.notiRadius.background =
+                                applicationContext.getDrawable(R.drawable.noti_call)
+                        }
+                    } else {
                         binding.unionLayout.visibility = View.VISIBLE
                         binding.notiView.visibility = View.VISIBLE
                         binding.notiRadius.background =
                             applicationContext.getDrawable(R.drawable.layout_round_border_eaecf0)
-                    } else {
-                        binding.unionLayout.visibility = View.GONE
-                        binding.notiView.visibility = View.GONE
-                        binding.notiRadius.background =
-                            applicationContext.getDrawable(R.drawable.noti_call)
                     }
+
+
 
                     binding.notiRadius.setOnClickListener {
-                        LogUtil.logE("오픈 알림 신청 OnClick..")
-                        binding.notiRadius.isSelected = !binding.notiRadius.isSelected
+                        if (!PrefsHelper.read("memberId", "").equals("")) {
 
-                        if (notificationYn == "N") {
-                            response?.postPortfolioNotification(
-                                "Bearer $accessToken",
-                                deviceId,
-                                memberId,
-                                portfolioId
-                            )?.enqueue(object : Callback<BaseDTO> {
-                                @SuppressLint("NotifyDataSetChanged")
-                                override fun onResponse(
-                                    call: Call<BaseDTO>,
-                                    response: Response<BaseDTO>
-                                ) {
-                                    try {
-                                        if (!response.body().toString().isEmpty()) {
-                                            LogUtil.logE("포트폴리오 알림 설정 정보 success " + response.body()?.status)
-                                            pvm.getPortfolioNotification(portfolioId)
+                            LogUtil.logE("오픈 알림 신청 OnClick..")
+                            binding.notiRadius.isSelected = !binding.notiRadius.isSelected
 
-                                            binding.unionLayout.visibility = View.GONE
-                                            binding.notiView.visibility = View.GONE
-                                            binding.notiRadius.background =
-                                                applicationContext.getDrawable(R.drawable.noti_call)
+                            if (notificationYn == "N") {
+                                response?.postPortfolioNotification(
+                                    "Bearer $accessToken",
+                                    deviceId,
+                                    memberId,
+                                    portfolioId
+                                )?.enqueue(object : Callback<BaseDTO> {
+                                    @SuppressLint("NotifyDataSetChanged")
+                                    override fun onResponse(
+                                        call: Call<BaseDTO>,
+                                        response: Response<BaseDTO>
+                                    ) {
+                                        try {
+                                            if (!response.body().toString().isEmpty()) {
+                                                LogUtil.logE("포트폴리오 알림 설정 정보 success " + response.body()?.status)
+                                                pvm.getPortfolioNotification(portfolioId)
+
+                                                binding.unionLayout.visibility = View.GONE
+                                                binding.notiView.visibility = View.GONE
+                                                binding.notiRadius.background =
+                                                    applicationContext.getDrawable(R.drawable.noti_call)
+                                            }
+                                        } catch (ex: Exception) {
+                                            ex.printStackTrace()
+                                            LogUtil.logE("포트폴리오 알림 설정 정보 변경 catch Error! " + ex.message)
                                         }
-                                    } catch (ex: Exception) {
-                                        ex.printStackTrace()
-                                        LogUtil.logE("포트폴리오 알림 설정 정보 변경 catch Error! " + ex.message)
                                     }
-                                }
 
-                                override fun onFailure(call: Call<BaseDTO>, t: Throwable) {
-                                    t.printStackTrace()
-                                    LogUtil.logE("포트폴리오 알림 설정 정보 변경 fail.. " + t.message)
-                                }
-                            })
-                        }
-                        // 포트폴리오 알림 설정 해제 - jhm 2022/11/03
-                        else {
-                            response?.deletePortfolioNotification(
-                                "Bearer $accessToken",
-                                deviceId,
-                                memberId,
-                                portfolioId
-                            )?.enqueue(object : Callback<BaseDTO> {
-                                @SuppressLint("NotifyDataSetChanged")
-                                override fun onResponse(
-                                    call: Call<BaseDTO>,
-                                    response: Response<BaseDTO>
-                                ) {
-                                    try {
-                                        if (!response.body().toString().isEmpty()) {
-                                            LogUtil.logE("포트폴리오 알림 설정 해제 Success")
-                                            pvm.getPortfolioNotification(portfolioId)
+                                    override fun onFailure(call: Call<BaseDTO>, t: Throwable) {
+                                        t.printStackTrace()
+                                        LogUtil.logE("포트폴리오 알림 설정 정보 변경 fail.. " + t.message)
+                                    }
+                                })
+                            }
+                            // 포트폴리오 알림 설정 해제 - jhm 2022/11/03
+                            else {
+                                response?.deletePortfolioNotification(
+                                    "Bearer $accessToken",
+                                    deviceId,
+                                    memberId,
+                                    portfolioId
+                                )?.enqueue(object : Callback<BaseDTO> {
+                                    @SuppressLint("NotifyDataSetChanged")
+                                    override fun onResponse(
+                                        call: Call<BaseDTO>,
+                                        response: Response<BaseDTO>
+                                    ) {
+                                        try {
+                                            if (!response.body().toString().isEmpty()) {
+                                                LogUtil.logE("포트폴리오 알림 설정 해제 Success")
+                                                pvm.getPortfolioNotification(portfolioId)
 
-                                            binding.unionLayout.visibility = View.VISIBLE
-                                            binding.notiView.visibility = View.VISIBLE
-                                            binding.notiRadius.background =
-                                                applicationContext.getDrawable(R.drawable.layout_round_border_eaecf0)
+                                                binding.unionLayout.visibility = View.VISIBLE
+                                                binding.notiView.visibility = View.VISIBLE
+                                                binding.notiRadius.background =
+                                                    applicationContext.getDrawable(R.drawable.layout_round_border_eaecf0)
+                                            }
+                                        } catch (ex: Exception) {
+                                            ex.printStackTrace()
+                                            LogUtil.logE("포트폴리오 알림 상태 해제 catch ${ex.message}")
                                         }
-                                    } catch (ex: Exception) {
-                                        ex.printStackTrace()
-                                        LogUtil.logE("포트폴리오 알림 상태 해제 catch ${ex.message}")
                                     }
-                                }
 
-                                override fun onFailure(call: Call<BaseDTO>, t: Throwable) {
-                                    t.printStackTrace()
-                                    LogUtil.logE("포트폴리오 알림 상태 해제 fail" + t.message)
-                                }
-                            })
+                                    override fun onFailure(call: Call<BaseDTO>, t: Throwable) {
+                                        t.printStackTrace()
+                                        LogUtil.logE("포트폴리오 알림 상태 해제 fail" + t.message)
+                                    }
+                                })
+                            }
+                        } else {
+                            val intent =
+                                Intent(this@PortfolioDetailActivity, LoginChkActivity::class.java)
+                            startActivity(intent)
                         }
-
-
                     }
+
 
                     // 알림 신청 말풍선 LAYOUT - jhm 2022/11/02
                     binding.closeIcon.setOnClickListener {
@@ -432,9 +454,11 @@ class PortfolioDetailActivity :
                                 "portfolioTitle",
                                 portfolioTitle
                             ) // 포트폴리오 이름 - jhm 2022/10/20
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                            
+                            // 남은 수량 - jhm 2022/11/05
+                            intent.putExtra("remainingPieceVolume",
+                                remainingPieceVolume)
                             startActivity(intent)
-                            finish()
                         }
                     }
 
@@ -634,6 +658,7 @@ class PortfolioDetailActivity :
             portfolioTitle = it.data.title
             vm.viewInitVertical(binding.productsRv) // 포트폴리오 구성 - jhm 2022/08/22
 
+            remainingPieceVolume = it.data.remainingPieceVolume
 
             // 총 판매 금액 - jhm 2022/08/22
             binding.allAmount.text = ConvertMoney().getNumKorString(toLongAmount) + "만원"
